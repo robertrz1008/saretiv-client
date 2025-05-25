@@ -1,0 +1,22 @@
+.main-page-con{
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: 1fr;
+  overflow: auto;
+}
+.main-page-layout{
+    display: grid;
+    grid-template-rows: 50px 1fr;
+    grid-template-columns: 1fr;
+}
+.main-con{
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color:  rgb(246, 251, 255);
+  align-items: center;
+  overflow-y: auto;
+}
