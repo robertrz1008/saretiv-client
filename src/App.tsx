@@ -5,6 +5,7 @@ import ProtectedRoute from './view/pages/RouteProtected'
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import RegisterPage from "./view/pages/RegisterPage";
 import './App.css'
+import MainPage from './view/pages/MainPage';
 
 function App() {
 
@@ -13,7 +14,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<RegisterPage />} />
         <Route element={<ProtectedRoute />}>
-          <Route path="/*" element={<h1>Sale Page</h1>} >
+          <Route path="/*" element={<MainPage/>} >
           </Route>
         </Route>
       </Routes>

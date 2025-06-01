@@ -8,9 +8,14 @@ export interface Role{
 }
 
 export interface User extends UserLogin{
-    telephone: String,
-    dni: string,
-    direction: string,
+    name: string,
+    lastname: string,
+    telephone: string,
+    document: string,
+    username: string,
+    password: string,
+    entryDate: Date,
+    status: boolean,
     roles: Role[]
 }
 

@@ -3,5 +3,11 @@
     height: 100vh;
     display: flex;
     justify-content: center;
+    flex-direction: column;
     align-items: center;
+}
+.Auth-page h1{
+    font-size: 40px;   
+    margin-bottom: 30px;
+    color: blue;
 }

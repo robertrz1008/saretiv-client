@@ -1,10 +1,10 @@
 import axios from "axios"
 
-const http = "http://localhost:4040/api/"
+const http = "http://localhost:8080/api/"
 
 const instance = axios.create({
     baseURL: http,
-    withCredentials: false
+    withCredentials: true
 })
 
 export default instance

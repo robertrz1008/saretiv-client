@@ -57,12 +57,15 @@ function RegisterPage() {
 
   return (
       <div className="Auth-page">
+        <h1>
+          Saretiv
+        </h1>
        <form className="Auth-form" onSubmit={(e) => {
         e.preventDefault()
         if(!validate()) return
         login()
       }}>
-      <center><h2>Saretiv</h2></center>
+      <center><h2>Autenticarse</h2></center>
         <InputText 
             type="text" 
             onChange={(e) => setUsername(e.target.value)}

@@ -60,6 +60,7 @@ export const AuthContextProvider = ({children}: ContexArg) => {
             }
             usersList()
             setLoading(false)
+            setUser(response.data)
             setIstAutenticate(true)
         } catch (error) {
             console.log(error)
@@ -89,6 +90,9 @@ export const AuthContextProvider = ({children}: ContexArg) => {
     useEffect(() => {
         checkLogin()
     }, [])
+    useEffect(() => {
+        console.log(user)
+    }, [user])
     
 
     return(

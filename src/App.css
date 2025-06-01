@@ -23,3 +23,15 @@
 .Auth-form *{
   margin-top: 10px;
 }
+.app{
+  
+  background-color: #f0f0f0;
+  width: 100%;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: 200px 1fr;
+  grid-template-rows: 1fr;
+}
+.home{
+  width: 700px;  
+}

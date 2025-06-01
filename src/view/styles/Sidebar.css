@@ -1,0 +1,75 @@
+.sidebar-section{
+  background-color: #293649;
+    transition: all .500ms;
+    display: grid;
+    grid-template-rows: 50px 1fr;
+    grid-template-columns: 1fr;
+    overflow: hidden;     
+    color: #e2dddd;
+    font-size: 19px;
+    ;
+}
+.nav-list{
+  width: 100%;
+  background-color: #445875;
+  padding-left: 0;
+  list-style: none;
+}
+.tr{
+  width: 100%;
+  padding-left: 0;
+  padding-right: 10px;
+}
+.link-title{
+  width: 90%;
+  height: 40px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-left: 10px;
+}
+.link-name:hover{
+  color: white;
+}
+.link-title div{
+  display: flex;
+  justify-content: space-between;
+}
+.link-title div h5{
+  margin-left: 10px;
+}
+/* menu submenu */
+.sub-menu {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+  padding-left: 10px;
+  list-style: none;
+  background-color: #37475f;
+}
+
+.sub-menu-open {
+  max-height: 200px; /* Ajusta este valor según el contenido de tu submenú */
+  transition: max-height 0.3s ease-in;
+  overflow: hidden;
+}
+
+.link-name{
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  height: 40px;
+}
+.link-name h5{
+  margin-left: 10px;
+}
+
+/* Opcional: animación para el ícono de flecha */
+.arrow {
+  transition: transform 0.2s ease;
+}
+
+.arrow-open {
+  transform: rotate(90deg);
+}
