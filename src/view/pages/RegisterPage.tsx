@@ -9,7 +9,7 @@ import "../styles/Auth.css"
 
 
 function RegisterPage() {
-  const {singIn, isAutenticate} = useAuth() as AuthContextIn
+  const {singIn, isAutenticate, buttonDisable, loginResponse} = useAuth() as AuthContextIn
   const navigate = useNavigate()
 
   useEffect(() => {
@@ -21,6 +21,8 @@ function RegisterPage() {
 
   const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [usernameEmty, setUsernameEmty] = useState<boolean>(false);
+  const [passwordEmty, setPasswordEmty] = useState<boolean>(false);
 
   const cleaninputs = () => {
     setUsername("");
@@ -40,45 +42,74 @@ function RegisterPage() {
     }
   }
 
-  function validate(): boolean {
-
-    if(username == ""){
-      console.log("falseo")
-      alert("Username is required")
-      return false
+  function validateInputs(): boolean {
+    let invalid: boolean = false;
+    if(username == "") {
+      setUsernameEmty(true)
+      invalid = true;
+    }else{
+      setUsernameEmty(false)
+      
     }
-    if(password == ""){
-      alert("Password is required")
-      return false
+    if(password == "") {
+      setPasswordEmty(true)
+      invalid = true;
+    }else{
+      setPasswordEmty(false)
     }
-    return true
+  
+    return invalid? false : true;
+  }
+  function handleSebmit(e: React.ChangeEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!validateInputs()) {
+      return;
+    }
+    login()
   }
 
 
   return (
       <div className="Auth-page">
-        <h1>
-          Saretiv
-        </h1>
-       <form className="Auth-form" onSubmit={(e) => {
-        e.preventDefault()
-        if(!validate()) return
-        login()
-      }}>
-      <center><h2>Autenticarse</h2></center>
+       <form className="Auth-form" onSubmit={handleSebmit}>
+      <div className="auth-title">
+         <h1>Saretiv</h1>
+      </div>
+      <div className="auth-form-line"></div>
+      <center className="auth-subtitle"><h2>Autenticarse</h2></center>
         <InputText 
+            variant="filled"
+            style={{marginTop: "10px"}}
             type="text" 
             onChange={(e) => setUsername(e.target.value)}
             value={username }
             placeholder="username" 
+            invalid={usernameEmty}
         />
+        {usernameEmty && <small id="username-help" style={{color: "red", marginLeft: "10px"}}> 
+                    el nombre de usuario está vacio
+        </small>}
+       
         <InputText 
+            variant="filled"
+            style={{marginTop: "10px"}}
             type="password" 
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             placeholder="password" 
+            invalid ={passwordEmty}
         />
-        <Button type="submit" label="Ingresar" icon="pi pi-check" />
+        {passwordEmty &&  <small id="username-help" style={{color: "red", marginLeft: "10px"}}>
+                    El nombre de usuario está vacio
+        </small>}
+        <Button type="submit" style={{marginTop: "10px"}} label="Ingresar" icon="pi pi-check" disabled={buttonDisable}/>
+
+        {loginResponse && !loginResponse.status && 
+          <small id="username-help" style={{color: "red", marginLeft: "10px", fontSize:"14px", marginTop: "10px"}}>
+            {loginResponse.message}
+          </small>
+        }
+
       </form>
       </div>
   )

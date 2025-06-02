@@ -6,8 +6,9 @@
     grid-template-columns: 1fr;
     overflow: hidden;     
     color: #e2dddd;
-    font-size: 19px;
-    ;
+    font-size: 18px;
+    font-weight: 1000;
+  
 }
 .nav-list{
   width: 100%;

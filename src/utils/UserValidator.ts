@@ -8,7 +8,7 @@ class UserRoleValidator{
     }
 
     public isAdmin(): boolean{
-        if(this.user.some(role => role.name === "ADMINISTRATOR")){
+        if(this.user.some(role => role.name === "ADMINISTRADOR")){
             return true
         }
         return false;

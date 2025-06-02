@@ -1,6 +1,7 @@
 import { useContext, createContext, type ReactNode, useState, useEffect } from "react";
-import { type CreateUser, type Profile, type UserLogin, type UserView } from "../Interface/InAuth";
+import { type CreateUser, type LoginResponse, type Profile, type UserLogin, type UserView } from "../Interface/InAuth";
 import { getUsersRequest, loginRequest, profileRequest, registerRequest } from "../services/Auth.service";
+import type { AxiosResponse, AxiosError} from "axios";
 
 const appContext = createContext({})
 
@@ -23,22 +24,36 @@ export const AuthContextProvider = ({children}: ContexArg) => {
     const [isAutenticate, setIstAutenticate] = useState<boolean>(false)
     const [authLoading, setAuthLoading] = useState(false)
     const [loading, setLoading] = useState(false)
+    const [buttonDisable, setButtonDisable] = useState<boolean>(false)
+    const [loginResponse, setLoginResponse] = useState<LoginResponse>()
 
 
     const singIn = async (user: UserLogin) => {
         setAuthLoading(true)
         //buttonDisable
+        setButtonDisable(true)
+        
         try {
-            await loginRequest(user)
-            
+           const response:AxiosResponse<LoginResponse>  = await loginRequest(user)
             // setAuthLoading(false)
+            console.log("response", response.data)
             checkLogin()
             
             //buttonEnable
             setIstAutenticate(true)
-        } catch (error) {
+            setButtonDisable(false)
+
+            if(!response.data.status){
                 setAuthLoading(false)
-                console.log(error)
+                setButtonDisable(false)
+                setLoginResponse(response.data)
+                return
+            }
+
+        } catch (error: AxiosError<LoginResponse> | any) {
+                setLoginResponse(error.response?.data)
+                setAuthLoading(false)
+                setButtonDisable(false)
                 // etErrors(error.response?.data)
         }
     }
@@ -106,6 +121,8 @@ export const AuthContextProvider = ({children}: ContexArg) => {
             users,
             createUser,
             usersList,
+            buttonDisable,
+            loginResponse
         }}>
                 {children}
         </appContext.Provider>

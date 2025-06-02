@@ -94,7 +94,7 @@ function Home() {
 
     <div className='home'>
         <div className="card">
-            <DataTable value={products} tableStyle={{ minWidth: '50rem' }}>
+            <DataTable value={products} stripedRows paginator rows={2} rowsPerPageOptions={[5, 10, 25, 50]}  tableStyle={{ minWidth: '40rem' }}>
                 <Column field="code" header="Code" frozen ></Column>
                 <Column field="name" header="Name"></Column>
                 <Column field="category" header="Category"></Column>

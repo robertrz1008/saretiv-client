@@ -6,8 +6,29 @@
     flex-direction: column;
     align-items: center;
 }
+.auth-title{
+    width: 100%;
+    text-align: center;
+}
 .Auth-page h1{
     font-size: 40px;   
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     color: blue;
+}
+.auth-subtitle h2{
+    font-size: 20px
+}
+.auth-form-line{
+    width: 100%;
+    border-bottom: 1px solid rgb(209, 208, 208);
+   background-color: black;
+}
+.Auth-form{
+  width: 350px;
+  display: flex;
+  justify-content: space-between;
+  padding: 30px;
+  border-radius: 3px;
+  box-shadow: 0 0 2px rgb(75, 74, 74);
+  flex-direction: column;
 }

@@ -25,6 +25,12 @@ export interface CreateUser extends UserLogin{
         roleListName: string[]
     }
 }
+export interface LoginResponse{
+    username: string,
+    message: string,
+    wt: string,
+    status: boolean
+}
 
 export interface Profile extends User{
 }
@@ -46,4 +52,6 @@ export interface AuthContextIn{
     user: Profile
     users: UserView[]
     createUser: (user: CreateUser) => User
+    buttonDisable: boolean
+    loginResponse: LoginResponse
 }

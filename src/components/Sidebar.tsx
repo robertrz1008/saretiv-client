@@ -32,7 +32,7 @@ function Sidebar() {
     setSubmenuReport(!submenuReport)
   }
 
-  const roleValid = new UserRoleValidator(user.roles);
+  const roleValid: UserRoleValidator = new UserRoleValidator(user.roles);
 
 
   return (
