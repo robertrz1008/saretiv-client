@@ -15,6 +15,7 @@ import { IoSettingsOutline } from "react-icons/io5";
 import UserRoleValidator from '../utils/UserValidator';
 import { useAuth } from '../context/AuthContext';
 import type { AuthContextIn } from '../Interface/InAuth';
+import { NavLink } from 'react-router-dom';
 
 function Sidebar() {
   const [submenuRegister, setSubmenuRegister] = useState(false)
@@ -66,18 +67,22 @@ function Sidebar() {
                     </div>
     
                     <ul className= {`sub-menu ${!submenuRegister? "sub-menu-close" : "sub-menu-open"}`}>
-                        <li className="link-name">
+                        <NavLink to={"/Usuarios"} className="link-name">
+                            <i><FaRegUser/></i>
+                            <h5>Usuarios</h5>  
+                        </NavLink>
+                        <NavLink to={"/Clientes"} className="link-name">
                             <i><FaRegUser/></i>
                             <h5>Clientes</h5>  
-                        </li>
-                        <li className="link-name">
+                        </NavLink>
+                        <NavLink to={"/Proveedores"} className="link-name">
                             <i><LuUsers/></i>
                             <h5>Proveedores</h5>
-                        </li>
-                        <li className="link-name">
+                        </NavLink>
+                        <NavLink to={"/Productos"} className="link-name">
                             <i><AiOutlineProduct/></i>
                             <h5>Productos</h5>
-                        </li>
+                        </NavLink>
                         <li className="link-name">
                             <i><MdOutlineCategory/></i>
                             <h5>Categoria</h5>

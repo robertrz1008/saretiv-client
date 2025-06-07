@@ -5,6 +5,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { type AuthContextIn } from "../../Interface/InAuth";
 import { useNavigate } from "react-router-dom";
+import logo from "../../assets/logo.png";
 import "../styles/Auth.css"
 
 
@@ -73,7 +74,7 @@ function RegisterPage() {
       <div className="Auth-page">
        <form className="Auth-form" onSubmit={handleSebmit}>
       <div className="auth-title">
-         <h1>Saretiv</h1>
+         <img src={logo} alt="Logo" className="auth-logo" width={250} height={80}/>
       </div>
       <div className="auth-form-line"></div>
       <center className="auth-subtitle"><h2>Autenticarse</h2></center>
@@ -83,12 +84,10 @@ function RegisterPage() {
             type="text" 
             onChange={(e) => setUsername(e.target.value)}
             value={username }
-            placeholder="username" 
+            placeholder="Nombre de Usuario" 
             invalid={usernameEmty}
         />
-        {usernameEmty && <small id="username-help" style={{color: "red", marginLeft: "10px"}}> 
-                    el nombre de usuario está vacio
-        </small>}
+        {usernameEmty && <small id="username-help" style={{color: "red", marginLeft: "10px"}}> El nombre es requetido </small>}
        
         <InputText 
             variant="filled"
@@ -96,12 +95,11 @@ function RegisterPage() {
             type="password" 
             onChange={(e) => setPassword(e.target.value)}
             value={password}
-            placeholder="password" 
+            placeholder="Contraseña" 
             invalid ={passwordEmty}
         />
-        {passwordEmty &&  <small id="username-help" style={{color: "red", marginLeft: "10px"}}>
-                    El nombre de usuario está vacio
-        </small>}
+        {passwordEmty &&  <small id="username-help" style={{color: "red", marginLeft: "10px"}}> La contraseña es requerida</small>}
+
         <Button type="submit" style={{marginTop: "10px"}} label="Ingresar" icon="pi pi-check" disabled={buttonDisable}/>
 
         {loginResponse && !loginResponse.status && 

@@ -8,6 +8,7 @@ export interface Role{
 }
 
 export interface User extends UserLogin{
+    id: number
     name: string,
     lastname: string,
     telephone: string,
@@ -35,14 +36,6 @@ export interface LoginResponse{
 export interface Profile extends User{
 }
 
-export interface UserView extends User{
-    accountNoExpired: boolean,
-    credentialNoLocked: boolean,
-    credentialNoExpired: boolean,
-    enaABoolean: boolean,
-    accountNoExpited: boolean
-}
-
 export interface AuthContextIn{
     singIn: (user: UserLogin) => void
     loading: boolean,
@@ -50,8 +43,9 @@ export interface AuthContextIn{
     usersList: () => void
     authLoading: boolean,
     user: Profile
-    users: UserView[]
     createUser: (user: CreateUser) => User
     buttonDisable: boolean
     loginResponse: LoginResponse
+    getUserList: () => void
+    userList: User[]
 }

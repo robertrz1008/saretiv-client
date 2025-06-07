@@ -1,12 +1,16 @@
-import React from 'react'
 import Sidebar from '../../components/Sidebar'
-import Home from './main/Home'
+import Navbar from '../../components/Navbar'
+import { Outlet } from 'react-router-dom'
+import "../styles/Register.css"
 
 function MainPage() {
   return (
     <div className='app'>
         <Sidebar/>
-        <Home/>
+         <div className='main-page-layout'>
+         <Navbar/>
+        <Outlet/> 
+      </div>
     </div>
   )
 }

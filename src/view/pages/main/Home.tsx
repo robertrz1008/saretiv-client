@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
+import { InputText } from 'primereact/inputtext';
 
 function Home() {
   interface Product {
@@ -88,18 +89,97 @@ function Home() {
       inventoryStatus: 'INSTOCK',
       rating: 4
     },
+    {
+      id: '1000',
+      code: 'f230fh0g3',
+      name: 'Bamboo Watch',
+      description: 'Product Description',
+      image: 'bamboo-watch.jpg',
+      price: 65,
+      category: 'Accessories',
+      quantity: 24,
+      inventoryStatus: 'INSTOCK',
+      rating: 5
+    },
+    {
+      id: '1001',
+      code: 'nvklal433',
+      name: 'Black Watch',
+      description: 'Product Description',
+      image: 'black-watch.jpg',
+      price: 72,
+      category: 'Accessories',
+      quantity: 61,
+      inventoryStatus: 'INSTOCK',
+      rating: 4
+    },
+    {
+      id: '1001',
+      code: 'nvklal433',
+      name: 'Black Watch',
+      description: 'Product Description',
+      image: 'black-watch.jpg',
+      price: 72,
+      category: 'Accessories',
+      quantity: 61,
+      inventoryStatus: 'INSTOCK',
+      rating: 4
+    },
+    {
+      id: '1001',
+      code: 'nvklal433',
+      name: 'Black Watch',
+      description: 'Product Description',
+      image: 'black-watch.jpg',
+      price: 72,
+      category: 'Accessories',
+      quantity: 61,
+      inventoryStatus: 'INSTOCK',
+      rating: 4
+    },
+    {
+      id: '1001',
+      code: 'nvklal433',
+      name: 'Black Watch',
+      description: 'Product Description',
+      image: 'black-watch.jpg',
+      price: 72,
+      category: 'Accessories',
+      quantity: 61,
+      inventoryStatus: 'INSTOCK',
+      rating: 4
+    },
+    {
+      id: '1001',
+      code: 'nvklal433',
+      name: 'Black Watch',
+      description: 'Product Description',
+      image: 'black-watch.jpg',
+      price: 72,
+      category: 'Accessories',
+      quantity: 61,
+      inventoryStatus: 'INSTOCK',
+      rating: 4
+    },
   ])
 
   return (
 
     <div className='home'>
-        <div className="card">
-            <DataTable value={products} stripedRows paginator rows={2} rowsPerPageOptions={[5, 10, 25, 50]}  tableStyle={{ minWidth: '40rem' }}>
+        <div className="card target" style={{marginTop:"20px", marginLeft:"20px"}}>
+            <InputText 
+              variant="filled"
+              style={{marginTop: "10px"}}
+              type="text" 
+              placeholder="Nombre de Usuario" 
+            />
+            <DataTable value={products} stripedRows paginator rows={5} rowsPerPageOptions={[5, 10, 25, 50]}  tableStyle={{ minWidth: '40rem' }}>
                 <Column field="code" header="Code" frozen ></Column>
                 <Column field="name" header="Name"></Column>
                 <Column field="category" header="Category"></Column>
                 <Column field="quantity" header="Quantity"></Column>
                 <Column field="price" header="Price" body={(rowData) => `$${rowData.price}`}></Column>
+                <Column field="inventoryStatus" header="Status"></Column>
                 <Column field="inventoryStatus" header="Status"></Column>
             </DataTable>
         </div>
