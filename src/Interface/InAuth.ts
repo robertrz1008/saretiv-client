@@ -48,4 +48,5 @@ export interface AuthContextIn{
     loginResponse: LoginResponse
     getUserList: () => void
     userList: User[]
+    logout: () => void,
 }

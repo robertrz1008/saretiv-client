@@ -1,6 +1,6 @@
 import { useContext, createContext, type ReactNode, useState, useEffect } from "react";
 import { type CreateUser, type LoginResponse, type Profile, type User, type UserLogin, } from "../Interface/InAuth";
-import { loginRequest, profileRequest, registerRequest, usersListRequest } from "../services/Auth.service";
+import { loginRequest, logoutRequest, profileRequest, registerRequest, usersListRequest } from "../services/Auth.service";
 import type { AxiosResponse, AxiosError} from "axios";
 
 const appContext = createContext({})
@@ -97,6 +97,25 @@ export const AuthContextProvider = ({children}: ContexArg) => {
                 console.log(error)
             }
     }
+
+    async function logout() {
+        try {
+            setAuthLoading(true)
+            await logoutRequest()
+            setIstAutenticate(false)
+            setUser(undefined)
+            setLoginResponse(undefined)
+            setButtonDisable(false)
+            setAuthLoading(false)
+            return true
+        } catch (error) {
+            console.log(error)
+            setAuthLoading(false)
+            return false
+        }
+        setUserList([])
+        // await logoutRequest()
+    }
     
     useEffect(() => {
         checkLogin()
@@ -118,7 +137,8 @@ export const AuthContextProvider = ({children}: ContexArg) => {
             buttonDisable,
             loginResponse,
             getUserList,
-            userList
+            userList,
+            logout
         }}>
                 {children}
         </appContext.Provider>

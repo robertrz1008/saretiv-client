@@ -122,13 +122,3 @@ tbody tr:hover{
     }
 }
 /* form */
-.register-form{
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    border-radius: 3px;
-    flex-direction: column;
-  }
-  .register-form *{
-    margin-top: 10px;
-  }

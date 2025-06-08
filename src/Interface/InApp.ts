@@ -1,4 +1,4 @@
-export interface AuthContextIn{
-    isFormModalOpen: () => void
-    showFormModal: boolean
+export interface AppContextIn{
+    isFormModalOpen: boolean
+    showFormModal:  (val: boolean) => void
 }

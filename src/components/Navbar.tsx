@@ -1,23 +1,40 @@
 import "../view/styles/Navbar.css"
-import { Button } from 'primereact/button'
-import { useNavigate } from 'react-router-dom'
-import {logoutRequest} from '../services/Auth.service'
+import { CgProfile } from "react-icons/cg";
 import { IoSettingsOutline } from "react-icons/io5";
+import { OverlayPanel } from 'primereact/overlaypanel';
+import { useRef } from "react";
+import { useAuth } from "../context/AuthContext";
+import type { AuthContextIn } from "../Interface/InAuth";
+import { Button } from "primereact/button";
 
 function Navbar() {
 
-  const navigate = useNavigate();
-  async function exitFromApp(){
-    await logoutRequest()
-    navigate("/login")
+  const op = useRef<OverlayPanel>(null);
+  const {user} = useAuth() as AuthContextIn
+  const context = useAuth() as AuthContextIn;
+  const exitFromApp =() => {
+    context.logout()
   }
+
+
   return (
     <div className='navbar-con'>
         <h3>Dashboard</h3>
-        {/* <Button label="Serrar sesion" onClick={exitFromApp}/> */}
+
+        <section className='navbar-menu-section'>
+          <div style={{color:"black", fontSize:"1.7rem", cursor:"pointer", marginRight:"20px", marginTop:"10px"}} onClick={(e) => op.current?.toggle(e)} >
+          <CgProfile/>
+        </div>
+        <OverlayPanel ref={op} className="profile-menu" style={{width:"200px", padding:"10px"}}>
+            <h3>{user.username}</h3>
+            <p>Role: {user.roles[0].name}</p>
+            <Button className="p-button-outlined p-button-danger" style={{width:"100%"}} onClick={exitFromApp}>Logout</Button>
+        </OverlayPanel>
+
         <i style={{color:"black", fontSize:"1.7rem", cursor:"pointer", marginRight:"20px", marginTop:"10px"}}>
           <IoSettingsOutline/>
-          </i>
+        </i>
+        </section>
     </div>
   )
 }

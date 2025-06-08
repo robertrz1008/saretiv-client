@@ -1,7 +1,7 @@
 import { useContext, createContext, type ReactNode, useState } from "react";
 const appContext = createContext({})
 
-export const useAuth =() => {
+export const useAppContext =() => {
      const context = useContext(appContext)
         if(!context){
             throw new Error("Context invalid")

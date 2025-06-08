@@ -16,3 +16,14 @@
     font-weight: 500;
     color: rgb(77, 75, 75);
 }
+.navbar-menu-section{
+    display: flex;
+}
+.profile-menu{
+    width: 100px;
+    display: flex;
+    padding: 5px;
+    flex-direction: column;
+    display: flex;
+    
+}
