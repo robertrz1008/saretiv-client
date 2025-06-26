@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import { DataTable } from 'primereact/datatable';
 import { Column } from 'primereact/column';
 import { InputText } from 'primereact/inputtext';
@@ -16,7 +16,7 @@ function Home() {
     inventoryStatus: string; 
     rating: number;
 }
-  const [products, setProducts] = useState<Product[]>([
+  const [products, _setProducts] = useState<Product[]>([
     {
       id: '1000',
       code: 'f230fh0g3',

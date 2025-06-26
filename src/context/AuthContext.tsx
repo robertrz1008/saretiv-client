@@ -50,7 +50,13 @@ export const AuthContextProvider = ({children}: ContexArg) => {
             }
 
         } catch (error: AxiosError<LoginResponse> | any) {
-                setLoginResponse(error.response?.data)
+                
+                if(error.response?.data) {
+                   setLoginResponse(error.response?.data)
+                }else{
+                    alert("No se puede conectar con el servidor")
+                }
+                
                 setAuthLoading(false)
                 setButtonDisable(false)
                 // etErrors(error.response?.data)

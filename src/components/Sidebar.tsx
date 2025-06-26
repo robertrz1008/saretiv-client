@@ -1,4 +1,3 @@
-import React from 'react'
 import { useState } from 'react'
 import "../view/styles/Sidebar.css"
 import { RiHome2Line } from "react-icons/ri";
@@ -49,7 +48,7 @@ function Sidebar() {
                       className="link-title">
                         <div >
                             <RiHome2Line />
-                            <h5>Inicio</h5>
+                            <h5>Administración</h5>
                         </div> 
                         <i></i>
                     </div>

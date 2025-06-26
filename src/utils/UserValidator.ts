@@ -1,7 +1,7 @@
 import type { Role } from "../Interface/InAuth";
 
 class UserRoleValidator{
-    private user: Role[];
+    private user: Role[] = [{name:"", id:0}];
 
     constructor(user: Role[]){
         this.user = user;
