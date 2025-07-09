@@ -1,16 +1,28 @@
 import { MdDeleteOutline } from "react-icons/md";
 import { type AuthContextIn } from '../../Interface/InAuth';
 import { useAuth } from '../../context/AuthContext';
+import { useAppContext } from "../../context/AppContext";
+import type { AppContextIn } from "../../Interface/InApp";
+import { GrShieldSecurity } from "react-icons/gr";
+import DeleteUserModal from "../Modal/confirm/DeleteUserModal";
 
 export default function UserTable() {
 
-    const {userList} = useAuth() as AuthContextIn
+
+    const {userList,} = useAuth() as AuthContextIn
+    const context = useAppContext() as AppContextIn
+    const {showFormModal} = useAppContext() as AppContextIn
+
 
     function isArray(){
         if(userList.length > 0) return true
         return false
     }
-
+    function clickIconDelete(e: React.MouseEvent<HTMLDivElement>){
+        e.stopPropagation()
+        context.showConfirmModal(true)
+    }
+     
   return (
         <table>
             <thead className="register-thead">
@@ -31,11 +43,11 @@ export default function UserTable() {
                         {
                             userList.map((data, id) => (
                                 <tr 
-                                    // onClick={() => {
-                                    //     setCliModify(data)
-                                    //     setIsCliModify(true)
-                                    //     showCliModal(true)
-                                    // }}
+                                    onClick={() => {
+                                        context.setUserUpdate(data)
+                                        context.userUpdateMode(true)
+                                        showFormModal(true)
+                                    }}
                                     key={id}>
                                     <td className="td-id">{id + 1}</td>
                                     <td>{data.name+" "+data.lastname}</td>
@@ -45,27 +57,32 @@ export default function UserTable() {
                                     <td>{data.roles[0].name}</td>
                                     <td>{data.status? "ACTIVO" : "INACTIVO"}</td>
                                     <td
-                                        onClick={(e) =>{    
+                                        onClick={(e) =>{
                                             e.stopPropagation()
                                         }}
                                         className='td-icon'
                                     >
-                                        <div 
-                                            // onClick={(e) => {
-                                            //     e.stopPropagation()
-                                            //     setDelCliModal(true)
-                                            // }}
+                                        <div style={{display:"flex"}}>
+                                            <div 
+                                                className="icon-con">
+                                                <a className="my-anchor-element">
+                                                    <GrShieldSecurity/> 
+                                                </a>
+                                            </div>
+                                            <div 
+                                            onClick={clickIconDelete}
                                             className="icon-con">
                                             <a className="my-anchor-element">
                                                 <MdDeleteOutline/> 
                                             </a>
                                             {/* <Tooltip anchorSelect=".my-anchor-element" place="left-start">Eliminar</Tooltip> */}
-
+                                            </div>
+                                            {/* <DeleteCliModal
+                                                    id={data.id as number}
+                                            /> */}
+                                            
                                         </div>
-                                        {/* <DeleteCliModal
-                                                id={data.id as number}
-                                        
-                                        /> */}
+                                        <DeleteUserModal id={data.id as number}/>
                                     </td>
                                 </tr>
                             ))
@@ -73,7 +90,6 @@ export default function UserTable() {
                     </tbody> 
                 )
             }
-            
         </table>
   )
 }

@@ -13,6 +13,7 @@ function UsersPage() {
 
     const {getUserList, userList} = useAuth() as AuthContextIn
     const context = useAppContext() as AppContextIn
+    const authContext = useAuth() as AuthContextIn
 
     useEffect(() => {
         getUserList()
@@ -30,6 +31,7 @@ function UsersPage() {
                     type="text" 
                     placeholder="Buscar Usuario" 
                     style={{height:"40px"}}
+                    onChange={(e) => authContext.listUserByFilter(e.target.value)}
                   />
                   <div>
                     <Button label="Nuevo Usuario" icon="pi pi-check" onClick={ () => context.showFormModal(true)} size='small'/>

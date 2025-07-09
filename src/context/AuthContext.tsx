@@ -1,6 +1,6 @@
 import { useContext, createContext, type ReactNode, useState, useEffect } from "react";
 import { type CreateUser, type LoginResponse, type Profile, type User, type UserLogin, } from "../Interface/InAuth";
-import { loginRequest, logoutRequest, profileRequest, registerRequest, usersListRequest } from "../services/Auth.service";
+import { deleteUserRequest, deleteUserRoleByUserRequest, getUserByFilterRequest, loginRequest, logoutRequest, profileRequest, registerRequest, usersListRequest } from "../services/Auth.service";
 import type { AxiosResponse, AxiosError} from "axios";
 
 const appContext = createContext({})
@@ -20,6 +20,7 @@ interface ContexArg{
 export const AuthContextProvider = ({children}: ContexArg) => {    
 
     const [user, setUser] = useState<Profile>()
+    
     const [isAutenticate, setIstAutenticate] = useState<boolean>(false)
     const [authLoading, setAuthLoading] = useState(false)
     const [loading, setLoading] = useState(false)
@@ -86,11 +87,12 @@ export const AuthContextProvider = ({children}: ContexArg) => {
             setLoading(false)
         }
     }
+   
 
     const createUser = async (user: CreateUser) => {
         try {
             await registerRequest(user)
-            getUserList
+            getUserList()
         } catch (error) {
             console.log(error)
         }
@@ -102,6 +104,34 @@ export const AuthContextProvider = ({children}: ContexArg) => {
             } catch (error) {
                 console.log(error)
             }
+    }
+    async function deleteUser(id: number): Promise<boolean>{
+        if(id = user?.id as number){
+            alert("no se puede eliminar al administrador")
+            return false
+        }
+        try {
+            await deleteUserRoleByUserRequest(id)
+            await deleteUserRequest(id)
+            getUserList()
+            return true
+        } catch (error) {
+         console.log(error)   
+         return false
+        }
+    }
+    async function listUserByFilter(filter: string){
+        if(filter.length < 1){
+            getUserList()
+            return
+        }
+
+        try {
+            const response = await getUserByFilterRequest(filter)
+            setUserList(response.data)
+        } catch (error) {
+            console.log(error)
+        }
     }
 
     async function logout() {
@@ -122,13 +152,13 @@ export const AuthContextProvider = ({children}: ContexArg) => {
         setUserList([])
         // await logoutRequest()
     }
+
+
+
     
     useEffect(() => {
         checkLogin()
     }, [])
-    useEffect(() => {
-        console.log(user)
-    }, [user])
     
 
     return(
@@ -144,7 +174,9 @@ export const AuthContextProvider = ({children}: ContexArg) => {
             loginResponse,
             getUserList,
             userList,
-            logout
+            logout,
+            deleteUser,
+            listUserByFilter
         }}>
                 {children}
         </appContext.Provider>

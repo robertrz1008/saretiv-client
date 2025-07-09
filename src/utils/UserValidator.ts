@@ -23,7 +23,6 @@ class UserRoleValidator{
 
      public isTechnical(): boolean{
         if(this.user.some(role => role.name === "TECNICO")){
-            console.log("es tecnico")
             return true
         }
         return false;

@@ -1,15 +1,19 @@
 import { Button } from 'primereact/button'
 import { Calendar } from 'primereact/calendar'
 import { InputText } from 'primereact/inputtext'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import type { AppContextIn } from '../../Interface/InApp';
 import RoleSelect from '../reusable/RoleSelect';
+import type { AuthContextIn, CreateUser } from '../../Interface/InAuth';
+import { registerRequest, updateUserRequest } from '../../services/Auth.service';
+import { useAuth } from '../../context/AuthContext';
 
 function UserForm() {
 
-  const [selectedRoles, setSelectedRoles] = useState([]);
- const [name, setName] = useState("");
+const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+
+const [name, setName] = useState("");
 const [nameEmpty, setNameEmpty] = useState(false);
 
 const [lastname, setLastname] = useState("");
@@ -21,7 +25,7 @@ const [telephoneEmpty, setTelephoneEmpty] = useState(false);
 const [document, setDocument] = useState("");
 const [documentEmpty, setDocumentEmpty] = useState(false);
 
-const [dateEntry, setDateEntry] = useState("");
+const [dateEntry, setDateEntry] = useState<Date | null>();
 const [dateEntryEmpty, setDateEntryEmpty] = useState(false);
 
 const [username, setUsername] = useState("");
@@ -34,14 +38,30 @@ const [passwordEmpty, setPasswordEmpty] = useState(false);
 const [password2, setPassword2] = useState("");
 const [password2Empty, setPassword2Empty] = useState(false)
 
-  const context = useAppContext() as AppContextIn;
+const context = useAppContext() as AppContextIn;
+const authContext = useAuth() as AuthContextIn
+
+
+  useEffect(() =>{
+    cleaninputs()
+    if(context.isUserUpdMode){
+      setName(context.userModify.name);
+      setLastname(context.userModify.lastname);
+      setTelephone(context.userModify.telephone);
+      setDocument(context.userModify.document);
+      setDateEntry(context.userModify.entryDate);
+      setUsername(context.userModify.username);
+    }
+  }, [])
+
+
 
   function cleaninputs(){
     setName("");
     setLastname("");
     setTelephone("");
     setDocument("");
-    setDateEntry("");
+    setDateEntry(null);
     setUsername("");
     setPassword("");
     setPassword2("");
@@ -90,13 +110,13 @@ const [password2Empty, setPassword2Empty] = useState(false)
     } else {
       setUsernameEmpty(false);
     }
-    if (password === "") {
+    if (!context.isUserUpdMode && password === "") {
       setPasswordEmpty(true);
       invalid = true;
     } else {
       setPasswordEmpty(false);
     }
-    if (password2 === "") {
+    if (!context.isUserUpdMode && password2 === "") {
       setPassword2Empty(true);
       setPassErrorMsg("La contraseña es requerida")
       invalid = true;
@@ -106,19 +126,63 @@ const [password2Empty, setPassword2Empty] = useState(false)
 
     return invalid;
   }
-  function handleSubmit() {
-    if (validateInputs()) return
 
-    if(password2 != password){
-      console.log("no coincide")
+  function validateSubmit(): boolean{
+    if (validateInputs()) return false
+
+    if(!context.isUserUpdMode && password2 != password){
       setPassword2Empty(true)
       setPassErrorMsg("No coincide la contraseña")
-      return
+      return false
     }
-    console.log("aprovado")
-    cleaninputs();
-    context.showFormModal(false);
+    return true
   }
+
+
+  async function handleSubmit() {
+
+    if(!validateSubmit()) return
+
+    const userSend: CreateUser={
+        name: name.trim(),
+        lastname: lastname.trim(),
+        telephone: telephone.trim(),
+        document: document.trim(),
+        username: username.trim(),
+        password: password,
+        entryDate: dateEntry as Date,
+        status: true,
+        roleRequest: {
+          roleListName:  selectedRoles
+        }
+      }
+
+    if(context.isUserUpdMode){
+      await updateUserRequest({
+          name: name.trim(),
+        lastname: lastname.trim(),
+        telephone: telephone.trim(),
+        document: document.trim(),
+        username: username.trim(),
+        password: context.userModify.password,
+        entryDate: dateEntry as Date,
+        status: true,
+        roleRequest: {
+          roleListName:  []
+        }
+      })
+      
+    }else{
+      
+    await registerRequest(userSend)
+    }
+    
+    context.showFormModal(false)
+    context.userUpdateMode(false)
+    authContext.getUserList()
+    cleaninputs();
+  }
+
 
 
 
@@ -185,7 +249,13 @@ const [password2Empty, setPassword2Empty] = useState(false)
               <label htmlFor="buttondisplay" className="font-bold block mb-2">
                 Button Display
               </label>
-              <Calendar id="buttondisplay" showIcon style={{ height: "40px", marginTop: "5px" }} />
+              <Calendar 
+                id="buttondisplay" 
+                value={dateEntry}
+                onChange={(e) => setDateEntry(e.target.value)}
+                showIcon 
+                style={{ height: "40px", marginTop: "5px"}} 
+              />
             </div>
           </div>
 
@@ -213,6 +283,7 @@ const [password2Empty, setPassword2Empty] = useState(false)
                 variant="filled"
                 style={{ marginTop: "5px", width: "100%", height: "40px" }}
                 type="Password"
+                disabled={context.isUserUpdMode}
                 invalid={passwordEmpty}
               />
               {passwordEmpty &&  <small id="username-help" className='empt-ymsg'> La contraseña es requerida</small>}
@@ -225,6 +296,7 @@ const [password2Empty, setPassword2Empty] = useState(false)
                 variant="filled"
                 style={{ marginTop: "5px", width: "100%", height: "40px" }}
                 type="password"
+                disabled={context.isUserUpdMode}
                 invalid={password2Empty}
               />
               {password2Empty &&  <small id="username-help" className='empt-ymsg'>{passwordError}</small>}
@@ -233,7 +305,11 @@ const [password2Empty, setPassword2Empty] = useState(false)
 
           <div className='doble-inputs' style={{marginTop: "10px" }}>
               <label>Seleccionar Rol</label>
-              <RoleSelect/>
+              <RoleSelect 
+                setSelectedRoles={setSelectedRoles} 
+                value={context.isUserUpdMode? context.userModify.roles : []}
+                isupdate={context.isUserUpdMode}
+                />
 
           </div>
         </section>

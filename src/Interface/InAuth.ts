@@ -7,8 +7,8 @@ export interface Role{
     name:string;
 }
 
-export interface User extends UserLogin{
-    id: number
+export interface InUser extends UserLogin{
+    id?: number
     name: string,
     lastname: string,
     telephone: string,
@@ -17,11 +17,13 @@ export interface User extends UserLogin{
     password: string,
     entryDate: Date,
     status: boolean,
+}
+
+export interface User extends InUser{
     roles: Role[]
 }
 
-export interface CreateUser extends UserLogin{
-    telephone: String,
+export interface CreateUser extends InUser{
     roleRequest: {
         roleListName: string[]
     }
@@ -49,4 +51,6 @@ export interface AuthContextIn{
     getUserList: () => void
     userList: User[]
     logout: () => void,
+    deleteUser: (id: number) => Promise<boolean>
+    listUserByFilter: (filter: string) => void
 }

@@ -3,9 +3,9 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import RegisterPage from "./view/pages/RegisterPage";
 import './App.css'
 import MainPage from './view/pages/MainPage';
-import Home from './view/pages/main/Home';
 import UsersPage from './view/pages/main/register/UsersPage';
 import "./view/styles/main.css"
+import ClientPage from './view/pages/main/register/ClientPage';
 
 function App() {
 
@@ -16,7 +16,7 @@ function App() {
         <Route element={<ProtectedRoute />}>
           <Route path="/*" element={<MainPage/>}>
             <Route path='Usuarios' element={<UsersPage/>}/>
-            <Route path='Clientes' element={<Home/>}/>
+            <Route path='Clientes' element={<ClientPage/>}/>
           </Route>
         </Route>
       </Routes>
