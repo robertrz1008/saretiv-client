@@ -1,72 +1,48 @@
-import { useEffect, useState, type Dispatch, type SetStateAction } from 'react'
+import {useState, type Dispatch, type SetStateAction } from 'react'
 import type { Role } from '../../Interface/InAuth';
+import { Dropdown, type DropdownChangeEvent } from 'primereact/dropdown';
 
 interface Prop{
-    setSelectedRoles: Dispatch<SetStateAction<string[]>>
-    value:Role[]
+    setSelectedRoles: (item:{name:string, code:string}) => void
+    value:{name:string, code:string}
     isupdate: boolean 
 }
 
 function RoleSelect(prop: Prop) {
-    const [roles, setRoles] = useState([
-    { name: 'ADMINISTRADOR', code: 'ADMINISTRADOR', value: false },
-    { name: 'VENDEDOR', code: 'VENDEDOR', value:false },
-    { name: 'TECNICO', code: 'TECNICO', value:false }
-  ])
-    function handleSelect(name:string){
+    
+    const roles=[
+    { name: 'ADMINISTRADOR', code: 'ADMINISTRADOR'},
+    { name: 'VENDEDOR', code: 'VENDEDOR'},
+    { name: 'TECNICO', code: 'TECNICO'}
+  ]
+   
 
-        if(prop.isupdate) return
+    // useEffect(() => {
+    //     let c =[]
+    //     roles.map( data => {
+    //         if(data.value){
+    //             c.push(data.name)
+    //             prop.setSelectedRoles(c)
+    //         }
+    //     })
+    // },[roles])
 
-        setRoles(prevRoles =>
-            prevRoles.map(role =>
-            role.name === name
-                ? { ...role, value: !role.value } // se invierte el valor del seleccionado
-                : role
-        )
-  );
-    }
-    function isSel(val:boolean){
-        if(val) return "role-target-selected"
-
-        return ""
-    }
-
-    useEffect(() => {
-        let c =[]
-        roles.map( data => {
-            if(data.value){
-                c.push(data.name)
-                prop.setSelectedRoles(c)
-            }
-        })
-    },[roles])
-
-    useEffect(() => {
-        if(!prop.isupdate) return
-
-        //charge the roles value to true if the prop.value contains the role
-        if(prop.value.length > 0){
-            setRoles(prevRoles =>
-                prevRoles.map(role =>
-                    prop.value.some(r => r.name === role.name)
-                        ? { ...role, value: true } // si el rol ya existe, se marca como seleccionado
-                        : { ...role, value: false } // si no, se desmarca
-                )
-            )
-        }
-         console.log(prop.value)
-    }, [])
+   
 
   return (
-    <div className='role-select-con' style={{display:"flex",}}>
-        {
-            roles.map((data) => (
-                <div className={`role-target ${isSel(data.value)}`} onClick={() => handleSelect(data.code)}>
-                    {data.name}
-                </div>
-            ))
-        }
-    </div>
+    <div className="card flex justify-content-center">
+            <Dropdown  
+                value={prop.value}
+                onChange={(e: DropdownChangeEvent) => {
+                  prop.setSelectedRoles(e.value)
+                  console.log(e.value)
+                }} 
+                style={{width:"100%"}}
+                options={roles} 
+                optionLabel="name"
+                optionValue="code"
+                placeholder="Select a City" className="w-full md:w-14rem" />
+        </div>
   )
 }
 

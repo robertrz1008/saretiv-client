@@ -3,8 +3,9 @@ import { useAppContext } from '../../../context/AppContext';
 import type { AppContextIn } from '../../../Interface/InApp';
 import { useAuth } from '../../../context/AuthContext';
 import type { AuthContextIn } from '../../../Interface/InAuth';
+import { useEffect } from 'react';
 
-interface ModalProp{
+ interface ModalProp{
     id: number
 }
 
@@ -20,11 +21,12 @@ function DeleteUserModal(prop: ModalProp) {
     }
   }
 
+  
   return (
     <>
     <ConfirmDialog 
-          group="declarative"  
-          visible={isShowConfirmModal} 
+          group="declarative"
+          visible={isShowConfirmModal}
           accept={() => deleteU()}
           onHide={() => {showConfirmModal(false)}} 
           message="Desea eliminar el producto seleccionado?" 

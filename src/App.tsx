@@ -5,7 +5,7 @@ import './App.css'
 import MainPage from './view/pages/MainPage';
 import UsersPage from './view/pages/main/register/UsersPage';
 import "./view/styles/main.css"
-import ClientPage from './view/pages/main/register/ClientPage';
+import ClientPage from './view/pages/main/register/CustomerPage';
 
 function App() {
 
@@ -20,7 +20,8 @@ function App() {
           </Route>
         </Route>
       </Routes>
-    </BrowserRouter>)
+    </BrowserRouter>
+  )
 }
 
 export default App

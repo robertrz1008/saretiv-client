@@ -28,6 +28,7 @@ export interface CreateUser extends InUser{
         roleListName: string[]
     }
 }
+
 export interface LoginResponse{
     username: string,
     message: string,
@@ -53,4 +54,5 @@ export interface AuthContextIn{
     logout: () => void,
     deleteUser: (id: number) => Promise<boolean>
     listUserByFilter: (filter: string) => void
+    
 }

@@ -8,10 +8,11 @@ import RoleSelect from '../reusable/RoleSelect';
 import type { AuthContextIn, CreateUser } from '../../Interface/InAuth';
 import { registerRequest, updateUserRequest } from '../../services/Auth.service';
 import { useAuth } from '../../context/AuthContext';
+import { Dropdown, type DropdownChangeEvent } from 'primereact/dropdown';
 
 function UserForm() {
 
-const [selectedRoles, setSelectedRoles] = useState<string[]>([]);
+const [roleSelect, setRoleSelect] = useState<{name:string, code:string} | null>(null)
 
 const [name, setName] = useState("");
 const [nameEmpty, setNameEmpty] = useState(false);
@@ -24,7 +25,7 @@ const [telephoneEmpty, setTelephoneEmpty] = useState(false);
 
 const [document, setDocument] = useState("");
 const [documentEmpty, setDocumentEmpty] = useState(false);
-
+ 
 const [dateEntry, setDateEntry] = useState<Date | null>();
 const [dateEntryEmpty, setDateEntryEmpty] = useState(false);
 
@@ -41,6 +42,13 @@ const [password2Empty, setPassword2Empty] = useState(false)
 const context = useAppContext() as AppContextIn;
 const authContext = useAuth() as AuthContextIn
 
+ const roles=[
+    { name: 'ADMINISTRADOR', code: 'ADMINISTRADOR'},
+    { name: 'VENDEDOR', code: 'VENDEDOR'},
+    { name: 'TECNICO', code: 'TECNICO'}
+  ]
+
+
 
   useEffect(() =>{
     cleaninputs()
@@ -51,10 +59,12 @@ const authContext = useAuth() as AuthContextIn
       setDocument(context.userModify.document);
       setDateEntry(context.userModify.entryDate);
       setUsername(context.userModify.username);
+      setRoleSelect({
+        name: context.userModify.roles[0].name, 
+        code: context.userModify.roles[0].name
+      })
     }
   }, [])
-
-
 
   function cleaninputs(){
     setName("");
@@ -66,7 +76,7 @@ const authContext = useAuth() as AuthContextIn
     setPassword("");
     setPassword2("");
     setPassErrorMsg("")
-
+    setRoleSelect(null)
     setNameEmpty(false);
     setLastnameEmpty(false);
     setTelephoneEmpty(false);
@@ -153,12 +163,11 @@ const authContext = useAuth() as AuthContextIn
         entryDate: dateEntry as Date,
         status: true,
         roleRequest: {
-          roleListName:  selectedRoles
+          roleListName:  [roleSelect?roleSelect.name : ""]
         }
       }
-
     if(context.isUserUpdMode){
-      await updateUserRequest({
+      await updateUserRequest(context.userDoc , {
           name: name.trim(),
         lastname: lastname.trim(),
         telephone: telephone.trim(),
@@ -297,7 +306,7 @@ const authContext = useAuth() as AuthContextIn
                 style={{ marginTop: "5px", width: "100%", height: "40px" }}
                 type="password"
                 disabled={context.isUserUpdMode}
-                invalid={password2Empty}
+                invalid={password2Empty} 
               />
               {password2Empty &&  <small id="username-help" className='empt-ymsg'>{passwordError}</small>}
             </div>
@@ -305,11 +314,15 @@ const authContext = useAuth() as AuthContextIn
 
           <div className='doble-inputs' style={{marginTop: "10px" }}>
               <label>Seleccionar Rol</label>
-              <RoleSelect 
-                setSelectedRoles={setSelectedRoles} 
-                value={context.isUserUpdMode? context.userModify.roles : []}
-                isupdate={context.isUserUpdMode}
-                />
+             <div className="card flex justify-content-center">
+                         <Dropdown  
+                             value={roleSelect}
+                             onChange={(e: DropdownChangeEvent) =>setRoleSelect(e.value) }
+                             style={{width:"100%"}}
+                             options={roles} 
+                             optionLabel="name"
+                             placeholder="Select a City" className="w-full md:w-14rem" />
+                     </div>
 
           </div>
         </section>
@@ -324,7 +337,7 @@ const authContext = useAuth() as AuthContextIn
         />
         <Button 
           type='submit'
-          label="Guradar" 
+          label="Guardar" 
           raised 
           size='small' 
           onClick={handleSubmit}

@@ -106,10 +106,10 @@ export const AuthContextProvider = ({children}: ContexArg) => {
             }
     }
     async function deleteUser(id: number): Promise<boolean>{
-        if(id = user?.id as number){
-            alert("no se puede eliminar al administrador")
-            return false
-        }
+        // if(id = user?.id as number){
+        //     alert("no se puede eliminar al administrador")
+        //     return false
+        // }
         try {
             await deleteUserRoleByUserRequest(id)
             await deleteUserRequest(id)
@@ -159,6 +159,9 @@ export const AuthContextProvider = ({children}: ContexArg) => {
     useEffect(() => {
         checkLogin()
     }, [])
+     useEffect(() => {
+        console.log(userList)
+    }, [userList])
     
 
     return(

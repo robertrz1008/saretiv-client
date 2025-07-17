@@ -5,23 +5,29 @@ import { useAppContext } from "../../context/AppContext";
 import type { AppContextIn } from "../../Interface/InApp";
 import { GrShieldSecurity } from "react-icons/gr";
 import DeleteUserModal from "../Modal/confirm/DeleteUserModal";
+import { useEffect, useState } from "react";
 
 export default function UserTable() {
 
 
-    const {userList,} = useAuth() as AuthContextIn
+    const {userList} = useAuth() as AuthContextIn
     const context = useAppContext() as AppContextIn
     const {showFormModal} = useAppContext() as AppContextIn
+
+    //useState
+    const [userID, setUserID] = useState(0)
+    
 
 
     function isArray(){
         if(userList.length > 0) return true
         return false
     }
-    function clickIconDelete(e: React.MouseEvent<HTMLDivElement>){
-        e.stopPropagation()
-        context.showConfirmModal(true)
-    }
+
+
+    useEffect(() => {
+        console.log(userID)
+    }, [userID])
      
   return (
         <table>
@@ -46,6 +52,7 @@ export default function UserTable() {
                                     onClick={() => {
                                         context.setUserUpdate(data)
                                         context.userUpdateMode(true)
+                                        context.addUserDoc(data.document)
                                         showFormModal(true)
                                     }}
                                     key={id}>
@@ -54,7 +61,7 @@ export default function UserTable() {
                                     <td>{data.username}</td>
                                     <td>{data.telephone}</td>
                                     <td>{data.document}</td>
-                                    <td>{data.roles[0].name}</td>
+                                    <td>{data.roles[0].name }</td>
                                     <td>{data.status? "ACTIVO" : "INACTIVO"}</td>
                                     <td
                                         onClick={(e) =>{
@@ -70,19 +77,21 @@ export default function UserTable() {
                                                 </a>
                                             </div>
                                             <div 
-                                            onClick={clickIconDelete}
+                                            onClick={() =>{
+                                                setUserID(data.id as number)
+                                                context.showConfirmModal(true)
+                                            }}
                                             className="icon-con">
                                             <a className="my-anchor-element">
                                                 <MdDeleteOutline/> 
                                             </a>
+                                            
                                             {/* <Tooltip anchorSelect=".my-anchor-element" place="left-start">Eliminar</Tooltip> */}
                                             </div>
-                                            {/* <DeleteCliModal
-                                                    id={data.id as number}
-                                            /> */}
+                                            <DeleteUserModal id={userID}/>
                                             
                                         </div>
-                                        <DeleteUserModal id={data.id as number}/>
+                                        
                                     </td>
                                 </tr>
                             ))

@@ -11,16 +11,13 @@ import UserForm from '../../../../components/form/UserForm'
 
 function UsersPage() {
 
-    const {getUserList, userList} = useAuth() as AuthContextIn
+    const {getUserList} = useAuth() as AuthContextIn
     const context = useAppContext() as AppContextIn
     const authContext = useAuth() as AuthContextIn
 
     useEffect(() => {
         getUserList()
     }, [])
-    useEffect(() => {
-        console.log(userList)
-    }, [userList])
 
   return (
     <div className='main-con'>
