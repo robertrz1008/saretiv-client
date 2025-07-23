@@ -10,6 +10,11 @@ export interface Customer{
     address: string
 }
 
+export interface Category{
+    id?: number;
+    name: string
+}
+
 export interface AppContextIn{
     isFormModalOpen: boolean
     showFormModal:  (val: boolean) => void

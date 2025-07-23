@@ -32,7 +32,7 @@ function CustomerTable() {
                 </tr>
             </thead>
             {
-                !isArray()? (<h1>There aren`t product</h1>): (
+                !isArray()? (<h3 >No product</h3>): (
                      <tbody>
                         {
                             context.customers.map((data, id) => (
@@ -46,7 +46,7 @@ function CustomerTable() {
                                 className='td-icon'
                                     key={id}>
                                     <td className="td-id">{id + 1}</td>
-                                    <td>{data.name+""+data.lastname }</td>
+                                    <td>{data.name+" "+data.lastname }</td>
                                     <td>{data.document}</td>
                                     <td>{data.telephone}</td>
                                      <td>{data.address}</td>

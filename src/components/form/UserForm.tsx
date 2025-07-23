@@ -191,6 +191,10 @@ const authContext = useAuth() as AuthContextIn
     authContext.getUserList()
     cleaninputs();
   }
+  function handleCancel() {
+    cleaninputs()
+    context.showFormModal(false)
+  }
 
 
 
@@ -317,6 +321,7 @@ const authContext = useAuth() as AuthContextIn
              <div className="card flex justify-content-center">
                          <Dropdown  
                              value={roleSelect}
+                             variant="filled"
                              onChange={(e: DropdownChangeEvent) =>setRoleSelect(e.value) }
                              style={{width:"100%"}}
                              options={roles} 
@@ -333,7 +338,7 @@ const authContext = useAuth() as AuthContextIn
         <Button 
           label="Cancelar" outlined 
           size='small' 
-          style={{ marginRight: "10px" }} onClick={() => context.showFormModal(false)}
+          style={{ marginRight: "10px" }} onClick={() => handleCancel()}
         />
         <Button 
           type='submit'

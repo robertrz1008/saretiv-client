@@ -82,6 +82,9 @@ tbody tr, thead tr{
 tbody tr:hover{
     background-color: rgb(233, 239, 243);
 }
+.tr-hovernone:hover{
+    background-color: #fff;
+}
 .td-id{
     width: 30px;
     text-align: end;

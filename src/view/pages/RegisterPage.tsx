@@ -15,7 +15,7 @@ function RegisterPage() {
 
   useEffect(() => {
     if(isAutenticate){
-        navigate("/home")
+        navigate("/Admin")
         cleaninputs()
     }
   }, [isAutenticate])

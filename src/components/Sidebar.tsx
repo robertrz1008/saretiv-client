@@ -44,14 +44,13 @@ function Sidebar() {
             <ul className='nav-list'>
               <li className="tr">
                 <div
-                      onClick={handleSubmenuRegister} 
-                      className="link-title">
-                        <div >
-                            <RiHome2Line />
-                            <h5>Administración</h5>
-                        </div> 
-                        <i></i>
-                    </div>
+                  className="link-title"
+                >
+                  <NavLink to={"/Admin"} className="link-name">
+                      <RiHome2Line />
+                          <h5>Administración</h5>
+                    </NavLink>
+                </div>
               </li>
                 
                 <li className="tr">
@@ -82,10 +81,10 @@ function Sidebar() {
                             <i><AiOutlineProduct/></i>
                             <h5>Productos</h5>
                         </NavLink>
-                        <li className="link-name">
+                        <NavLink to={"/CategoriasProducto"} className="link-name">
                             <i><MdOutlineCategory/></i>
                             <h5>Categoria</h5>
-                        </li>
+                        </NavLink>
                         <li className="link-name">
                             <i><VscTools/></i>
                             <h5>Soporte</h5>
