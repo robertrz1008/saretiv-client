@@ -23,7 +23,7 @@ function ClientPage() {
                 <InputText
                   onChange={(e) => context.customerListByFilter(e.target.value)}
                   variant="filled"
-                  type="text"  
+                  type="text" 
                   placeholder="Buscar Ciente" 
                   style={{height:"40px"}}
                 />

@@ -87,7 +87,7 @@ function CategoryProductPage() {
         <div className='register-con'>
             <div className='register-head'>
                 <Button
-                 label="Nuevo Cliente" 
+                 label="Nueva Cateogoria" 
                  icon="pi pi-check" 
                  size='small'
                  disabled={isbuttonEnable}

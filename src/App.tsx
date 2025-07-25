@@ -8,6 +8,8 @@ import "./view/styles/main.css"
 import ClientPage from './view/pages/main/register/CustomerPage';
 import Home from './view/pages/main/Home';
 import CategoryProduct from './view/pages/main/register/CategoryProductPage';
+import SupplierPage from './view/pages/main/register/SupplierPage';
+import ProductPage from './view/pages/main/register/ProductPage';
 
 function App() {
 
@@ -21,6 +23,8 @@ function App() {
             <Route path='Usuarios' element={<UsersPage/>}/>
             <Route path='Clientes' element={<ClientPage/>}/>
             <Route path='CategoriasProducto' element={<CategoryProduct/>}/>
+            <Route path='Proveedores' element={<SupplierPage/>}/>
+            <Route path='Productos' element={<ProductPage/>}/>
           </Route>
         </Route>
       </Routes>

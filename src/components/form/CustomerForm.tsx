@@ -42,7 +42,11 @@ function CustomerForm() {
     }
   }, [])
 
-
+  function cancel(){
+    cleanInput();
+    context.showFormModal(false)
+    context.setCustUpdateMode(false)
+  }
 
   function cleanInput(){
     setName("");
@@ -102,10 +106,9 @@ function CustomerForm() {
       }else{
         await createCustomertRequest(customSend)
       }
-      context.setCustUpdateMode(false)
+      
       context.customerList()
-      cleanInput()
-      context.showFormModal(false)
+      cancel()
 
   }
 
@@ -192,7 +195,7 @@ function CustomerForm() {
               <Button 
                 label="Cancelar" outlined 
                 size='small' 
-                onClick={() => context.showFormModal(false)}
+                onClick={() => cancel()}
                 style={{ marginRight: "10px" }} />
               <Button 
                 type='submit'

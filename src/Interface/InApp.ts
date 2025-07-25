@@ -1,5 +1,10 @@
 import type { User } from "./InAuth"
 
+export interface DropdownItem{
+    label: string, 
+    code: string 
+}
+
 export interface Customer{
     id?: number
     name: string,
@@ -14,6 +19,36 @@ export interface Category{
     id?: number;
     name: string
 }
+export interface Supplier{
+    id?: number
+    name: string,
+    telephone: string
+    ruc: string
+    address: string
+}
+export interface Product{
+    id?: number
+    description: string,
+    entryPrice: number,
+    salePrice: number,
+    stock: number,
+    barcode: string,
+}
+export interface ProductPost extends Product{
+    supplier: {
+        id: number
+    },
+    category: {
+        id: number
+    }
+}
+export interface ProductGet extends Product{
+    supplier: Supplier
+    category: Category
+}
+
+
+
 
 export interface AppContextIn{
     isFormModalOpen: boolean
@@ -25,6 +60,7 @@ export interface AppContextIn{
     showConfirmModal: (val: boolean) => void
     isShowConfirmModal: boolean
     customers: Customer[],
+    suppliers: Supplier[]
     customerList: () => void,
     iscustUpdMode: boolean 
     customerModify: Customer
@@ -36,4 +72,19 @@ export interface AppContextIn{
     userDoc: string
     addCustomerDoc: (doc: string) => void
     customerDoc: string
+    supplierList: () => void 
+    isSupUpdMode: boolean
+    supplierModify: Supplier 
+    setSupUpddateMode: (val: boolean) => void
+    setSupplierUpdate: (sup: Supplier) => void
+    deleteSupplier: (id: number) => void 
+    supplierListByFilter: (str: string) => void
+    products: ProductGet[]
+    productList: () => void
+    isProductUpdMode: boolean
+    productModify: ProductGet
+    setProductUpdate: (pro: ProductGet) => void
+    setProductUpdateMode: (val: boolean) => void
+    deleteProduct: (id: number) => void
+    productListByFilter: (str: string) => void
 }
