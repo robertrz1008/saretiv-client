@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import { deleteCategoryProRequest, getCategoryProRequest, postCategoryProRequest, updateCategoryProRequest } from '../../../../services/category.service'
+import { getCategoryProRequest, postCategoryProRequest, updateCategoryProRequest } from '../../../../services/category.service'
 import CategoryProTable from '../../../../components/tables/CategoryProTable'
 import { Button } from 'primereact/button'
-import type { Category } from '../../../../Interface/InApp'
+import type { AppContextIn, Category } from '../../../../Interface/InApp'
+import { useAppContext } from '../../../../context/AppContext'
 
 function CategoryProductPage() {
 
@@ -14,6 +15,12 @@ function CategoryProductPage() {
      const [nameEmpty, setNameEmpty] = React.useState<boolean>(false);
      const [catIDModify, setCatIDModify] = React.useState(0);
 
+
+    const context = useAppContext() as AppContextIn
+
+    useEffect(() => {
+        context.setGlobalTitleFn('Categorias de Productos');
+    }, []);
 
 
 

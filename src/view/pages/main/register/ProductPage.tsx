@@ -13,6 +13,7 @@ function ProductPage() {
     
       useEffect(() => {
         context.productList()
+        context.setGlobalTitleFn('Productos');
       },[])
 
   return (

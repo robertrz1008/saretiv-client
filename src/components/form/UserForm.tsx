@@ -4,11 +4,12 @@ import { InputText } from 'primereact/inputtext'
 import { useEffect, useState } from 'react';
 import { useAppContext } from '../../context/AppContext';
 import type { AppContextIn } from '../../Interface/InApp';
-import RoleSelect from '../reusable/RoleSelect';
 import type { AuthContextIn, CreateUser } from '../../Interface/InAuth';
 import { registerRequest, updateUserRequest } from '../../services/Auth.service';
 import { useAuth } from '../../context/AuthContext';
 import { Dropdown, type DropdownChangeEvent } from 'primereact/dropdown';
+import { data } from 'react-router-dom';
+import axios from 'axios';
 
 function UserForm() {
 
@@ -27,7 +28,7 @@ const [document, setDocument] = useState("");
 const [documentEmpty, setDocumentEmpty] = useState(false);
  
 const [dateEntry, setDateEntry] = useState<Date | null>();
-const [dateEntryEmpty, setDateEntryEmpty] = useState(false);
+const [_dateEntryEmpty, setDateEntryEmpty] = useState(false);
 
 const [username, setUsername] = useState("");
 const [usernameEmpty, setUsernameEmpty] = useState(false);
@@ -38,6 +39,9 @@ const [passwordEmpty, setPasswordEmpty] = useState(false);
 
 const [password2, setPassword2] = useState("");
 const [password2Empty, setPassword2Empty] = useState(false)
+
+const [errorMsg, setErrorMsg] = useState("")
+const [isError, setIsError] = useState(false)
 
 const context = useAppContext() as AppContextIn;
 const authContext = useAuth() as AuthContextIn
@@ -53,15 +57,16 @@ const authContext = useAuth() as AuthContextIn
   useEffect(() =>{
     cleaninputs()
     if(context.isUserUpdMode){
+      const currentUser = context.userModify
       setName(context.userModify.name);
-      setLastname(context.userModify.lastname);
-      setTelephone(context.userModify.telephone);
-      setDocument(context.userModify.document);
-      setDateEntry(context.userModify.entryDate);
-      setUsername(context.userModify.username);
+      setLastname(currentUser.lastname);
+      setTelephone(currentUser.telephone);
+      setDocument(currentUser.document);
+      setDateEntry(new Date(currentUser.entryDate));
+      setUsername(currentUser.username);
       setRoleSelect({
-        name: context.userModify.roles[0].name, 
-        code: context.userModify.roles[0].name
+        name: currentUser.roles[0].name, 
+        code: currentUser.roles[0].name
       })
     }
   }, [])
@@ -86,6 +91,12 @@ const authContext = useAuth() as AuthContextIn
     setPasswordEmpty(false);
     setPassword2Empty(false);
 
+  }
+
+  function handleCancel() {
+    context.userUpdateMode(false)
+    cleaninputs()
+    context.showFormModal(false)
   }
 
   function validateInputs(): boolean {
@@ -166,35 +177,39 @@ const authContext = useAuth() as AuthContextIn
           roleListName:  [roleSelect?roleSelect.name : ""]
         }
       }
-    if(context.isUserUpdMode){
-      await updateUserRequest(context.userDoc , {
-          name: name.trim(),
-        lastname: lastname.trim(),
-        telephone: telephone.trim(),
-        document: document.trim(),
-        username: username.trim(),
-        password: context.userModify.password,
-        entryDate: dateEntry as Date,
-        status: true,
-        roleRequest: {
-          roleListName:  []
+      setIsError(false)
+   try {
+        if(context.isUserUpdMode){
+          await updateUserRequest(context.userDoc , {
+              name: name.trim(),
+              lastname: lastname.trim(),
+              telephone: telephone.trim(),
+              document: document.trim(),
+              username: username.trim(),
+              password: context.userModify.password,
+              entryDate: dateEntry as Date,
+              status: true,
+              roleRequest: {
+              roleListName:  []
+            }
+          })
+          
+        }else{
+          await registerRequest(userSend)
         }
-      })
       
-    }else{
-      
-    await registerRequest(userSend)
+        handleCancel()
+        authContext.getUserList()
+
+   } catch (error) {
+      if(axios.isAxiosError(error)){
+        setIsError(true)
+        setErrorMsg(error.response?.data.error)
+      }
+      console.log(error)
     }
-    
-    context.showFormModal(false)
-    context.userUpdateMode(false)
-    authContext.getUserList()
-    cleaninputs();
   }
-  function handleCancel() {
-    cleaninputs()
-    context.showFormModal(false)
-  }
+  
 
 
 
@@ -267,6 +282,7 @@ const authContext = useAuth() as AuthContextIn
                 value={dateEntry}
                 onChange={(e) => setDateEntry(e.target.value)}
                 showIcon 
+                variant="filled"
                 style={{ height: "40px", marginTop: "5px"}} 
               />
             </div>
@@ -332,7 +348,7 @@ const authContext = useAuth() as AuthContextIn
           </div>
         </section>
       </form>
-
+      {isError &&  <small id="username-help" className='empt-ymsg'>{errorMsg}</small>}
       {/* buttons */}
       <div style={{ display: "flex", width: "100%", justifyContent: "flex-end", marginTop: "20px" }}>
         <Button 

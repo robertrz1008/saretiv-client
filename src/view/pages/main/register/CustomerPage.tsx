@@ -14,6 +14,7 @@ function ClientPage() {
 
   useEffect(() => {
     customerList()
+    context.setGlobalTitleFn('Clientes'); 
   },[])
 
   return (

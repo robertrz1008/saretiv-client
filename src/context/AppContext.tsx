@@ -4,6 +4,8 @@ import type { Customer, Product, ProductGet, ProductPost, Supplier } from "../In
 import { customerListRequest, deleteCustomerRequest, getCustomerByFilterRequest } from "../services/Customer.service";
 import { deletesupplierRequest, getSupplierByFilterRequest, getSupplierRequest } from "../services/Supplier.service";
 import { deleteProductRequest, getProductByFilterRequest, getProductRequest } from "../services/Product.service";
+import type { ProductDetail, ProductDetailPost } from "../Interface/SalesInterfaces";
+import { createProDetailRequest, createSaleRequest, updateSaleRequest } from "../services/Sale.service";
 const appContext = createContext({})
 
 export const useAppContext =() => {
@@ -19,6 +21,8 @@ interface ContexArg{
 }
 
 export const AppContexProvider = ({children}: ContexArg) => {
+
+    const [globalTitle, setGlobalTitle] = useState("");
 
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isUserUpdMode, setUserUpdMode] = useState(false)
@@ -39,11 +43,15 @@ export const AppContexProvider = ({children}: ContexArg) => {
     const [products, setProducts] = useState<ProductGet[]>([]);
     const [isProductUpdMode, setProductUpdMode] = useState(false);
     const [productModify, setProductModify] = useState<ProductGet>();
+    //sales 
+    const [productDetails, setProductDetails] = useState<ProductDetail[]>([]);
+    const [total, setTotal]= useState(0)
 
 
 
-
-
+    function setGlobalTitleFn(title: string) {
+        setGlobalTitle(title);
+    }
     function showFormModal(val: boolean) {
         setIsFormModalOpen(val);
         if(!val){
@@ -59,6 +67,7 @@ export const AppContexProvider = ({children}: ContexArg) => {
     function setUserUpdate(user: User) {
         setUserToModify(user)
     }
+
      function setCustUpdateMode(val: boolean){
         setCustUpdMode(val)
     }
@@ -178,19 +187,95 @@ export const AppContexProvider = ({children}: ContexArg) => {
     function setProductUpdateMode(val: boolean) {
         setProductUpdMode(val)
     }
-    
+    //sales
+    function sumTotal(){
+        const newTotal = productDetails.reduce((con, el) => con + el.subtotal, 0)
+        setTotal(newTotal)
+      }
+      function totalZero(){
+        setTotal(0)
+      }
+    function addDetailProductToList( id: number){
+        setProductDetails((prevProducts) => {
+          return prevProducts.map((product) => {
+            return product.id === id
+              ? { ...product, subtotal: product.price* product.amount }
+              : product;
+          });
+        });
+    }
+    function addProductAmout(id: number){
+        setProductDetails((detailPro) => {
+          return detailPro.map((pro) => {
+            return pro.id == id? { ...pro, amount: pro.amount + 1 } : pro
+          })
+        })
+      }
+    function changeProductAmount(id: number, amountCurrent: number){
 
+        if(!amountCurrent) return
+  
+        setProductDetails((detailPro) => {
+          return detailPro.map((pro) => {
+            return pro.id == id? { ...pro, amount: amountCurrent, subtotal: pro.price * amountCurrent } : pro
+          })
+        })
+        sumTotal()
+      }
+    
+    function handleAddProduct(pro: ProductDetail){
+        if(productDetails.some((data) => data.id == pro.id)){
+            addProductAmout(pro.id as number);
+          } else {
+            setProductDetails([...productDetails, pro])
+          }
+          addDetailProductToList(pro.id as number);
+          console.log(productDetails)
+    }
+    async function deleteProductDetail(id: number){
+        const newPd= productDetails.filter(data => data.id != id)
+        setProductDetails(newPd)
+    }
+    async function createSale(){
+        if(productDetails.length === 0) return
+
+        try {
+            const SaleCreated = await createSaleRequest({
+                total:0,
+                createAt: new Date()
+            })    
+
+            const proDetailToSave: ProductDetailPost[] = productDetails.map((pro) => {
+                return {
+                    ProductAmount: pro.amount,
+                    subtotal: pro.subtotal,
+                    product: {id: pro.id as number},
+                    sale: {id: SaleCreated.data.id as number}
+                }
+            })
+            await createProDetailRequest(proDetailToSave)
+
+            await updateSaleRequest(SaleCreated.data.id, {total: total});
+
+            setProductDetails([])
+            productList()
+            totalZero()
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
 
 
     return (
         <appContext.Provider value={{
-            isFormModalOpen, showFormModal, showConfirmModal, isShowConfirmModal,
+            isFormModalOpen, showFormModal, showConfirmModal, isShowConfirmModal, setGlobalTitleFn, globalTitle,
             userUpdateMode, setUserUpdate, isUserUpdMode, userModify, addUserDoc, userDoc,
             customers, customerList, iscustUpdMode, customerModify, setCustUpdate, setCustUpdateMode,  deleteCustomer, customerListByFilter, addCustomerDoc, customerDoc,
             suppliers, supplierList, isSupUpdMode, supplierModify, setSupUpddateMode, setSupplierUpdate, deleteSupplier, supplierListByFilter,
-            products, productList, isProductUpdMode, productModify, setProductModify, setProductUpdateMode, setProductUpdate, deleteProduct, productListByFilter
+            products, productList, isProductUpdMode, productModify, setProductModify, setProductUpdateMode, setProductUpdate, deleteProduct, productListByFilter,
+            productDetails, changeProductAmount, handleAddProduct, deleteProductDetail,total,sumTotal, createSale,
         }}>
             {children}
         </appContext.Provider>

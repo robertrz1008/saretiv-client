@@ -2,6 +2,7 @@ import { useContext, createContext, type ReactNode, useState, useEffect } from "
 import { type CreateUser, type LoginResponse, type Profile, type User, type UserLogin, } from "../Interface/InAuth";
 import { deleteUserRequest, deleteUserRoleByUserRequest, getUserByFilterRequest, loginRequest, logoutRequest, profileRequest, registerRequest, usersListRequest } from "../services/Auth.service";
 import type { AxiosResponse, AxiosError} from "axios";
+import axios from "axios";
 
 const appContext = createContext({})
 
@@ -91,6 +92,7 @@ export const AuthContextProvider = ({children}: ContexArg) => {
 
     const createUser = async (user: CreateUser) => {
         try {
+            console.log("creating")
             await registerRequest(user)
             getUserList()
         } catch (error) {

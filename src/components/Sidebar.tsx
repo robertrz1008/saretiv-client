@@ -104,11 +104,11 @@ function Sidebar() {
                     </div>
     
                     <ul className= {`sub-menu ${!submenuTransaction? " sub-menu-close" : "sub-menu-open"}`}>
-                        { roleValid.isSeller() && (
-                         <li className="link-name">
+                        { roleValid.isAdmin() && (
+                          <NavLink to={"/Vender"} className="link-name">
                             <i><LuUsers/></i>
                             <h5>Vendedor</h5>
-                        </li>   
+                          </NavLink> 
                        )
                         }
                        { roleValid.isTechnical() && (

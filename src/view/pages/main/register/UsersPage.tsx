@@ -17,6 +17,7 @@ function UsersPage() {
 
     useEffect(() => {
         getUserList()
+        context.setGlobalTitleFn('Usuarios');
     }, [])
 
   return (

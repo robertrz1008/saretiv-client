@@ -10,6 +10,7 @@ import Home from './view/pages/main/Home';
 import CategoryProduct from './view/pages/main/register/CategoryProductPage';
 import SupplierPage from './view/pages/main/register/SupplierPage';
 import ProductPage from './view/pages/main/register/ProductPage';
+import SalePage from './view/pages/main/Transaction/SalePage';
 
 function App() {
 
@@ -25,6 +26,7 @@ function App() {
             <Route path='CategoriasProducto' element={<CategoryProduct/>}/>
             <Route path='Proveedores' element={<SupplierPage/>}/>
             <Route path='Productos' element={<ProductPage/>}/>
+            <Route path='Vender' element={<SalePage/>}/>
           </Route>
         </Route>
       </Routes>

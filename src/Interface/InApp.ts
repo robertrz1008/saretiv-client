@@ -1,4 +1,5 @@
 import type { User } from "./InAuth"
+import type { ProductDetail } from "./SalesInterfaces";
 
 export interface DropdownItem{
     label: string, 
@@ -51,6 +52,8 @@ export interface ProductGet extends Product{
 
 
 export interface AppContextIn{
+    setGlobalTitleFn: (str: string) => void, 
+    globalTitle: string
     isFormModalOpen: boolean
     showFormModal:  (val: boolean) => void
     userUpdateMode: (val: boolean) => void
@@ -87,4 +90,11 @@ export interface AppContextIn{
     setProductUpdateMode: (val: boolean) => void
     deleteProduct: (id: number) => void
     productListByFilter: (str: string) => void
+    changeProductAmount: (id: number, amountCurrent: number) => void
+    deleteProductDetail: (id: number) => void
+    handleAddProduct: (pro: ProductDetail) => void
+    productDetails: ProductDetail[]
+    total: number
+    sumTotal: () => void
+    createSale: () => void
 }

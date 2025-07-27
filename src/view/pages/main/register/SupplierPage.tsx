@@ -13,6 +13,7 @@ function SupplierPage() {
 
     useEffect(() =>{
         context.supplierList()
+        context.setGlobalTitleFn('Proveedores');
     }, [])
 
   return (

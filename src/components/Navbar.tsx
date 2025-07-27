@@ -6,20 +6,24 @@ import { useRef } from "react";
 import { useAuth } from "../context/AuthContext";
 import type { AuthContextIn } from "../Interface/InAuth";
 import { Button } from "primereact/button";
+import { useAppContext } from "../context/AppContext";
+import type { AppContextIn } from "../Interface/InApp";
 
 function Navbar() {
 
   const op = useRef<OverlayPanel>(null);
-  const {user} = useAuth() as AuthContextIn
-  const context = useAuth() as AuthContextIn;
+  const {user, logout} = useAuth() as AuthContextIn
+  const context = useAppContext() as AppContextIn
+
+  
   const exitFromApp =() => {
-    context.logout()
+    logout()
   }
 
 
   return (
     <div className='navbar-con'>
-        <h3>Dashboard</h3>
+        <h3>{context.globalTitle}</h3>
 
         <section className='navbar-menu-section'>
           <div style={{color:"black", fontSize:"1.7rem", cursor:"pointer", marginRight:"20px", marginTop:"10px"}} onClick={(e) => op.current?.toggle(e)} >
