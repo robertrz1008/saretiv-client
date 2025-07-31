@@ -7,7 +7,7 @@ export interface ProductDetail{
 }
 export interface ProductDetailPost{
         id?: number
-        ProductAmount: number
+        productAmount: number
         subtotal: number
         product: {id: number}
         sale: {id:number}

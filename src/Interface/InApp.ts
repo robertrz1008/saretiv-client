@@ -97,4 +97,7 @@ export interface AppContextIn{
     total: number
     sumTotal: () => void
     createSale: () => void
+    formTitle: string
+    setModalFormTitle: (title: string) => void
+    saleButtonDisable: boolean
 }

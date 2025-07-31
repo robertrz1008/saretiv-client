@@ -31,6 +31,7 @@ function ProductDetailTable() {
               onClick={context.createSale}
               label="Procesar" 
               size="small"
+              disabled={context.saleButtonDisable}
             />
         </div>
         

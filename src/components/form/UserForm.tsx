@@ -55,6 +55,7 @@ const authContext = useAuth() as AuthContextIn
 
 
   useEffect(() =>{
+    context.setModalFormTitle("Datos del Usuario")
     cleaninputs()
     if(context.isUserUpdMode){
       const currentUser = context.userModify
@@ -96,6 +97,8 @@ const authContext = useAuth() as AuthContextIn
   function handleCancel() {
     context.userUpdateMode(false)
     cleaninputs()
+    setErrorMsg("")
+    setIsError(false)
     context.showFormModal(false)
   }
 
@@ -348,7 +351,7 @@ const authContext = useAuth() as AuthContextIn
           </div>
         </section>
       </form>
-      {isError &&  <small id="username-help" className='empt-ymsg'>{errorMsg}</small>}
+      {isError &&  <center style={{marginTop:"15px"}}><p id="username-help" className='empt-ymsg'>{errorMsg}</p></center>}
       {/* buttons */}
       <div style={{ display: "flex", width: "100%", justifyContent: "flex-end", marginTop: "20px" }}>
         <Button 

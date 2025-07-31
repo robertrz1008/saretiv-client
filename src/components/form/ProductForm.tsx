@@ -141,6 +141,7 @@ function ProductForm() {
 
 
  useEffect(() => {
+    context.setModalFormTitle("Datos del Producto")
     cleanInput();
     if (context.isProductUpdMode) {
         const product = context.productModify;

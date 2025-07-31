@@ -6,23 +6,31 @@ import type { AppContextIn } from "../../Interface/InApp";
 import { GrShieldSecurity } from "react-icons/gr";
 import DeleteUserModal from "../Modal/confirm/DeleteUserModal";
 import { useEffect, useState } from "react";
+import PasswordForm from "../reusable/PasswordForm";
 
 export default function UserTable() {
 
 
     const {userList} = useAuth() as AuthContextIn
     const context = useAppContext() as AppContextIn
+    
     const {showFormModal} = useAppContext() as AppContextIn
 
     //useState
     const [userID, setUserID] = useState(0)
-    
+    const [showPassModal, setShowPassModal] = useState(false)
 
 
+    function setPassFormModal(val: boolean){
+        setShowPassModal(val)
+    }
     function isArray(){
         if(userList.length > 0) return true
         return false
     }
+
+
+
 
 
     useEffect(() => {
@@ -66,14 +74,14 @@ export default function UserTable() {
                                     <td
                                         onClick={(e) =>{
                                             e.stopPropagation()
-                                        }}
+                                        }} 
                                         className='td-icon'
                                     >
                                         <div style={{display:"flex"}}>
                                             <div 
                                                 className="icon-con">
                                                 <a className="my-anchor-element">
-                                                    <GrShieldSecurity/> 
+                                                    <GrShieldSecurity onClick={() => setPassFormModal(true)}/> 
                                                 </a>
                                             </div>
                                             <div 
@@ -89,6 +97,11 @@ export default function UserTable() {
                                             {/* <Tooltip anchorSelect=".my-anchor-element" place="left-start">Eliminar</Tooltip> */}
                                             </div>
                                             <DeleteUserModal id={userID}/>
+                                            <PasswordForm
+                                                setPassFormModal={setPassFormModal}
+                                                showPassModal={showPassModal}
+                                                id={userID}
+                                            />
                                             
                                         </div>
                                         

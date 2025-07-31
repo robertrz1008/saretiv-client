@@ -1,10 +1,27 @@
 import { InputText } from "primereact/inputtext"
 import { useAppContext } from "../../../context/AppContext"
-import type { AppContextIn } from "../../../Interface/InApp"
+import type { AppContextIn, ProductGet } from "../../../Interface/InApp"
+import { useEffect, useState } from "react"
 
 function ProductsSelTable() {
 
     const context = useAppContext() as AppContextIn
+    const [proWithoutStock, setProWithoutStock] = useState<ProductGet[]>([])
+
+
+
+    function setProducts(){
+        const newPr = context.products.filter(pro => pro.stock > 0)
+        console.log(newPr)
+        setProWithoutStock(newPr)
+    }
+
+    useEffect(() => {
+        setProducts()
+    }, [])
+    useEffect(() => {
+        setProducts()
+    }, [context.products])
 
 
   return (
@@ -30,10 +47,10 @@ function ProductsSelTable() {
                     </tr>
                 </thead>
                 {
-                    !context.products? (<h1>No hay cliente</h1>): (
+                    !proWithoutStock? (<h1>No hay cliente</h1>): (
                         <tbody>
                             {
-                                context.products.map((data, id) => (
+                                proWithoutStock.map((data, id) => (
                                     <tr 
                                         style={{height:"40px"}}
                                         onClick={() => context.handleAddProduct({

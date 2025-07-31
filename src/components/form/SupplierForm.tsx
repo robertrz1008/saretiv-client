@@ -90,6 +90,7 @@ function SupplierForm() {
 
 
   useEffect(() => {
+    context.setModalFormTitle("Datos del Proveedor")
     cleanInput()
     if(context.isSupUpdMode){ 
       console.log(context.supplierModify);

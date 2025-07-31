@@ -12,7 +12,7 @@ function FormModal({children}: ContexArg) {
   const context = useAppContext() as AppContextIn
 
   return (
-    <Dialog header="Datos del Usuario" position='top' visible={context.isFormModalOpen} style={{ marginTop:"50px"}} onHide={() => {context.showFormModal(false) }}>
+    <Dialog header={context.formTitle} position='top' visible={context.isFormModalOpen} style={{ marginTop:"50px"}} onHide={() => {context.showFormModal(false) }}>
           {children}
     </Dialog>
   )

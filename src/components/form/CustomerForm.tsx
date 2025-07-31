@@ -32,6 +32,7 @@ function CustomerForm() {
 
 
   useEffect(() => {
+    context.setModalFormTitle("Datos del Cliente")
     cleanInput()
     if(context.iscustUpdMode){
       setName(context.customerModify.name);

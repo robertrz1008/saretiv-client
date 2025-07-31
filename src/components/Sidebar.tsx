@@ -21,6 +21,7 @@ function Sidebar() {
   const [submenuTransaction, setSubmenuTransaction] = useState(false)
   const [submenuReport, setSubmenuReport] = useState(false)
   const {user} =useAuth() as AuthContextIn
+  
 
   function handleSubmenuRegister() {
     setSubmenuRegister(!submenuRegister)
