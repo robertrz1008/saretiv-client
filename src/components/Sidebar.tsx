@@ -84,8 +84,13 @@ function Sidebar() {
                         </NavLink>
                         <NavLink to={"/CategoriasProducto"} className="link-name">
                             <i><MdOutlineCategory/></i>
-                            <h5>Categoria</h5>
+                            <h5>Categoria Productos</h5>
                         </NavLink>
+                        <NavLink to={"/CategoriasDispositivo"} className="link-name">
+                            <i><MdOutlineCategory/></i>
+                            <h5>Categoria Dispositivos</h5>
+                        </NavLink>
+                       
                         <li className="link-name">
                             <i><VscTools/></i>
                             <h5>Soporte</h5>

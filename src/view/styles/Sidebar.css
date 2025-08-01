@@ -55,7 +55,7 @@
 }
 
 .sub-menu-open {
-  max-height: 200px; /* Ajusta este valor según el contenido de tu submenú */
+  max-height: 300px; /* Ajusta este valor según el contenido de tu submenú */
   transition: max-height 0.3s ease-in;
   overflow: hidden;
 }

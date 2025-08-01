@@ -1,12 +1,12 @@
-import React from 'react'
-import type { AppContextIn, Category } from '../../Interface/InApp'
-import { MdDeleteOutline } from "react-icons/md";
-import { InputText } from 'primereact/inputtext';
-import { Button } from 'primereact/button';
+import { Button } from "primereact/button"
+import type { AppContextIn, Category } from "../../../Interface/InApp"
+import { InputText } from "primereact/inputtext"
+import { useAppContext } from "../../../context/AppContext"
+import { useState } from "react"
+import { deleteCategoryDevRequest } from "../../../services/category.service"
 import { FaPen } from "react-icons/fa";
-import { deleteCategoryProRequest } from '../../services/category.service';
-import { useAppContext } from '../../context/AppContext';
-import DeleteCategoryProModal from '../Modal/confirm/DeleteCategoryProModal';
+import { MdDeleteOutline } from "react-icons/md"
+import DeleteCategoryDevModal from "../../Modal/confirm/DeleteCategoryDevModal"
 
 interface Prop{
     categories: Category[]
@@ -22,13 +22,9 @@ interface Prop{
     listCategories: () => void
 }
 
-
-
-function CategoryProTable(prop: Prop) {
-
-
-    const context = useAppContext() as AppContextIn
-    const [catID, setCatID] = React.useState<number>(0);
+function CategoryDevTable(prop: Prop) {
+   const context = useAppContext() as AppContextIn
+    const [catID, setCatID] = useState<number>(0);
 
 
    function isCategoryModify(id: number): boolean {
@@ -41,7 +37,7 @@ function CategoryProTable(prop: Prop) {
     }
     async function deleteCategory(id: number) {
         try {
-            await deleteCategoryProRequest(id)   
+            await deleteCategoryDevRequest(id)   
             prop.listCategories()
         } catch (error) {
             alert("No se puede eliminar esta categoria");
@@ -125,11 +121,8 @@ function CategoryProTable(prop: Prop) {
                                                 className="icon-con">
                                                 <FaPen 
                                                     style={{fontSize:"20px"}}
-                                                    onClick={() => {
-                                                        prop.selectCatModify(data)
-                                                        console.log(data)
-                                                    }}
-                                                    />
+                                                    onClick={() =>prop.selectCatModify(data)}
+                                                />
                                                 <MdDeleteOutline
                                                     onClick={() =>{
                                                         setCatID(data.id as number)
@@ -172,7 +165,7 @@ function CategoryProTable(prop: Prop) {
                                             </td>
                                         </>
                                     )}
-                                    <DeleteCategoryProModal
+                                    <DeleteCategoryDevModal
                                         id={catID}
                                         deleteCategory={deleteCategory}
                                     />
@@ -224,4 +217,4 @@ function CategoryProTable(prop: Prop) {
   )
 }
 
-export default CategoryProTable
+export default CategoryDevTable
