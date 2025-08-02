@@ -1,5 +1,6 @@
 import type { User } from "./InAuth"
 import type { ProductDetail } from "./SalesInterfaces";
+import type { SupportTypeGet } from "./SupportIn";
 
 export interface DropdownItem{
     label: string, 
@@ -100,4 +101,13 @@ export interface AppContextIn{
     formTitle: string
     setModalFormTitle: (title: string) => void
     saleButtonDisable: boolean
+    listSupportType: () => void
+    
+    setSupportTypeUpdateMode: (val: boolean) =>  void
+    deleteSupportType: (id: number) => void
+    setSupportTypeUpdate: (sup: SupportTypeGet) => void
+    supportTypes: SupportTypeGet[]
+    supportTypeUpdMode: boolean
+    supportTypeModify: SupportTypeGet
+    listSupportTypeByFilter: (str: string) => void
 }

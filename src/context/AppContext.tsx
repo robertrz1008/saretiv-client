@@ -6,6 +6,8 @@ import { deletesupplierRequest, getSupplierByFilterRequest, getSupplierRequest }
 import { deleteProductRequest, getProductByFilterRequest, getProductByIdRequest, getProductRequest, updateProductRequest } from "../services/Product.service";
 import type { ProductDetail, ProductDetailPost } from "../Interface/SalesInterfaces";
 import { createProDetailRequest, createSaleRequest, updateSaleRequest } from "../services/Sale.service";
+import { deleteSupportTypeRequest, getSupportTypeRequest } from "../services/SupportType.service";
+import type { SupportTypeGet } from "../Interface/SupportIn";
 const appContext = createContext({})
 
 export const useAppContext =() => {
@@ -47,6 +49,10 @@ export const AppContexProvider = ({children}: ContexArg) => {
     const [productDetails, setProductDetails] = useState<ProductDetail[]>([]);
     const [total, setTotal]= useState(0)
     const [saleButtonDisable, setSaleButtonDisable] = useState(false)
+    //support type
+    const [supportTypes, setSupportTypes] = useState<SupportTypeGet[]>([])
+    const [supportTypeUpdMode, setSupportTypeUpdMode] = useState(false)
+    const [supportTypeModify, setSupportTypeModify] = useState<SupportTypeGet>()
 
     const [formTitle, setFormTitle] = useState("")
 
@@ -241,18 +247,6 @@ export const AppContexProvider = ({children}: ContexArg) => {
         const newPd= productDetails.filter(data => data.id != id)
         setProductDetails(newPd)
     }
-    async function modifyProductStock(id: number, stock: number): Promise<boolean>{
-        try {
-            const pro = await getProductByIdRequest(id)
-            const newStok = pro.data.stock - stock
-
-            await updateProductRequest(id, {...pro.data, stock: newStok})
-            return true
-        } catch (error) {
-            console.log(error)
-            return false
-        }
-    }
     async function createSale(){
         if(productDetails.length === 0) return
         console.log(productDetails)
@@ -297,9 +291,49 @@ export const AppContexProvider = ({children}: ContexArg) => {
         }
     }
 
+    //support type
+    async function listSupportType(){
+        try {
+            const response = await getSupportTypeRequest()
+            setSupportTypes(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async function deleteSupportType(id: number){
+        try {
+            await deleteSupportTypeRequest(id)
+            listSupportType()
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async function setSupportTypeUpdate(sup: SupportTypeGet){
+        setSupportTypeModify(sup)
+    }
+    async function setSupportTypeUpdateMode(val: boolean){
+        setSupportTypeUpdMode(val)
+    }
+    async function listSupportTypeByFilter(str: string){
+         if(str == ""){
+            listSupportType()
+            return
+        }
+
+        try {
+            const res = await getSupplierByFilterRequest(str)
+            setSupportTypes(res.data)
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
 
+    
+
+    
     return (
         <appContext.Provider value={{
             isFormModalOpen, showFormModal, showConfirmModal, isShowConfirmModal, setGlobalTitleFn, globalTitle,
@@ -308,7 +342,8 @@ export const AppContexProvider = ({children}: ContexArg) => {
             suppliers, supplierList, isSupUpdMode, supplierModify, setSupUpddateMode, setSupplierUpdate, deleteSupplier, supplierListByFilter,
             products, productList, isProductUpdMode, productModify, setProductModify, setProductUpdateMode, setProductUpdate, deleteProduct, productListByFilter,
             productDetails, changeProductAmount, handleAddProduct, deleteProductDetail,total,sumTotal, createSale,
-            formTitle, setModalFormTitle, saleButtonDisable
+            formTitle, setModalFormTitle, saleButtonDisable,
+            listSupportType, deleteSupportType, setSupportTypeUpdate, setSupportTypeUpdateMode, supportTypes, supportTypeUpdMode, supportTypeModify, listSupportTypeByFilter
         }}>
             {children}
         </appContext.Provider>

@@ -1,5 +1,5 @@
 import axios from "./axios";
-import type {Category, ProductPost} from "../Interface/InApp"
+import type {ProductPost} from "../Interface/InApp"
 import { HTTP } from "../utils/config";
 
 const API = HTTP+"/api/product"

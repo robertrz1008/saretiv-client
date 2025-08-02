@@ -74,6 +74,7 @@ function CategoryDevTable(prop: Prop) {
                                 onChange={(e) => prop.addTypeName(e.target.value)}
                                 style={{ marginTop: "5px", width: "300px", height: "40px" }}
                                 type="text"
+                                autoFocus
                                 invalid={prop.nameEmpty}
                                 />
                                  <Button
@@ -140,6 +141,7 @@ function CategoryDevTable(prop: Prop) {
                                                 onChange={(e) => prop.addTypeName(e.target.value)}
                                                 style={{ marginTop: "5px", width: "300px", height: "40px" }}
                                                 type="text"
+                                                autoFocus
                                                 invalid={prop.nameEmpty}
                                                 />
                                                 <Button
@@ -183,6 +185,7 @@ function CategoryDevTable(prop: Prop) {
                                 value={prop.name}
                                 onChange={(e) => prop.addTypeName(e.target.value)}
                                 style={{ marginTop: "5px", width: "300px", height: "40px" }}
+                                autoFocus
                                 type="text"
                                 invalid={prop.nameEmpty}
                                 />

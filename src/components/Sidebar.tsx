@@ -91,10 +91,10 @@ function Sidebar() {
                             <h5>Categoria Dispositivos</h5>
                         </NavLink>
                        
-                        <li className="link-name">
+                        <NavLink to={"/tiposSoporte"} className="link-name">
                             <i><VscTools/></i>
                             <h5>Soporte</h5>
-                        </li>
+                        </NavLink>
                       </ul>
                 </li>
 

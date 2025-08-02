@@ -12,6 +12,8 @@ import SupplierPage from './view/pages/main/register/SupplierPage';
 import ProductPage from './view/pages/main/register/ProductPage';
 import SalePage from './view/pages/main/Transaction/SalePage';
 import CategoryDevicePage from './view/pages/main/register/CategoryDevicePage';
+import SupportTypeTable from './components/tables/register/SupportTypeTable';
+import SupportTypePage from './view/pages/main/register/SupportTypePage';
 
 function App() {
 
@@ -27,6 +29,7 @@ function App() {
             <Route path='CategoriasProducto' element={<CategoryProduct/>}/>
             <Route path='CategoriasDispositivo' element={<CategoryDevicePage/>}/>
             <Route path='Proveedores' element={<SupplierPage/>}/>
+            <Route path='tiposSoporte' element={<SupportTypePage/>}/>
             <Route path='Productos' element={<ProductPage/>}/>
             <Route path='Vender' element={<SalePage/>}/>
           </Route>
