@@ -117,11 +117,11 @@ function Sidebar() {
                           </NavLink> 
                        )
                         }
-                       { roleValid.isTechnical() && (
-                         <li className="link-name">
+                       { roleValid.isAdmin() && (
+                         <NavLink to={"/SoporteTecnico"} className="link-name">
                             <i><LuUsers/></i>
                             <h5>Soporte</h5>
-                        </li>   
+                        </NavLink>  
                        )
                         }
                     </ul>

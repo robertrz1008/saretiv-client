@@ -31,6 +31,7 @@ export const AppContexProvider = ({children}: ContexArg) => {
     const [userModify, setUserToModify] = useState<User>()
     const [isShowConfirmModal, setShowConfirmModal] = useState(false)
     const [userDoc, setUserDoc] = useState("")
+    const [showRSidebar, setShowRSidebar] = useState(false)
 
     //abm
     const [customers, setCustomers] = useState<Customer[]>([]);
@@ -53,6 +54,8 @@ export const AppContexProvider = ({children}: ContexArg) => {
     const [supportTypes, setSupportTypes] = useState<SupportTypeGet[]>([])
     const [supportTypeUpdMode, setSupportTypeUpdMode] = useState(false)
     const [supportTypeModify, setSupportTypeModify] = useState<SupportTypeGet>()
+    //support
+    const [supports, setSupports] = useState<SupportTypeGet[]>([])
 
     const [formTitle, setFormTitle] = useState("")
 
@@ -87,6 +90,9 @@ export const AppContexProvider = ({children}: ContexArg) => {
     }
     function addUserDoc(str: string){
         setUserDoc(str)
+    }
+    function setShowRightSidebar(val: boolean){
+        setShowRSidebar(val)
     }
 
     //customer
@@ -337,7 +343,7 @@ export const AppContexProvider = ({children}: ContexArg) => {
     return (
         <appContext.Provider value={{
             isFormModalOpen, showFormModal, showConfirmModal, isShowConfirmModal, setGlobalTitleFn, globalTitle,
-            userUpdateMode, setUserUpdate, isUserUpdMode, userModify, addUserDoc, userDoc,
+            userUpdateMode, setUserUpdate, isUserUpdMode, userModify, addUserDoc, userDoc, showRSidebar, setShowRSidebar,
             customers, customerList, iscustUpdMode, customerModify, setCustUpdate, setCustUpdateMode,  deleteCustomer, customerListByFilter, addCustomerDoc, customerDoc,
             suppliers, supplierList, isSupUpdMode, supplierModify, setSupUpddateMode, setSupplierUpdate, deleteSupplier, supplierListByFilter,
             products, productList, isProductUpdMode, productModify, setProductModify, setProductUpdateMode, setProductUpdate, deleteProduct, productListByFilter,

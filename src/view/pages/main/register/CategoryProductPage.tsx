@@ -11,9 +11,9 @@ function CategoryProductPage() {
     const [showRowRegister, setShowRowRegister] = useState(false)
     const [isbuttonEnable, setButtonEnable] = useState(false)
 
-     const [name, setName] = React.useState<string>("");
-     const [nameEmpty, setNameEmpty] = React.useState<boolean>(false);
-     const [catIDModify, setCatIDModify] = React.useState(0);
+    const [name, setName] = React.useState<string>("");
+    const [nameEmpty, setNameEmpty] = React.useState<boolean>(false);
+    const [catIDModify, setCatIDModify] = React.useState(0);
 
 
     const context = useAppContext() as AppContextIn

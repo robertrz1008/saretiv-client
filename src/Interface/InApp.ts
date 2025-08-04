@@ -110,4 +110,6 @@ export interface AppContextIn{
     supportTypeUpdMode: boolean
     supportTypeModify: SupportTypeGet
     listSupportTypeByFilter: (str: string) => void
+    showRSidebar: boolean
+    setShowRSidebar: (val: boolean) => void
 }
