@@ -7,10 +7,11 @@ import { deleteProductRequest, getProductByFilterRequest, getProductByIdRequest,
 import type { ProductDetail, ProductDetailPost } from "../Interface/SalesInterfaces";
 import { createProDetailRequest, createSaleRequest, updateSaleRequest } from "../services/Sale.service";
 import { deleteSupportTypeRequest, getSupportTypeRequest } from "../services/SupportType.service";
-import type { SupportTypeGet } from "../Interface/SupportIn";
+import type { SupportCustomGet, SupportTypeGet } from "../Interface/SupportIn";
+import { getSupportsCustomRequest } from "../services/Support.Service";
 const appContext = createContext({})
 
-export const useAppContext =() => {
+export const useAppContext = ()  => {
      const context = useContext(appContext)
         if(!context){
             throw new Error("Context invalid")
@@ -55,7 +56,7 @@ export const AppContexProvider = ({children}: ContexArg) => {
     const [supportTypeUpdMode, setSupportTypeUpdMode] = useState(false)
     const [supportTypeModify, setSupportTypeModify] = useState<SupportTypeGet>()
     //support
-    const [supports, setSupports] = useState<SupportTypeGet[]>([])
+    const [supports, setSupports] = useState<SupportCustomGet[]>([])
 
     const [formTitle, setFormTitle] = useState("")
 
@@ -334,7 +335,16 @@ export const AppContexProvider = ({children}: ContexArg) => {
             console.log(error)
         }
     }
-
+    //support
+    async function listSupport(){
+        try {
+            const response = await getSupportsCustomRequest()
+            console.log(response.data)
+            setSupports(response.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
     
@@ -349,7 +359,8 @@ export const AppContexProvider = ({children}: ContexArg) => {
             products, productList, isProductUpdMode, productModify, setProductModify, setProductUpdateMode, setProductUpdate, deleteProduct, productListByFilter,
             productDetails, changeProductAmount, handleAddProduct, deleteProductDetail,total,sumTotal, createSale,
             formTitle, setModalFormTitle, saleButtonDisable,
-            listSupportType, deleteSupportType, setSupportTypeUpdate, setSupportTypeUpdateMode, supportTypes, supportTypeUpdMode, supportTypeModify, listSupportTypeByFilter
+            listSupportType, deleteSupportType, setSupportTypeUpdate, setSupportTypeUpdateMode, supportTypes, supportTypeUpdMode, supportTypeModify, listSupportTypeByFilter,
+            listSupport, supports
         }}>
             {children}
         </appContext.Provider>

@@ -1,13 +1,19 @@
-import { useState } from "react";
 import "../../../styles/Support.css"
 import { InputText } from "primereact/inputtext";
-import { useAppContext } from "../../../../context/AppContext";
-import type { AppContextIn } from "../../../../Interface/InApp";
 import RightSidebar from "../../../../components/RightSidebar/RightSidebar";
 import SupportForm from "../../../../components/form/SupportForm";
 import SupportsActiveView from "../../../../components/support/SupportsActiveView";
+import { useAppContext } from "../../../../context/AppContext";
+import type { AppContextIn } from "../../../../Interface/InApp";
+import { useEffect } from "react";
 
 function SupportPage() {
+
+  const context = useAppContext() as AppContextIn
+
+  useEffect(() => {
+    context.listSupport()
+  }, [])
     
   return (
     <div className='main-con'>

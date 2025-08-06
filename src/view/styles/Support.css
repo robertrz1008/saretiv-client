@@ -17,17 +17,17 @@
 }
 .support-item{
     width: 250px;
-    height: 150px;
+    height: 140px;
     transition: all .400ms;
 }
 .support-btn-add{
     width: 250px;
     height: 150px;
-    border: 2px solid grey;
+    border: 2px dashed grey;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 37px;
+    font-size: 34px;
     color: grey;
     border-radius: 5px;
     cursor: pointer;
@@ -37,12 +37,47 @@
     background-color: #f5f1f1;
 }
 
-.support-item:hover{
-    position: relative;
-    bottom: 4px;
-}
 .support-form-inputs{
     height: 90%;
     padding-right: 10px;
     overflow-y: scroll;
+}
+.supp-item-text-con{
+    width: 100%;
+    height: 80%;
+    display: flex;
+    flex-direction: column;
+}
+.supp-item-text-con p{
+    color: rgb(102, 99, 99);
+}
+.supp-item-text-description p{
+    color: rgb(13, 64, 141);
+    font-weight: bold;
+}
+.supp-item-foot{
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.jose{
+    background-color: rgb(58, 129, 235);
+}
+.supp-icon-con{
+    padding: 5px;
+    color: white;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+.icon-conf{
+    background-color: rgb(58, 129, 235);
+    margin-right: 10px;
+}
+.icon-dev{
+    background-color: grey;
 }

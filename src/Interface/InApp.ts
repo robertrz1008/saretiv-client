@@ -1,6 +1,6 @@
 import type { User } from "./InAuth"
 import type { ProductDetail } from "./SalesInterfaces";
-import type { SupportTypeGet } from "./SupportIn";
+import type { SupportCustomGet, SupportTypeGet } from "./SupportIn";
 
 export interface DropdownItem{
     label: string, 
@@ -112,4 +112,6 @@ export interface AppContextIn{
     listSupportTypeByFilter: (str: string) => void
     showRSidebar: boolean
     setShowRSidebar: (val: boolean) => void
+    listSupport: () => void
+    supports: SupportCustomGet[]
 }

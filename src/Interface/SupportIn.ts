@@ -1,4 +1,5 @@
-import type { Category } from "./InApp"
+import type { Category, Customer } from "./InApp"
+import type { User } from "./InAuth"
 
 export interface SupportType{
     id?: number
@@ -13,3 +14,48 @@ export interface SupportTypeDTO extends SupportType{
         id: number
     }
 }
+
+export interface Support{
+    id?: number
+    startDate: Date
+    endDate?: Date
+    total: number
+    status: string
+}
+
+export interface SupportCustomGet extends Support{
+    description: string
+    observation: string
+    categoryDev: string
+    customer: string
+    document: string
+}
+export interface SupportGet extends Support{
+    customer: Customer
+    user: User
+}
+
+export interface SupportPost{
+     customerId: number
+    startDate: Date,
+    status: string,
+    total: number,
+    userId: number
+}
+
+
+export interface Device{
+    id?: number
+    description: string;
+    observation: string
+}
+
+export interface DevicePost extends Device{
+    categoryId: number
+    supportId: number
+}
+export interface DeviceGet extends Device{
+    category: Category
+    support: Support
+}
+
