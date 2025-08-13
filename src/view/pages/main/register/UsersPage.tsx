@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useAuth } from '../../../../context/AuthContext'
 import type { AuthContextIn } from '../../../../Interface/InAuth'
-import UserTable from '../../../../components/tables/UserTable'
+import UserTable from '../../../../components/tables/register/UserTable'
 import { InputText } from 'primereact/inputtext'
 import { Button } from 'primereact/button'
 import { useAppContext } from '../../../../context/AppContext'

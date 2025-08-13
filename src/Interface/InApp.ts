@@ -114,4 +114,8 @@ export interface AppContextIn{
     setShowRSidebar: (val: boolean) => void
     listSupport: () => void
     supports: SupportCustomGet[]
+    supportUpdMode: boolean
+    supportModify: SupportCustomGet
+    setSupportsUpdMode: (val: boolean) => void
+    setSupportModify: (supp: SupportCustomGet) => void
 }

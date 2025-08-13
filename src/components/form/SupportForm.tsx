@@ -8,10 +8,13 @@ import { usersListRequest } from "../../services/Auth.service";
 import type { User } from "../../Interface/InAuth";
 import type { AxiosResponse } from "axios";
 import { Button } from "primereact/button";
-import type { SupportCustomGet, SupportGet, SupportPost } from "../../Interface/SupportIn";
-import { postSupportRequest } from "../../services/Support.Service";
+import type { SupportGet, SupportPost } from "../../Interface/SupportIn";
+import { postSupportRequest, updateSupportRequest } from "../../services/Support.Service";
 import { useAppContext } from "../../context/AppContext";
-import { postDeviceRequest } from "../../services/Device.service";
+import { postDeviceRequest, updateDeviceRequest } from "../../services/Device.service";
+import { InputText } from "primereact/inputtext";
+import { Calendar } from "primereact/calendar";
+import { RadioButton, type RadioButtonChangeEvent } from "primereact/radiobutton";
 
 function SupportForm() {
 
@@ -34,6 +37,9 @@ function SupportForm() {
 
     const [observation, setObservation] = useState("");
     const [observationEmpty, setObservationEmpty] = useState(false);
+
+    const [status, setStatus] = useState<string>('');
+    const [startDate, setStartDate] = useState<Date | null>()
 
 
 
@@ -105,7 +111,7 @@ function SupportForm() {
 
     async function registerSupport(){
         const supportToSend: SupportPost={
-            startDate: new Date,
+            startDate: startDate? startDate as Date : new Date,
             total: 0,
             status: "ACTIVO",
             userId: Number(technicalSelect?.code),
@@ -129,24 +135,76 @@ function SupportForm() {
             return false
         }
     }
+    async function updateSupport(){
+        const suppSend = context.supportModify
+
+        try {
+            await updateSupportRequest( suppSend.id as number, {
+                customerId: suppSend.customerId,
+                startDate: suppSend.endDate as Date,
+                status: status,
+                total: suppSend.total,
+                userId: suppSend.userId
+            })
+            
+            await updateDeviceRequest(suppSend.devId, {
+                description: description,
+                observation: observation,
+                categoryId: suppSend.categoryDevId,
+                supportId: suppSend.id as number
+            })
+            return true
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+    }
 
     async function handleSubmit(){
         if(validateInputs()) return
         
-        try {
+        if(context.supportUpdMode){
+            await updateSupport()
+        }else{
             await registerSupport();
-            cleanInputs()
-            context.listSupport()
-            context.setShowRSidebar(false)
-        } catch (error) {
-            console.log(error)
+        }
+
+        cleanInputs()
+        context.listSupport()
+        context.setShowRSidebar(false)
+        context.setSupportsUpdMode(false)
+    }
+
+    function isFormToUpdate(){
+        cleanInputs()
+        if(!context.supportUpdMode) return 
+
+        if(context.supportModify != null){
+            const supportCurrent = context.supportModify
+            console.log(supportCurrent)
+            setDescription(supportCurrent.description)
+            setObservation(supportCurrent.observation)
+            setStartDate(supportCurrent.startDate)
+            setcategorySelect({
+                label: supportCurrent.categoryDev, 
+                code: (supportCurrent.categoryDevId+"")
+            })
+            setcustomerSelect({
+                label: supportCurrent.customer,
+                code: (supportCurrent.categoryDevId+"")
+            })
+            setTechnicalSelect({
+                label: supportCurrent.user,
+                code: (supportCurrent.userId+"")
+            })
         }
     }
 
 
-
     useEffect(() => {
+        cleanInputs()
         getItems()
+        isFormToUpdate()
     }, [])
 
 
@@ -157,17 +215,31 @@ function SupportForm() {
             {/* customer */}
             <div style={{ width: "100%" }}>
                 <label htmlFor="username" style={{ marginTop: "10px" }}>Cliente</label>
-                <Dropdown
-                    variant="filled"
-                    filter
-                    options={customerItems}
-                    onChange={(e: DropdownChangeEvent) =>setcustomerSelect(e.value) }
-                    style={{width:"100%", height: "40px", marginTop: "5px"}}
-                    value={customerSelect} 
-                    placeholder='Seleccionar'
-                    className="w-full md:w-14rem"
-                    invalid={customerEmpty}
-                />
+                {
+                    !context.supportUpdMode? (
+                        <Dropdown
+                            variant="filled"
+                            filter
+                            options={customerItems}
+                            onChange={(e: DropdownChangeEvent) =>setcustomerSelect(e.value) }
+                            style={{width:"100%", height: "40px", marginTop: "5px"}}
+                            value={customerSelect} 
+                            key={`customer-${customerSelect?.code || 'empty'}`}
+                            placeholder='Seleccionar'
+                            className="w-full md:w-14rem"
+                            invalid={customerEmpty}
+                        />
+                    ): (
+                        <InputText
+                            value={context.supportModify.customer}
+                            // onChange={(e) => setName(e.target.value)}
+                            variant="filled"
+                            style={{ marginTop: "5px", width: "100%", height: "40px" }}
+                            type="text"
+                            disabled
+                            />
+                    )
+                }
                 {customerEmpty &&  <small id="username-help" className='empt-ymsg'> El proveedor es requerido</small>}
             </div>
 
@@ -192,17 +264,31 @@ function SupportForm() {
             {/* categoria */}
             <div style={{ width: "100%" }}>
                 <label htmlFor="username" style={{ marginTop: "10px" }}>Cateogría</label>
-                <Dropdown
-                    variant="filled"
-                    filter
-                    options={categoryItems}
-                    onChange={(e: DropdownChangeEvent) =>setcategorySelect(e.value) }
-                    style={{width:"100%", height: "40px", marginTop: "5px"}}
-                    value={categorySelect} 
-                    placeholder='Seleccionar'
-                    className="w-full md:w-14rem"
-                    invalid={categoryEmpty}
-                />
+                
+                {
+                    !context.supportUpdMode? (
+                        <Dropdown
+                            variant="filled"
+                            filter
+                            options={categoryItems}
+                            onChange={(e: DropdownChangeEvent) =>setcategorySelect(e.value) }
+                            style={{width:"100%", height: "40px", marginTop: "5px"}}
+                            value={categorySelect} 
+                            placeholder='Seleccionar'
+                            className="w-full md:w-14rem"
+                            invalid={categoryEmpty}
+                        />
+                    ):(
+                        <InputText
+                            value={context.supportModify.categoryDev}
+                            // onChange={(e) => setName(e.target.value)}
+                            variant="filled"
+                            style={{ marginTop: "5px", width: "100%", height: "40px" }}
+                            type="text"
+                            disabled
+                        />
+                    )
+                }
                 {categoryEmpty &&  <small id="username-help" className='empt-ymsg'> La categoria es requerido</small>}
             </div>
             {/* description */}
@@ -229,13 +315,43 @@ function SupportForm() {
                 />
                     {observationEmpty &&  <small id="username-help" className='empt-ymsg'>La description es requerida</small>}
             </div>
-        </div>
+            {/* Date */}
+            <div style={{marginTop: "10px"}}>
+                <label htmlFor="buttondisplay" className="font-bold block mb-2">Fecha Inicio</label>
+                    <Calendar 
+                        id="buttondisplay" 
+                        value={startDate}
+                        onChange={(e) => setStartDate(e.target.value )}
+                        showIcon 
+                        variant="filled"
+                        style={{ height: "40px", width:"100%", marginTop: "5px"}} 
+                    />
+            </div>
+            {/* status */}
+            <div style={{marginTop: "10px"}}>
+                 <h4 >Estado del soporte</h4>
+                <div style={{display:"flex", width:"100%", justifyContent:"space-between", marginTop:"10px"}}>
+                    <div className="flex align-items-center">
+                    <RadioButton inputId="ingredient1" name="pizza" value="Cheese" onChange={(e: RadioButtonChangeEvent) => setStatus(e.value)} checked={status === 'Cheese'} />
+                    <label htmlFor="ingredient1" className="ml-2">Activo</label>
+                </div>
+                <div className="flex align-items-center">
+                    <RadioButton inputId="ingredient2" name="pizza" value="Mushroom" onChange={(e: RadioButtonChangeEvent) => setStatus(e.value)} checked={status === 'Mushroom'} />
+                    <label htmlFor="ingredient2" className="ml-2">Cancelado</label>
+                </div>
+                <div className="flex align-items-center">
+                    <RadioButton inputId="ingredient3" name="pizza" value="Pepper" onChange={(e: RadioButtonChangeEvent) => setStatus(e.value)} checked={status === 'Pepper'} />
+                    <label htmlFor="ingredient3" className="ml-2">Finalizado</label>
+                </div>
+                </div>
+            </div>
+            <div style={{height: "20px"}}></div>
+        </div >
             <Button
                 onClick={handleSubmit}
                 label="Procesar" 
                 style={{width:"100%", marginTop:"10px"}}
                 size="small"
-                // disabled={context.saleButtonDisable}
             />
     </>
   )

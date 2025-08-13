@@ -1,20 +1,29 @@
-import { Button } from 'primereact/button'
-import type { AppContextIn } from '../../Interface/InApp'
+import type { AppContextIn } from "../../Interface/InApp";
 import { MdDevices } from "react-icons/md";
-import { useAppContext } from '../../context/AppContext'
+import { useAppContext } from "../../context/AppContext";
 import { GrConfigure } from "react-icons/gr";
+import { useNavigate } from "react-router-dom";
 
-function SupportsActiveView() {
+interface Prop{
+  setDeviceTitle: (des : string) => void
+}
 
-    const context = useAppContext() as AppContextIn
+function SupportsActiveView(prop: Prop) {
 
-    const newList = context.supports.reverse()
+  const context = useAppContext() as AppContextIn
+
+  const newList = context.supports.reverse()
+
+  const navigate = useNavigate()
 
   return (
     <div className="support-list">
         <div
             className=" support-btn-add"
-            onClick={() => context.setShowRSidebar(true)}
+            onClick={() => {
+              context.setShowRSidebar(true)
+              context.setSupportsUpdMode(false)
+            }}
         >
             <h1>+</h1>
         </div>
@@ -34,11 +43,18 @@ function SupportsActiveView() {
                     <p>{sup.total}</p>
                     <div style={{display:"flex", }}>
                         <div className='supp-icon-con icon-conf'>
-                          <GrConfigure/>
+                          <GrConfigure onClick={()=>{
+                            prop.setDeviceTitle(sup.description)
+                            navigate("/SoporteTecnico/Detalles")
+                          }}/>
                         </div>
                         <div className='supp-icon-con icon-dev'>
                           <MdDevices
-                            onClick={() => context.setShowRSidebar(true)}
+                            onClick={() => {
+                              context.setShowRSidebar(true)
+                              context.setSupportsUpdMode(true)
+                              context.setSupportModify(sup)
+                            }}
                           />
                         </div>
                     </div>

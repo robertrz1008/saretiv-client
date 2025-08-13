@@ -1,7 +1,7 @@
 import { useState } from 'react';
-import { useAppContext } from '../../context/AppContext'
-import type { AppContextIn } from '../../Interface/InApp'
-import DeleteCostomerModal from '../Modal/confirm/DeleteCostomerModal'
+import { useAppContext } from '../../../context/AppContext'
+import type { AppContextIn } from '../../../Interface/InApp'
+import DeleteCostomerModal from '../../Modal/confirm/DeleteCostomerModal'; 
 import { MdDeleteOutline } from "react-icons/md";
 
 function CustomerTable() {

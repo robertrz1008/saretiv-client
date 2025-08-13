@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { getCategoryProRequest, postCategoryProRequest, updateCategoryProRequest } from '../../../../services/category.service'
-import CategoryProTable from '../../../../components/tables/CategoryProTable'
+import CategoryProTable from '../../../../components/tables/register/CategoryProTable'
 import { Button } from 'primereact/button'
 import type { AppContextIn, Category } from '../../../../Interface/InApp'
 import { useAppContext } from '../../../../context/AppContext'

@@ -1,6 +1,6 @@
 import { Button } from "primereact/button"
 import { InputText } from "primereact/inputtext"
-import CustomerTable from "../../../../components/tables/CustomerTable"
+import CustomerTable from "../../../../components/tables/register/CustomerTable" 
 import { useAppContext } from "../../../../context/AppContext"
 import type { AppContextIn } from "../../../../Interface/InApp"
 import { useContext, useEffect } from "react"

@@ -39,3 +39,23 @@
   box-shadow: 0 0 1px grey;
   border-radius: 4px;
 }
+
+ /* flex box */
+.flex{
+  display: flex;
+}
+.f-jc-center{
+  justify-content: center;
+}
+.f-jc-beetwen{
+  justify-content: space-between;
+}
+.f-ai-center{
+  align-items: center;
+}
+
+/* table */
+.td-number{
+  padding-right: 5px;
+  text-align: end;
+}

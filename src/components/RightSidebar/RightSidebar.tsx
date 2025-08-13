@@ -16,8 +16,9 @@ function RightSidebar({children}: ContexArg) {
         position='right' 
         style={{width:"420px", height:"100%",}}
         onHide={() => {
-        context.setShowRSidebar(false)
-    }}>
+          context.setShowRSidebar(false)
+        }}
+    >
             {children}
     </Sidebar>
   )

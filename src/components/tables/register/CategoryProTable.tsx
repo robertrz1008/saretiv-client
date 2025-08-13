@@ -1,12 +1,12 @@
 import React from 'react'
-import type { AppContextIn, Category } from '../../Interface/InApp'
+import type { AppContextIn, Category } from '../../../Interface/InApp'
 import { MdDeleteOutline } from "react-icons/md";
 import { InputText } from 'primereact/inputtext';
 import { Button } from 'primereact/button';
 import { FaPen } from "react-icons/fa";
-import { deleteCategoryProRequest } from '../../services/category.service';
-import { useAppContext } from '../../context/AppContext';
-import DeleteCategoryProModal from '../Modal/confirm/DeleteCategoryProModal';
+import { deleteCategoryProRequest } from '../../../services/category.service';
+import { useAppContext } from '../../../context/AppContext';
+import DeleteCategoryProModal from '../../Modal/confirm/DeleteCategoryProModal';
 
 interface Prop{
     categories: Category[]

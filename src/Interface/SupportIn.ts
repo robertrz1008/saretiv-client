@@ -27,8 +27,13 @@ export interface SupportCustomGet extends Support{
     description: string
     observation: string
     categoryDev: string
+    categoryDevId: number
     customer: string
+    devId: number
+    customerId: number
     document: string
+    user: string
+    userId: number
 }
 export interface SupportGet extends Support{
     customer: Customer
@@ -36,7 +41,7 @@ export interface SupportGet extends Support{
 }
 
 export interface SupportPost{
-     customerId: number
+    customerId: number
     startDate: Date,
     status: string,
     total: number,

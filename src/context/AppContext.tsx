@@ -57,6 +57,8 @@ export const AppContexProvider = ({children}: ContexArg) => {
     const [supportTypeModify, setSupportTypeModify] = useState<SupportTypeGet>()
     //support
     const [supports, setSupports] = useState<SupportCustomGet[]>([])
+    const [supportUpdMode, setSupportsUpdMode] = useState(false)
+    const [supportModify, setSupportModify] = useState<SupportCustomGet>()
 
     const [formTitle, setFormTitle] = useState("")
 
@@ -91,9 +93,6 @@ export const AppContexProvider = ({children}: ContexArg) => {
     }
     function addUserDoc(str: string){
         setUserDoc(str)
-    }
-    function setShowRightSidebar(val: boolean){
-        setShowRSidebar(val)
     }
 
     //customer
@@ -339,7 +338,6 @@ export const AppContexProvider = ({children}: ContexArg) => {
     async function listSupport(){
         try {
             const response = await getSupportsCustomRequest()
-            console.log(response.data)
             setSupports(response.data)
         } catch (error) {
             console.log(error)
@@ -360,7 +358,7 @@ export const AppContexProvider = ({children}: ContexArg) => {
             productDetails, changeProductAmount, handleAddProduct, deleteProductDetail,total,sumTotal, createSale,
             formTitle, setModalFormTitle, saleButtonDisable,
             listSupportType, deleteSupportType, setSupportTypeUpdate, setSupportTypeUpdateMode, supportTypes, supportTypeUpdMode, supportTypeModify, listSupportTypeByFilter,
-            listSupport, supports
+            listSupport, supports, supportUpdMode, supportModify, setSupportsUpdMode, setSupportModify
         }}>
             {children}
         </appContext.Provider>

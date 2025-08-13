@@ -1,12 +1,12 @@
 import { MdDeleteOutline } from "react-icons/md";
-import { type AuthContextIn } from '../../Interface/InAuth';
-import { useAuth } from '../../context/AuthContext';
-import { useAppContext } from "../../context/AppContext";
-import type { AppContextIn } from "../../Interface/InApp";
+import { type AuthContextIn } from '../../../Interface/InAuth';
+import { useAuth } from "../../../context/AuthContext"; 
+import { useAppContext } from "../../../context/AppContext"; 
+import type { AppContextIn } from "../../../Interface/InApp";
 import { GrShieldSecurity } from "react-icons/gr";
-import DeleteUserModal from "../Modal/confirm/DeleteUserModal";
+import DeleteUserModal from "../../Modal/confirm/DeleteUserModal";
 import { useEffect, useState } from "react";
-import PasswordForm from "../reusable/PasswordForm";
+import PasswordForm from "../../reusable/PasswordForm";
 
 export default function UserTable() {
 

@@ -30,7 +30,7 @@ function ProductForm() {
     // const [stockEmpty, setStockEmpty] = useState(false);
 
     const [categoryItems, setCategoryItems] = useState<DropdownItem[]>([]);
-    const [categorySelect, setcategorySelect] = useState<DropdownItem | null>(null)
+    const [categorySelect, setcategorySelect] = useState<DropdownItem | null>()
     const [categoryEmpty, setCategoryEmpty] = useState(false);
 
     const [supplierItems, setSupplierItems] = useState<DropdownItem[]>([]);
