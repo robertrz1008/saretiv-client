@@ -1,18 +1,23 @@
 
 import { Button } from 'primereact/button'
 import SupportActivitiesTable from '../tables/supports/SupportActivitiesTable'
+import SupportTypeSearch from '../Modal/search/SupportTypeSearch'
+import { useEffect, useState } from 'react'
 import { useAppContext } from '../../context/AppContext'
 import type { AppContextIn } from '../../Interface/InApp'
-import SupportTypeSearch from '../Modal/search/SupportTypeSearch'
-import { useState } from 'react'
 
 function SupportActivities() {
 
+  const context = useAppContext() as AppContextIn
   const [showthisModal, setShowThisModal] = useState(false)
 
   function setThisModal(val: boolean){
     setShowThisModal(val)
   }
+
+  useEffect(() => {
+    context.sumSupTotal()
+  }, [context.activities])
 
   return (
     <div className='support-types-con'>

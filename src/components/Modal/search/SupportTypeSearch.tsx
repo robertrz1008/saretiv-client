@@ -1,8 +1,9 @@
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import { useAppContext } from "../../../context/AppContext"
 import type { AppContextIn } from "../../../Interface/InApp"
 import { Dialog } from "primereact/dialog"
 import { InputText } from "primereact/inputtext"
+import type { SupportTypeGet } from "../../../Interface/SupportIn"
 
 interface Prop { 
   showthisModal: boolean
@@ -12,10 +13,34 @@ interface Prop {
 function SupportTypeSearch(prop: Prop) {
 
   const context = useAppContext() as AppContextIn
+  const [thisSupportTypes, setThisSupportTypes] = useState<SupportTypeGet[]>([])
+
+
+  function hanldeSelect(supType: SupportTypeGet){
+    context.addActivitesToList({
+      support: null,
+      supportType: supType,
+      isSaved: false
+    })
+    prop.setThisModal(false)
+  }
+
 
   useEffect(() => {
     context.listSupportType()
   },[])
+
+  useEffect(() => {
+    //listing by this category
+    if(context.supportCurrent){
+      const currentSup = context.supportCurrent.categoryDev
+      const newList = context.supportTypes.filter((sup: SupportTypeGet) => sup.category.name == currentSup)
+      setThisSupportTypes(newList)
+    }
+  }, [context.supportTypes])
+
+
+
 
   return (
     <Dialog header={"Seleccionar Actividad"} visible={prop.showthisModal} style={{ marginTop: "50px" }} onHide={() => { prop.setThisModal(false) }}>
@@ -40,11 +65,12 @@ function SupportTypeSearch(prop: Prop) {
             </thead>
             <tbody>
               {
-                !context.supportTypes? 
+                !thisSupportTypes? 
                         ( <tr></tr> ) : 
-                        context.supportTypes.map((pro, id) => (
+                        thisSupportTypes.map((pro, id) => (
                           <tr
                             key={id}
+                            onClick={() => hanldeSelect(pro)}
                             className="sale-table-tr"
                             style={{ height: "40px" }}
                           >

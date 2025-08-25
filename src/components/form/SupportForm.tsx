@@ -141,7 +141,7 @@ function SupportForm() {
         try {
             await updateSupportRequest( suppSend.id as number, {
                 customerId: suppSend.customerId,
-                startDate: suppSend.endDate as Date,
+                startDate: suppSend.startDate as Date,
                 status: status,
                 total: suppSend.total,
                 userId: suppSend.userId
@@ -181,10 +181,9 @@ function SupportForm() {
 
         if(context.supportModify != null){
             const supportCurrent = context.supportModify
-            console.log(supportCurrent)
             setDescription(supportCurrent.description)
             setObservation(supportCurrent.observation)
-            setStartDate(supportCurrent.startDate)
+            setStartDate(new Date(supportCurrent.startDate))
             setcategorySelect({
                 label: supportCurrent.categoryDev, 
                 code: (supportCurrent.categoryDevId+"")
@@ -206,6 +205,9 @@ function SupportForm() {
         getItems()
         isFormToUpdate()
     }, [])
+    useEffect(() => {
+        console.log(startDate)
+    }, [startDate])
 
 
   return (

@@ -39,7 +39,7 @@ export default function ProductDetailList() {
                       >
                         <td>{pro.description}</td>
                         <ProductAmountTF
-                            amountValue={pro.amount}
+                            amountValue={pro.productAmount}
                             proId={pro.id as number}
                         />
                         <td className="td-price">{pro.subtotal}</td>

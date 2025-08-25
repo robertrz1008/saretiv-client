@@ -1,5 +1,6 @@
 import type { Category, Customer } from "./InApp"
 import type { User } from "./InAuth"
+import type { ProductDetail } from "./SalesInterfaces"
 
 export interface SupportType{
     id?: number
@@ -59,8 +60,11 @@ export interface DevicePost extends Device{
     categoryId: number
     supportId: number
 }
+
 export interface DeviceGet extends Device{
     category: Category
     support: Support
 }
-
+export interface SuppProductDetail extends ProductDetail{
+    isSaved: boolean
+}

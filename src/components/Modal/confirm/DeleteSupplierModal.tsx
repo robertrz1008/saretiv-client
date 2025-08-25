@@ -1,7 +1,6 @@
-import React from 'react'
+
 import type { AppContextIn } from '../../../Interface/InApp'
 import { useAppContext } from '../../../context/AppContext'
-import type { AuthContextIn } from '../../../Interface/InAuth'
 import { ConfirmDialog } from 'primereact/confirmdialog'
 
 interface ModalProp{

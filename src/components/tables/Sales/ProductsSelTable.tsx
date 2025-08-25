@@ -56,7 +56,7 @@ function ProductsSelTable() {
                                         onClick={() => context.handleAddProduct({
                                             id: data.id as number,
                                             description: data.description,
-                                            amount: 1,
+                                            productAmount: 1,
                                             price: data.salePrice,
                                             subtotal: 0
                                         })}

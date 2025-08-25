@@ -1,38 +1,48 @@
-import { useState } from "react"
+import { MdDeleteOutline } from "react-icons/md"
 import { useAppContext } from "../../../context/AppContext"
 import type { AppContextIn } from "../../../Interface/InApp"
-import type { SupportTypeGet } from "../../../Interface/SupportIn"
+import type { activityGet } from "../../../Interface/Activities"
 
 function SupportActivitiesTable() {
 
     const context = useAppContext() as AppContextIn
 
-    const [activities, setActivities] = useState<SupportTypeGet[]>([])
+   function handleDelete(act: activityGet){
+    if(!act.isSaved){
+        context.resetActivityFromCache(act.supportType.id as number)
+        return
+    }
+
+   }
+
     return (
         <div className="sale-form-list-con">
             <table className="sale-table-con">
                 <thead className="register-thead">
                     <tr>
-                        <th className="td-id"></th>
                         <th>Descripción</th>
-                        <th>Monto</th>
+                        <th className="td-number">Monto</th>
                         <th className='td-icon'></th>
                     </tr>
                 </thead>
                 <tbody>
                     {
-                        !activities ?
+                        !context.activities ?
                             (<tr></tr>) :
-                            activities.map((pro, id) => (
+                            context.activities.map((pro, id) => (
                                 <tr
                                     key={id}
                                     className="sale-table-tr"
-                                    style={{ height: "40px" }}
+                                    style={{ height: "40px", cursor:"auto" }}
                                 >
-                                    <td></td>
-                                    <td>{pro.description}</td>
-                                    <td className="td-number">{pro.amount}</td>
-                                    <td></td>
+                                    <td>{pro.supportType.description}</td>
+                                    <td className="td-number">{pro.supportType.amount}</td>
+                                    <td>
+                                        <MdDeleteOutline
+                                            style={{cursor:"pointer" }}
+                                            onClick={() => handleDelete(pro)}
+                                        />
+                                    </td>
                                 </tr>
                             ))
                     }

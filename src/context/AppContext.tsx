@@ -1,29 +1,31 @@
 import { useContext, createContext, type ReactNode, useState } from "react";
 import type { User } from "../Interface/InAuth";
-import type { Customer,  ProductGet,  Supplier } from "../Interface/InApp";
+import type { Customer, ProductGet, Supplier } from "../Interface/InApp";
 import { customerListRequest, deleteCustomerRequest, getCustomerByFilterRequest } from "../services/Customer.service";
 import { deletesupplierRequest, getSupplierByFilterRequest, getSupplierRequest } from "../services/Supplier.service";
-import { deleteProductRequest, getProductByFilterRequest, getProductByIdRequest, getProductRequest, updateProductRequest } from "../services/Product.service";
-import type { ProductDetail, ProductDetailPost } from "../Interface/SalesInterfaces";
-import { createProDetailRequest, createSaleRequest, updateSaleRequest } from "../services/Sale.service";
+import { deleteProductRequest, getProductByFilterRequest, getProductByIdRequest, getProductRequest, updateProductRequest, updateProductStockRequest } from "../services/Product.service";
+import type { ProductDetail, ProductDetailGet, ProductDetailPost } from "../Interface/SalesInterfaces";
+import { createProDetailRequest, createSaleRequest, deleteProductDetailRequest, getProductDetailByIdRequest, getProductDetailBySupportRequest, updateSaleRequest } from "../services/Sale.service";
 import { deleteSupportTypeRequest, getSupportTypeRequest } from "../services/SupportType.service";
-import type { SupportCustomGet, SupportTypeGet } from "../Interface/SupportIn";
-import { getSupportsCustomRequest } from "../services/Support.Service";
+import type { SupportCustomGet, SupportTypeGet, SuppProductDetail } from "../Interface/SupportIn";
+import { getSupportsCustomRequest, updateSupportTotalRequest } from "../services/Support.Service";
+import type { AxiosResponse } from "axios";
+import type { activityGet } from "../Interface/Activities";
 const appContext = createContext({})
 
-export const useAppContext = ()  => {
-     const context = useContext(appContext)
-        if(!context){
-            throw new Error("Context invalid")
-        }
-        return context
+export const useAppContext = () => {
+    const context = useContext(appContext)
+    if (!context) {
+        throw new Error("Context invalid")
+    }
+    return context
 }
 
-interface ContexArg{
-    children:ReactNode
+interface ContexArg {
+    children: ReactNode
 }
 
-export const AppContexProvider = ({children}: ContexArg) => {
+export const AppContexProvider = ({ children }: ContexArg) => {
 
     const [globalTitle, setGlobalTitle] = useState("");
 
@@ -49,7 +51,7 @@ export const AppContexProvider = ({children}: ContexArg) => {
     const [productModify, setProductModify] = useState<ProductGet>();
     //sales 
     const [productDetails, setProductDetails] = useState<ProductDetail[]>([]);
-    const [total, setTotal]= useState(0)
+    const [total, setTotal] = useState(0)
     const [saleButtonDisable, setSaleButtonDisable] = useState(false)
     //support type
     const [supportTypes, setSupportTypes] = useState<SupportTypeGet[]>([])
@@ -59,11 +61,16 @@ export const AppContexProvider = ({children}: ContexArg) => {
     const [supports, setSupports] = useState<SupportCustomGet[]>([])
     const [supportUpdMode, setSupportsUpdMode] = useState(false)
     const [supportModify, setSupportModify] = useState<SupportCustomGet>()
+    const [supProDetail, setSupProDetail] = useState<SuppProductDetail[]>([])
+    const [supTotal, setSupTotal] = useState(0)
+    const [supportCurrent, setSupportCurrent] = useState<SupportCustomGet>()
+    //support activities
+    const [activities, setActivities] = useState<activityGet[]>([])
 
     const [formTitle, setFormTitle] = useState("")
 
 
-    function setModalFormTitle(title: string){
+    function setModalFormTitle(title: string) {
         setFormTitle(title)
     }
     function setGlobalTitleFn(title: string) {
@@ -71,27 +78,27 @@ export const AppContexProvider = ({children}: ContexArg) => {
     }
     function showFormModal(val: boolean) {
         setIsFormModalOpen(val);
-        if(!val){
+        if (!val) {
             setUserUpdMode(false)
         }
     }
     function showConfirmModal(val: boolean) {
         setShowConfirmModal(val);
     }
-     function userUpdateMode(val: boolean){
+    function userUpdateMode(val: boolean) {
         setUserUpdMode(val)
     }
     function setUserUpdate(user: User) {
         setUserToModify(user)
     }
 
-     function setCustUpdateMode(val: boolean){
+    function setCustUpdateMode(val: boolean) {
         setCustUpdMode(val)
     }
     function setCustUpdate(cust: Customer) {
         setCustomersModify(cust)
     }
-    function addUserDoc(str: string){
+    function addUserDoc(str: string) {
         setUserDoc(str)
     }
 
@@ -104,7 +111,7 @@ export const AppContexProvider = ({children}: ContexArg) => {
             console.log(error)
         }
     }
-    async function deleteCustomer(id: number){
+    async function deleteCustomer(id: number) {
         try {
             await deleteCustomerRequest(id)
             showConfirmModal(false)
@@ -113,8 +120,8 @@ export const AppContexProvider = ({children}: ContexArg) => {
             console.log(error)
         }
     }
-    async function customerListByFilter(str: string){
-        if(str == ""){
+    async function customerListByFilter(str: string) {
+        if (str == "") {
             customerList()
             return
         }
@@ -125,7 +132,7 @@ export const AppContexProvider = ({children}: ContexArg) => {
             console.log(error)
         }
     }
-    function addCustomerDoc(str:string){
+    function addCustomerDoc(str: string) {
         setCustomerDoc(str)
     }
     // supplier
@@ -137,7 +144,7 @@ export const AppContexProvider = ({children}: ContexArg) => {
             console.log(error)
         }
     }
-    async function deleteSupplier(id: number){
+    async function deleteSupplier(id: number) {
         try {
             await deletesupplierRequest(id)
             showConfirmModal(false)
@@ -147,8 +154,8 @@ export const AppContexProvider = ({children}: ContexArg) => {
             console.log(error)
         }
     }
-    async function supplierListByFilter(str: string){
-        if(str == ""){
+    async function supplierListByFilter(str: string) {
+        if (str == "") {
             supplierList()
             return
         }
@@ -167,7 +174,7 @@ export const AppContexProvider = ({children}: ContexArg) => {
     }
 
     //product
-    async function productList(){
+    async function productList() {
         try {
             const response = await getProductRequest()
             setProducts(response.data)
@@ -175,7 +182,7 @@ export const AppContexProvider = ({children}: ContexArg) => {
             console.log(error)
         }
     }
-    async function deleteProduct(id: number){
+    async function deleteProduct(id: number) {
         try {
             await deleteProductRequest(id)
             showConfirmModal(false)
@@ -184,8 +191,8 @@ export const AppContexProvider = ({children}: ContexArg) => {
             console.log(error)
         }
     }
-    async function productListByFilter(str: string){
-        if(str == ""){
+    async function productListByFilter(str: string) {
+        if (str == "") {
             productList()
             return
         }
@@ -193,7 +200,7 @@ export const AppContexProvider = ({children}: ContexArg) => {
         try {
             const res = await getProductByFilterRequest(str)
             setProducts(res.data)
-            
+
         } catch (error) {
             console.log(error)
         }
@@ -204,101 +211,9 @@ export const AppContexProvider = ({children}: ContexArg) => {
     function setProductUpdateMode(val: boolean) {
         setProductUpdMode(val)
     }
-    //sales
-    function sumTotal(){
-        const newTotal = productDetails.reduce((con, el) => con + el.subtotal, 0)
-        setTotal(newTotal)
-      }
-      function totalZero(){
-        setTotal(0)
-      }
-    function addDetailProductToList( id: number){
-        setProductDetails((prevProducts) => {
-          return prevProducts.map((product) => {
-            return product.id === id
-              ? { ...product, subtotal: product.price* product.amount }
-              : product;
-          });
-        });
-    }
-    function addProductAmout(id: number){
-        setProductDetails((detailPro) => {
-          return detailPro.map((pro) => {
-            return pro.id == id? { ...pro, amount: pro.amount + 1 } : pro
-          })
-        })
-      }
-    function changeProductAmount(id: number, amountCurrent: number){
-
-        if(!amountCurrent) return
-  
-        setProductDetails((detailPro) => {
-          return detailPro.map((pro) => {
-            return pro.id == id? { ...pro, amount: amountCurrent, subtotal: pro.price * amountCurrent } : pro
-          })
-        })
-        sumTotal()
-      }
-    
-    function handleAddProduct(pro: ProductDetail){
-        if(productDetails.some((data) => data.id == pro.id)){
-            addProductAmout(pro.id as number);
-          } else {
-            setProductDetails([...productDetails, pro])
-          }
-          addDetailProductToList(pro.id as number);
-          console.log(productDetails)
-    }
-    async function deleteProductDetail(id: number){
-        const newPd= productDetails.filter(data => data.id != id)
-        setProductDetails(newPd)
-    }
-    async function createSale(){
-        if(productDetails.length === 0) return
-        console.log(productDetails)
-        try {
-            setSaleButtonDisable(true)
-            const SaleCreated = await createSaleRequest({
-                total:0,
-                createAt: new Date()
-            })    
-        
-            const proDetailToSave: ProductDetailPost[] = productDetails.map((pro) => {
-                return {
-                    id: pro.id,
-                    productAmount: pro.amount,
-                    subtotal: pro.subtotal,
-                    product: {id: pro.id as number},
-                    sale: {id: SaleCreated.data.id as number}
-                }
-            })
-            
-            await createProDetailRequest(proDetailToSave)
-
-            await updateSaleRequest(SaleCreated.data.id, {total: total});
-
-            // modifyin the product`s stock
-            for (const productDetail of productDetails) {
-                const proId= productDetail.id
-                const pro = await getProductByIdRequest(proId)
-                const newStok = pro.data.stock - productDetail.amount
-
-                await updateProductRequest(proId, {...pro.data, stock: newStok})
-            }
-            
-            setProductDetails([])
-            productList()
-            totalZero()
-        } catch (error) {
-            console.log(error)
-            alert("no se pudo realizar la venta")
-        }finally{
-            setSaleButtonDisable(false)
-        }
-    }
 
     //support type
-    async function listSupportType(){
+    async function listSupportType() {
         try {
             const response = await getSupportTypeRequest()
             setSupportTypes(response.data)
@@ -306,7 +221,7 @@ export const AppContexProvider = ({children}: ContexArg) => {
             console.log(error)
         }
     }
-    async function deleteSupportType(id: number){
+    async function deleteSupportType(id: number) {
         try {
             await deleteSupportTypeRequest(id)
             listSupportType()
@@ -314,14 +229,14 @@ export const AppContexProvider = ({children}: ContexArg) => {
             console.log(error)
         }
     }
-    async function setSupportTypeUpdate(sup: SupportTypeGet){
+    async function setSupportTypeUpdate(sup: SupportTypeGet) {
         setSupportTypeModify(sup)
     }
-    async function setSupportTypeUpdateMode(val: boolean){
+    async function setSupportTypeUpdateMode(val: boolean) {
         setSupportTypeUpdMode(val)
     }
-    async function listSupportTypeByFilter(str: string){
-         if(str == ""){
+    async function listSupportTypeByFilter(str: string) {
+        if (str == "") {
             listSupportType()
             return
         }
@@ -329,13 +244,106 @@ export const AppContexProvider = ({children}: ContexArg) => {
         try {
             const res = await getSupplierByFilterRequest(str)
             setSupportTypes(res.data)
-            
+
         } catch (error) {
             console.log(error)
         }
     }
+//sales
+    function sumTotal() {
+        const newTotal = productDetails.reduce((con, el) => con + el.subtotal, 0)
+        setTotal(newTotal)
+    }
+    function totalZero() {
+        setTotal(0)
+    }
+    function addDetailProductToList(id: number) {
+        setProductDetails((prevProducts) => {
+            return prevProducts.map((product) => {
+                return product.id === id
+                    ? { ...product, subtotal: product.price * product.productAmount }
+                    : product;
+            });
+        });
+    }
+    function addProductAmout(id: number) {
+        setProductDetails((detailPro) => {
+            return detailPro.map((pro) => {
+                return pro.id == id ? { ...pro, amount: pro.productAmount + 1 } : pro
+            })
+        })
+    }
+    function changeProductAmount(id: number, amountCurrent: number) {
+
+        if (!amountCurrent) return
+
+        setProductDetails((detailPro) => {
+            return detailPro.map((pro) => {
+                return pro.id == id ? { ...pro, amount: amountCurrent, subtotal: pro.price * amountCurrent } : pro
+            })
+        })
+        sumTotal()
+    }
+
+    function handleAddProduct(pro: ProductDetail) {
+        if (productDetails.some((data) => data.id == pro.id)) {
+            addProductAmout(pro.id as number);
+        } else {
+            setProductDetails([...productDetails, pro])
+        }
+        addDetailProductToList(pro.id as number);
+    }
+    async function deleteProductDetail(id: number) {
+        const newPd = productDetails.filter(data => data.id != id)
+        setProductDetails(newPd)
+    }
+    async function createSale() {
+        if (productDetails.length === 0) return true
+        console.log(productDetails)
+        try {
+            setSaleButtonDisable(true)
+            const SaleCreated = await createSaleRequest({
+                total: 0,
+                createAt: new Date()
+            })
+
+            const proDetailToSave: ProductDetailPost[] = productDetails.map((pro) => {
+                return {
+                    productAmount: pro.productAmount,
+                    subtotal: pro.subtotal,
+                    product: { id: pro.id as number },
+                    sale: { id: SaleCreated.data.id as number },
+                    support: null
+                }
+            })
+
+            await createProDetailRequest(proDetailToSave)
+
+            await updateSaleRequest(SaleCreated.data.id, { total: total });
+
+            // modifyin the product`s stock
+            for (const productDetail of productDetails) {
+                const proId = productDetail.id
+                const pro = await getProductByIdRequest(proId)
+                const newStok = pro.data.stock - productDetail.productAmount
+
+                await updateProductRequest(proId, { ...pro.data, stock: newStok })
+            }
+
+            setProductDetails([])
+            productList()
+            totalZero()
+            return true
+        } catch (error) {
+            alert("no se pudo realizar la venta")
+            return false
+        } finally {
+            setSaleButtonDisable(false)
+        }
+    }
+
     //support
-    async function listSupport(){
+    async function listSupport() {
         try {
             const response = await getSupportsCustomRequest()
             setSupports(response.data)
@@ -344,21 +352,198 @@ export const AppContexProvider = ({children}: ContexArg) => {
         }
     }
 
+    //product detail for support
+    function sumSupTotal() {
+        const propTotal = supProDetail.reduce((con, el) => con + el.subtotal, 0)
+        const actTotal = activities.reduce((con, el) => con + el.supportType.amount, 0)
 
-    
+        const total = propTotal + actTotal
+        setSupTotal(total)
+    }
+    function supTotalZero() {
+        setSupTotal(0)
+    }
+    function addDetailProductToSuppList(id: number) {
+        setSupProDetail((prevProducts) => {
+            return prevProducts.map((product) => {
+                return product.id == id
+                    ? { 
+                        ...product, 
+                        subtotal: product.price? (product.price * product.productAmount) : 0 
+                    }
+                    : product;
+            });
+        });
+    }
+    function addSuppProductAmout(id: number) {
+        setSupProDetail((detailPro) => {
+            return detailPro.map((pro) => {
+                return pro.id == id ? { ...pro, productAmount: pro.productAmount + 1 } : pro
+            })
+        })
+    }
 
-    
+    function handleAddSuppProduct(pro: ProductDetail) {
+        if (supProDetail.some((data) => data.id == pro.id)) {
+            addSuppProductAmout(pro.id as number);
+        } else {
+            setSupProDetail([...supProDetail, {...pro, isSaved: false}])
+        }
+        addDetailProductToSuppList(pro.id as number);
+    }
+
+    function resetSuppProduct(id: number){
+        const newPro = supProDetail.filter(pro => pro.id != id)
+        setSupProDetail(newPro)
+    }
+    function suppDetailConcel(){
+        setSupProDetail([])
+        setSupTotal(0)
+    }
+    async function getSupportDetials(id: number){
+        try {
+            const pro  = await getProductDetailBySupportRequest(id)
+            const newPro: SuppProductDetail[] = pro.data.map((pro: SuppProductDetail) => ({...pro, isSaved: true}))
+            setSupProDetail(newPro)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    async function registerSaleForSupport(products: SuppProductDetail[], support: SupportCustomGet){
+        if(products.length == 0) return true
+        
+       try {
+        //creating sale
+        console.log("creating sale")
+         const SaleCreated = await createSaleRequest({total: 0, createAt: new Date()})
+ 
+         //preparing product
+         console.log("preparing product")
+         const proDetailToSave: ProductDetailPost[] = products.map((pro) => {
+                 return {
+                    //  id: pro.id,
+                     productAmount: pro.productAmount,
+                     subtotal: pro.subtotal,
+                     product: { id: pro.id as number },
+                     sale: { id: SaleCreated.data.id as number },
+                     support: {
+                         id: support.id as number
+                     }
+                 }
+         })
+         console.log(proDetailToSave)
+         await createProDetailRequest(proDetailToSave)
+
+         //suming total
+         const saleTotal = proDetailToSave.reduce((con, el) => con+el.subtotal, 0)
+
+        console.log("updating sale")
+         await updateSaleRequest(SaleCreated.data.id, { total: saleTotal });
+ 
+         //registering products details in the sale
+         for (const productDetail of products) {
+             const proId = productDetail.id
+             const pro = await getProductByIdRequest(proId)
+             const newStok = pro.data.stock - productDetail.productAmount
+
+            // substracting product stock
+             await updateProductRequest(proId, { ...pro.data, stock: newStok })
+         }
+         setSupProDetail([])
+         supTotalZero()
+         return true
+       } catch (error) {
+        console.log(error)
+        return false
+       }
+       
+    }
+
+    async function registerSupportDetails(support: SupportCustomGet, products: SuppProductDetail[]){
+        //regiter products 
+        const sale = await registerSaleForSupport(products, support)
+
+        if(!sale) return false
+
+        try {
+            await updateSupportTotalRequest(support.id as number, supTotal);
+            return true
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+    }
+
+    async function resetSuppProductFromDB(id: number){
+
+        try {
+             //getting productDetail
+             console.log("getting productDetail")
+            const proDRes: AxiosResponse<ProductDetailGet> = await getProductDetailByIdRequest(id)
+
+            const proD = proDRes.data
+
+            //getting product
+            console.log("getting product")
+            const productFound: AxiosResponse<ProductGet> = await getProductByIdRequest(proD.product.id as number)
+
+            //updating product stock
+            const newStock = productFound.data.stock + proD.productAmount
+
+            await updateProductStockRequest(
+                productFound.data.id as number,
+                newStock
+            )
+            await deleteProductDetailRequest(id)
+
+            const newTotal = supTotal - proD.subtotal
+            setSupTotal(newTotal)
+
+            //updating support total
+            await updateSupportTotalRequest(
+                supportCurrent?.id as number, 
+                newTotal
+            )
+           
+
+            //getting support details
+            getSupportDetials(supportCurrent?.id as number)
+            showConfirmModal(false)
+        } catch (error) {
+            console.log(error)
+        }
+
+    }
+
+    //activities
+    function addActivitesToList(act: activityGet){
+        setActivities([...activities, act])
+    }
+    function resetActivityFromCache(id: number){
+        const newList = activities.filter(act => act.supportType.id != id)
+        setActivities(newList)
+    }
+    async function registerActivityForSupport(){
+        
+    }
+
+
+
+
+
     return (
         <appContext.Provider value={{
             isFormModalOpen, showFormModal, showConfirmModal, isShowConfirmModal, setGlobalTitleFn, globalTitle,
             userUpdateMode, setUserUpdate, isUserUpdMode, userModify, addUserDoc, userDoc, showRSidebar, setShowRSidebar,
-            customers, customerList, iscustUpdMode, customerModify, setCustUpdate, setCustUpdateMode,  deleteCustomer, customerListByFilter, addCustomerDoc, customerDoc,
+            customers, customerList, iscustUpdMode, customerModify, setCustUpdate, setCustUpdateMode, deleteCustomer, customerListByFilter, addCustomerDoc, customerDoc,
             suppliers, supplierList, isSupUpdMode, supplierModify, setSupUpddateMode, setSupplierUpdate, deleteSupplier, supplierListByFilter,
             products, productList, isProductUpdMode, productModify, setProductModify, setProductUpdateMode, setProductUpdate, deleteProduct, productListByFilter,
-            productDetails, changeProductAmount, handleAddProduct, deleteProductDetail,total,sumTotal, createSale,
+            productDetails, changeProductAmount, handleAddProduct, deleteProductDetail, total, sumTotal, createSale,
             formTitle, setModalFormTitle, saleButtonDisable,
             listSupportType, deleteSupportType, setSupportTypeUpdate, setSupportTypeUpdateMode, supportTypes, supportTypeUpdMode, supportTypeModify, listSupportTypeByFilter,
-            listSupport, supports, supportUpdMode, supportModify, setSupportsUpdMode, setSupportModify
+            listSupport, supports, supportUpdMode, supportModify, setSupportsUpdMode, setSupportModify,
+            suppDetailConcel, handleAddSuppProduct, supProDetail, resetSuppProduct, resetSuppProductFromDB, sumSupTotal, supTotal,registerSupportDetails, getSupportDetials, setSupportCurrent, supportCurrent, activities, addActivitesToList, resetActivityFromCache
         }}>
             {children}
         </appContext.Provider>

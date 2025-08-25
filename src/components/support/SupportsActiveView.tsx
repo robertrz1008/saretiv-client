@@ -3,6 +3,7 @@ import { MdDevices } from "react-icons/md";
 import { useAppContext } from "../../context/AppContext";
 import { GrConfigure } from "react-icons/gr";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 interface Prop{
   setDeviceTitle: (des : string) => void
@@ -11,10 +12,22 @@ interface Prop{
 function SupportsActiveView(prop: Prop) {
 
   const context = useAppContext() as AppContextIn
+  const [suppId, setSuppId] = useState(0)
 
   const newList = context.supports.reverse()
 
   const navigate = useNavigate()
+
+
+
+  useEffect(() => {
+    if(suppId){
+      navigate("/SoporteTecnico/Detalles/"+suppId)
+    }
+  }, [suppId])
+
+
+
 
   return (
     <div className="support-list">
@@ -45,7 +58,8 @@ function SupportsActiveView(prop: Prop) {
                         <div className='supp-icon-con icon-conf'>
                           <GrConfigure onClick={()=>{
                             prop.setDeviceTitle(sup.description)
-                            navigate("/SoporteTecnico/Detalles")
+                            setSuppId(sup.id as number)
+                            
                           }}/>
                         </div>
                         <div className='supp-icon-con icon-dev'>

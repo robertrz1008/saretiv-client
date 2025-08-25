@@ -1,6 +1,7 @@
+import type { activityGet } from "./Activities";
 import type { User } from "./InAuth"
 import type { ProductDetail } from "./SalesInterfaces";
-import type { SupportCustomGet, SupportTypeGet } from "./SupportIn";
+import type { SupportCustomGet, SupportTypeGet, SuppProductDetail } from "./SupportIn";
 
 export interface DropdownItem{
     label: string, 
@@ -118,4 +119,18 @@ export interface AppContextIn{
     supportModify: SupportCustomGet
     setSupportsUpdMode: (val: boolean) => void
     setSupportModify: (supp: SupportCustomGet) => void
+    supProDetail: SuppProductDetail[]
+    handleAddSuppProduct: (pro: ProductDetail) => void
+    resetSuppProduct: (id: number) => void
+    sumSupTotal: () => void
+    supTotal: number,
+    suppDetailConcel:() => void
+    registerSupportDetails: (support: SupportCustomGet, products: SuppProductDetail[]) => boolean
+    getSupportDetials: (id: number) => void
+    setSupportCurrent: (sup: SupportCustomGet) => void
+    supportCurrent: SupportCustomGet
+    resetSuppProductFromDB: (id:number) => void
+    activities: activityGet[]
+    addActivitesToList: (activity: activityGet) => void
+    resetActivityFromCache: (id: number) => void
 }
