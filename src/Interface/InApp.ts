@@ -1,4 +1,4 @@
-import type { activityGet } from "./Activities";
+import type { ActivityGet } from "./Activities";
 import type { User } from "./InAuth"
 import type { ProductDetail } from "./SalesInterfaces";
 import type { SupportCustomGet, SupportTypeGet, SuppProductDetail } from "./SupportIn";
@@ -125,12 +125,13 @@ export interface AppContextIn{
     sumSupTotal: () => void
     supTotal: number,
     suppDetailConcel:() => void
-    registerSupportDetails: (support: SupportCustomGet, products: SuppProductDetail[]) => boolean
+    registerSupportDetails: (support: SupportCustomGet, products: SuppProductDetail[], activities: ActivityGet[]) => boolean
     getSupportDetials: (id: number) => void
     setSupportCurrent: (sup: SupportCustomGet) => void
     supportCurrent: SupportCustomGet
     resetSuppProductFromDB: (id:number) => void
-    activities: activityGet[]
-    addActivitesToList: (activity: activityGet) => void
+    activities: ActivityGet[]
+    addActivitesToList: (activity: ActivityGet) => void
     resetActivityFromCache: (id: number) => void
+    resetActivityFromDB: (actvityId: number) => void
 }

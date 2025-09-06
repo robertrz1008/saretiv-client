@@ -10,7 +10,8 @@ import { deleteSupportTypeRequest, getSupportTypeRequest } from "../services/Sup
 import type { SupportCustomGet, SupportTypeGet, SuppProductDetail } from "../Interface/SupportIn";
 import { getSupportsCustomRequest, updateSupportTotalRequest } from "../services/Support.Service";
 import type { AxiosResponse } from "axios";
-import type { activityGet } from "../Interface/Activities";
+import type { ActivityDTO, ActivityGet } from "../Interface/Activities";
+import { deleteActivityRequest, getActivitiesBySupportIdRequest, postActivitiesRequest } from "../services/Activities.service";
 const appContext = createContext({})
 
 export const useAppContext = () => {
@@ -65,7 +66,7 @@ export const AppContexProvider = ({ children }: ContexArg) => {
     const [supTotal, setSupTotal] = useState(0)
     const [supportCurrent, setSupportCurrent] = useState<SupportCustomGet>()
     //support activities
-    const [activities, setActivities] = useState<activityGet[]>([])
+    const [activities, setActivities] = useState<ActivityGet[]>([])
 
     const [formTitle, setFormTitle] = useState("")
 
@@ -249,7 +250,7 @@ export const AppContexProvider = ({ children }: ContexArg) => {
             console.log(error)
         }
     }
-//sales
+    //sales
     function sumTotal() {
         const newTotal = productDetails.reduce((con, el) => con + el.subtotal, 0)
         setTotal(newTotal)
@@ -402,24 +403,27 @@ export const AppContexProvider = ({ children }: ContexArg) => {
     }
     async function getSupportDetials(id: number){
         try {
+            //getting product by support
             const pro  = await getProductDetailBySupportRequest(id)
             const newPro: SuppProductDetail[] = pro.data.map((pro: SuppProductDetail) => ({...pro, isSaved: true}))
             setSupProDetail(newPro)
+
+            //getting activities registered
+            const res = await getActivitiesBySupportIdRequest(id)
+            const newAct: ActivityGet[] = res.data.map((act: ActivityGet) => ({...act, isSaved: true}))
+            setActivities(newAct)
         } catch (error) {
             console.log(error)
         }
     }
-
     async function registerSaleForSupport(products: SuppProductDetail[], support: SupportCustomGet){
-        if(products.length == 0) return true
+        if(products.length == 0) return false
         
        try {
         //creating sale
-        console.log("creating sale")
          const SaleCreated = await createSaleRequest({total: 0, createAt: new Date()})
  
          //preparing product
-         console.log("preparing product")
          const proDetailToSave: ProductDetailPost[] = products.map((pro) => {
                  return {
                     //  id: pro.id,
@@ -438,7 +442,6 @@ export const AppContexProvider = ({ children }: ContexArg) => {
          //suming total
          const saleTotal = proDetailToSave.reduce((con, el) => con+el.subtotal, 0)
 
-        console.log("updating sale")
          await updateSaleRequest(SaleCreated.data.id, { total: saleTotal });
  
          //registering products details in the sale
@@ -459,13 +462,18 @@ export const AppContexProvider = ({ children }: ContexArg) => {
        }
        
     }
-
-    async function registerSupportDetails(support: SupportCustomGet, products: SuppProductDetail[]){
-        //regiter products 
+    async function registerSupportDetails(
+        support: SupportCustomGet, 
+        products: SuppProductDetail[],
+        activities: ActivityGet[]
+    ){
+        //regiter products and acitivities
         const sale = await registerSaleForSupport(products, support)
+        const activitiesRegister = await registerActivityForSupport(activities)
 
-        if(!sale) return false
+        if(!sale && !activitiesRegister) return false
 
+        //modifing the support`s total
         try {
             await updateSupportTotalRequest(support.id as number, supTotal);
             return true
@@ -474,18 +482,15 @@ export const AppContexProvider = ({ children }: ContexArg) => {
             return false
         }
     }
-
     async function resetSuppProductFromDB(id: number){
 
         try {
              //getting productDetail
-             console.log("getting productDetail")
             const proDRes: AxiosResponse<ProductDetailGet> = await getProductDetailByIdRequest(id)
 
             const proD = proDRes.data
 
             //getting product
-            console.log("getting product")
             const productFound: AxiosResponse<ProductGet> = await getProductByIdRequest(proD.product.id as number)
 
             //updating product stock
@@ -517,18 +522,67 @@ export const AppContexProvider = ({ children }: ContexArg) => {
     }
 
     //activities
-    function addActivitesToList(act: activityGet){
+    function addActivitesToList(act: ActivityGet){
         setActivities([...activities, act])
     }
     function resetActivityFromCache(id: number){
+        console.log("id de actividad "+id)
         const newList = activities.filter(act => act.supportType.id != id)
+        console.log(newList)
         setActivities(newList)
-    }
-    async function registerActivityForSupport(){
-        
-    }
+    } 
+    async function registerActivityForSupport(activities: ActivityGet[]){
+        if(activities.length == 0) return false
 
+        //listing activities for register
+        let activitiesForSave: ActivityDTO[] = []
+        activities.map((act) => {
+            const item: ActivityDTO = {
+                support: {id: supportCurrent?.id as number},
+                supportType: {id: act.supportType.id as number}
+            }
+            activitiesForSave.push(item)
+        })
+        try {
+            await postActivitiesRequest(activitiesForSave)
+            return true
+        } catch (error) {
+            console.log(error)
+            return false
+        }
 
+    }
+    
+    async function resetActivityFromDB(actvityId: number){
+        console.log(actvityId)
+        const thisActivity: ActivityGet | undefined  = activities.find(act => act.id == actvityId)
+
+        if(!thisActivity) return
+
+        const activityAmount = thisActivity.supportType.amount
+        const newTotal = supTotal - activityAmount
+
+        try {
+            await updateSupportTotalRequest(
+                supportCurrent?.id as number,
+                newTotal
+            )
+
+            // setSupTotal(newTotal)
+            await deleteActivityRequest(actvityId)
+
+            //update the activity list
+            const newList = activities.filter(act => act.id != actvityId)
+            console.log(newList)
+            setActivities(newList)
+
+            console.log("sacando de la lista")
+            
+            
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
 
@@ -543,7 +597,7 @@ export const AppContexProvider = ({ children }: ContexArg) => {
             formTitle, setModalFormTitle, saleButtonDisable,
             listSupportType, deleteSupportType, setSupportTypeUpdate, setSupportTypeUpdateMode, supportTypes, supportTypeUpdMode, supportTypeModify, listSupportTypeByFilter,
             listSupport, supports, supportUpdMode, supportModify, setSupportsUpdMode, setSupportModify,
-            suppDetailConcel, handleAddSuppProduct, supProDetail, resetSuppProduct, resetSuppProductFromDB, sumSupTotal, supTotal,registerSupportDetails, getSupportDetials, setSupportCurrent, supportCurrent, activities, addActivitesToList, resetActivityFromCache
+            suppDetailConcel, handleAddSuppProduct, supProDetail, resetSuppProduct, resetSuppProductFromDB, sumSupTotal, supTotal,registerSupportDetails, getSupportDetials, setSupportCurrent, supportCurrent, activities, addActivitesToList, resetActivityFromCache, resetActivityFromDB
         }}>
             {children}
         </appContext.Provider>

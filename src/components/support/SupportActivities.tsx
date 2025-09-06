@@ -19,6 +19,7 @@ function SupportActivities() {
     context.sumSupTotal()
   }, [context.activities])
 
+
   return (
     <div className='support-types-con'>
         <div className='flex f-jc-beetwen f-ai-center'>

@@ -11,4 +11,5 @@ export const getSupportFilterRequest = (filter: string) => axios.get(API+`/filte
 export const deleteSupportRequest = (id: number) => axios.delete(API+`/${id}`)
 export const updateSupportRequest = (id: number, sup: SupportPost) => axios.put(API+`/${id}`, sup) 
 export const updateSupportTotalRequest = (id: number, total: number) => axios.put(API+`/total/${total}/${id}`) 
+export const updateSupportStatusRequest = (id: number, status: string) => axios.put(API+`/status/${status}/${id}`) 
 export const getSupportByIdRequest = (id: number) => axios.get(API+`/id/${id}`)

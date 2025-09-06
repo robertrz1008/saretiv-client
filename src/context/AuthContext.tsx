@@ -161,9 +161,6 @@ export const AuthContextProvider = ({children}: ContexArg) => {
     useEffect(() => {
         checkLogin()
     }, [])
-     useEffect(() => {
-        console.log(userList)
-    }, [userList])
     
 
     return(

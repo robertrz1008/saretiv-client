@@ -16,6 +16,24 @@ function SupportTypeSearch(prop: Prop) {
   const [thisSupportTypes, setThisSupportTypes] = useState<SupportTypeGet[]>([])
 
 
+  function listSuportTypeForSelect(){
+
+    //Listing by category
+    const currentSup = context.supportCurrent.categoryDev
+    let newList = context.supportTypes.filter((sup: SupportTypeGet) => sup.category.name == currentSup)
+
+    let activitiesId:Array<number>=[]
+    context.activities.map(map => {
+      activitiesId.push(map.supportType.id as number)
+    })
+
+    newList = newList.filter(act => activitiesId.includes(act.id as number) == false)
+    setThisSupportTypes(newList)
+    
+  }
+  
+
+  //for send
   function hanldeSelect(supType: SupportTypeGet){
     context.addActivitesToList({
       support: null,
@@ -31,13 +49,14 @@ function SupportTypeSearch(prop: Prop) {
   },[])
 
   useEffect(() => {
-    //listing by this category
     if(context.supportCurrent){
-      const currentSup = context.supportCurrent.categoryDev
-      const newList = context.supportTypes.filter((sup: SupportTypeGet) => sup.category.name == currentSup)
-      setThisSupportTypes(newList)
+      listSuportTypeForSelect()
     }
-  }, [context.supportTypes])
+  }, [context.activities])
+
+
+
+
 
 
 
@@ -48,7 +67,7 @@ function SupportTypeSearch(prop: Prop) {
             <InputText
               // value={description}
               variant="filled"
-              // onChange={(e) => setDescription(e.target.value)}
+              // onChange={(e) => context.getSup(e.target.value)}
               placeholder="Buscar"
               style={{ width: "100%"}}
             />

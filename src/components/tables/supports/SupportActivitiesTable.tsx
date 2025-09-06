@@ -1,17 +1,25 @@
 import { MdDeleteOutline } from "react-icons/md"
 import { useAppContext } from "../../../context/AppContext"
 import type { AppContextIn } from "../../../Interface/InApp"
-import type { activityGet } from "../../../Interface/Activities"
+import type { ActivityGet } from "../../../Interface/Activities"
+import { act, useState } from "react"
+import DeleteActivityModal from "../../Modal/confirm/DeleteActivityModal"
 
 function SupportActivitiesTable() {
 
     const context = useAppContext() as AppContextIn
+    const [actId, setActId] = useState(0)
+    const [modal, setModal] = useState(false)
 
-   function handleDelete(act: activityGet){
+    const handleModal = (val: boolean) => setModal(val)
+
+   function handleDelete(act: ActivityGet){
     if(!act.isSaved){
         context.resetActivityFromCache(act.supportType.id as number)
         return
     }
+    setModal(true)
+    setActId(act.id as number)
 
    }
 
@@ -46,6 +54,11 @@ function SupportActivitiesTable() {
                                 </tr>
                             ))
                     }
+                    <DeleteActivityModal 
+                        handleModal={handleModal}
+                        id={actId}
+                        isModalOpen={modal}
+                    />
                 </tbody>
             </table>
         </div>

@@ -9,7 +9,7 @@ import type { User } from "../../Interface/InAuth";
 import type { AxiosResponse } from "axios";
 import { Button } from "primereact/button";
 import type { SupportGet, SupportPost } from "../../Interface/SupportIn";
-import { postSupportRequest, updateSupportRequest } from "../../services/Support.Service";
+import { postSupportRequest, updateSupportRequest, updateSupportStatusRequest } from "../../services/Support.Service";
 import { useAppContext } from "../../context/AppContext";
 import { postDeviceRequest, updateDeviceRequest } from "../../services/Device.service";
 import { InputText } from "primereact/inputtext";
@@ -40,6 +40,8 @@ function SupportForm() {
 
     const [status, setStatus] = useState<string>('');
     const [startDate, setStartDate] = useState<Date | null>()
+
+    const [isStatusDisabled, setStatusDisabled] = useState(true)
 
 
 
@@ -135,24 +137,42 @@ function SupportForm() {
             return false
         }
     }
+
+    async function updateSupportStatus(id: number, status: string){
+        try {
+            console.log("status: "+status)
+            await updateSupportStatusRequest(id, status)
+            return true
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+    }
+
     async function updateSupport(){
         const suppSend = context.supportModify
 
         try {
-            await updateSupportRequest( suppSend.id as number, {
+            if(status == "CANCELADO" || status == "FINALIZADO" ){
+
+                await updateSupportStatus(suppSend.id as number, status)
+
+            }else{
+                await updateSupportRequest( suppSend.id as number, {
                 customerId: suppSend.customerId,
                 startDate: suppSend.startDate as Date,
                 status: status,
                 total: suppSend.total,
                 userId: suppSend.userId
-            })
+                })
+                await updateDeviceRequest(suppSend.devId, {
+                    description: description,
+                    observation: observation,
+                    categoryId: suppSend.categoryDevId,
+                    supportId: suppSend.id as number
+                })
+            }
             
-            await updateDeviceRequest(suppSend.devId, {
-                description: description,
-                observation: observation,
-                categoryId: suppSend.categoryDevId,
-                supportId: suppSend.id as number
-            })
             return true
         } catch (error) {
             console.log(error)
@@ -196,6 +216,7 @@ function SupportForm() {
                 label: supportCurrent.user,
                 code: (supportCurrent.userId+"")
             })
+            setStatusDisabled(false)
         }
     }
 
@@ -205,9 +226,16 @@ function SupportForm() {
         getItems()
         isFormToUpdate()
     }, [])
+
     useEffect(() => {
         console.log(startDate)
     }, [startDate])
+
+
+    
+
+
+
 
 
   return (
@@ -334,17 +362,25 @@ function SupportForm() {
                  <h4 >Estado del soporte</h4>
                 <div style={{display:"flex", width:"100%", justifyContent:"space-between", marginTop:"10px"}}>
                     <div className="flex align-items-center">
-                    <RadioButton inputId="ingredient1" name="pizza" value="Cheese" onChange={(e: RadioButtonChangeEvent) => setStatus(e.value)} checked={status === 'Cheese'} />
-                    <label htmlFor="ingredient1" className="ml-2">Activo</label>
-                </div>
-                <div className="flex align-items-center">
-                    <RadioButton inputId="ingredient2" name="pizza" value="Mushroom" onChange={(e: RadioButtonChangeEvent) => setStatus(e.value)} checked={status === 'Mushroom'} />
-                    <label htmlFor="ingredient2" className="ml-2">Cancelado</label>
-                </div>
-                <div className="flex align-items-center">
-                    <RadioButton inputId="ingredient3" name="pizza" value="Pepper" onChange={(e: RadioButtonChangeEvent) => setStatus(e.value)} checked={status === 'Pepper'} />
-                    <label htmlFor="ingredient3" className="ml-2">Finalizado</label>
-                </div>
+                        <RadioButton 
+                            inputId="ingredient2"
+                            value="CANCELADO" 
+                            disabled={isStatusDisabled}
+                            onChange={(e: RadioButtonChangeEvent) => setStatus(e.value)} 
+                            checked={status === 'CANCELADO'} 
+                        />
+                        <label htmlFor="ingredient2" className="ml-2">Cancelado</label>
+                    </div>
+
+                    <div className="flex align-items-center">
+                        <RadioButton inputId="ingredient3"
+                            value="FINALIZADO" 
+                            disabled={isStatusDisabled}
+                            onChange={(e: RadioButtonChangeEvent) => setStatus(e.value)} 
+                            checked={status == 'FINALIZADO'} 
+                        />
+                        <label htmlFor="ingredient3" className="ml-2">Finalizado</label>
+                    </div>
                 </div>
             </div>
             <div style={{height: "20px"}}></div>

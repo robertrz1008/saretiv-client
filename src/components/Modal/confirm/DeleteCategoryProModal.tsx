@@ -1,4 +1,3 @@
-import React from 'react'
 import { useAppContext } from '../../../context/AppContext'
 import type { AppContextIn } from '../../../Interface/InApp'
 import { ConfirmDialog } from 'primereact/confirmdialog'
@@ -20,6 +19,7 @@ function DeleteCategoryProModal(prop: ModalProp) {
               onHide={() => {context.showConfirmModal(false)}} 
               message={"Decea eliminar esta categoria? "} 
               header="Eliminar" icon="pi pi-exclamation-triangle"
+              acceptLabel='Si'
         />  
   )
 }

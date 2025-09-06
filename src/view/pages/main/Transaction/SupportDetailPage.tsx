@@ -4,14 +4,21 @@ import SupportProducts from "../../../../components/support/SupportProducts"
 import { useNavigate, useParams } from "react-router-dom"
 import { useAppContext } from "../../../../context/AppContext"
 import type { AppContextIn } from "../../../../Interface/InApp"
-import { useEffect } from "react"
+import { useEffect, useState } from "react"
 import type { SupportCustomGet, SuppProductDetail } from "../../../../Interface/SupportIn"
+import type { ActivityGet } from "../../../../Interface/Activities"
 
 function SupportDetailPage() {
 
     const navigate = useNavigate()
     const param = useParams()
     const context = useAppContext() as AppContextIn
+
+    const [btnDisabled, setBtnDisabled] = useState(true)
+
+
+
+
 
 
 
@@ -23,18 +30,29 @@ function SupportDetailPage() {
         navigate("/SoporteTecnico")
         context.suppDetailConcel()
     }
+    function handleButtom(){
+        if (setProductsDetailnotSaved().length > 0 || setActivitiesnotSaved().length > 0 ) {
+            setBtnDisabled(false)
+            return
+        }
+        setBtnDisabled(true)
+    }
     function setProductsDetailnotSaved(): SuppProductDetail[]{
         const pro: SuppProductDetail[] = context.supProDetail.filter(pro => pro.isSaved == false);
-
         return pro
     }
-    async function afterRegister(){
-        const result = await context.registerSupportDetails( 
+    function setActivitiesnotSaved(): ActivityGet[]{
+        const act: ActivityGet[] = context.activities.filter((act: ActivityGet) => act.isSaved == false)
+        return act
+    }
+    async function beforeRegister(){
+        const resultPro = await context.registerSupportDetails( 
             context.supportCurrent as SupportCustomGet,
-            setProductsDetailnotSaved()
+            setProductsDetailnotSaved(),
+            setActivitiesnotSaved()
         )
 
-        if(!result){
+        if(!resultPro){
             alert("No se pudo realizar la transaccion")
             return 
         }
@@ -44,10 +62,15 @@ function SupportDetailPage() {
 
 
 
+
     useEffect(() => {
-        setSupports()
-        
+        setSupports() 
     }, [])
+
+    useEffect(() => {
+        handleButtom()
+    }, [context.activities, context.supProDetail])
+    
     useEffect(() => {
         const thisSup = context.supportCurrent
         if(thisSup){
@@ -55,7 +78,11 @@ function SupportDetailPage() {
         }
     }, [context.supportCurrent])
     
+
+
     
+
+
 
     return (
         <div className="main-con">
@@ -85,7 +112,8 @@ function SupportDetailPage() {
                             label="Guardar" 
                             raised 
                             style={{width:"200px"}}
-                            onClick={afterRegister}
+                            disabled={btnDisabled}  
+                            onClick={beforeRegister}
                             size='small'
                         />
                 </section>

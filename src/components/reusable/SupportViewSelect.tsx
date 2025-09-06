@@ -6,7 +6,7 @@ interface Prop{
     isupdate: boolean 
 }
 
-function RoleSelect(prop: Prop) {
+function SupportViewSelect(prop: Prop) {
     
     const roles=[
     { name: 'ADMINISTRADOR', code: 'ADMINISTRADOR'},
@@ -44,4 +44,4 @@ function RoleSelect(prop: Prop) {
   )
 }
 
-export default RoleSelect
+export default SupportViewSelect
