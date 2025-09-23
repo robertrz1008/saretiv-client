@@ -19,6 +19,12 @@ export interface InUser extends UserLogin{
     entryDate: Date,
     status: boolean,
 }
+export interface UserParams{
+    property: string,
+    role: string
+    order: string
+    isActive: boolean
+}
 
 export interface User extends InUser{
     roles: Role[]
@@ -55,5 +61,5 @@ export interface AuthContextIn{
     logout: () => void,
     deleteUser: (id: number) => Promise<boolean>
     listUserByFilter: (filter: string) => void
-    
+    getUserListByParams: (user: UserParams) => void
 }

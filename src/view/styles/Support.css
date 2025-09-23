@@ -79,6 +79,13 @@
     background-color: rgb(58, 129, 235);
     margin-right: 10px;
 }
+.icon-menu{
+    color: grey;
+    transition: all 0.2s ease;
+}
+.supp-icon-con:hover{
+    background-color: #e7e5e5;
+}
 .icon-dev{
     background-color: grey;
 }
@@ -133,5 +140,36 @@
 }
 .pay-search-target:hover{
     background-color: rgb(214, 218, 221);
-    
+}
+
+.menu-option{
+    width: 150px;
+}
+.menu-option-item{
+    width: 100%;
+    height: 30px;
+    cursor: pointer;
+    display: flex;
+    padding-left: 5px;
+    align-items: center;
+}
+.menu-option-item:hover{
+   background-color: rgb(214, 218, 221);
+}
+
+/* support details modal */
+.supp-detial-modal{
+    width: 460px;
+    height: 600px;
+}
+.details-texts-item{
+    margin-top: 6px;
+    width: 90%;
+}
+.details-texts{
+    width: 460px;
+}
+.detail-table-con{
+    margin-top: 15px;
+    width: 460px;
 }

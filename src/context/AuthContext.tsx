@@ -1,6 +1,6 @@
 import { useContext, createContext, type ReactNode, useState, useEffect } from "react";
-import { type CreateUser, type LoginResponse, type Profile, type User, type UserLogin, } from "../Interface/InAuth";
-import { deleteUserRequest, deleteUserRoleByUserRequest, getUserByFilterRequest, loginRequest, logoutRequest, profileRequest, registerRequest, usersListRequest } from "../services/Auth.service";
+import { type CreateUser, type LoginResponse, type Profile, type User, type UserLogin, type UserParams, } from "../Interface/InAuth";
+import { deleteUserRequest, deleteUserRoleByUserRequest, getUserByFilterRequest, getUserByParamsRequest, loginRequest, logoutRequest, profileRequest, registerRequest, usersListRequest } from "../services/Auth.service";
 import type { AxiosResponse, AxiosError} from "axios";
 import axios from "axios";
 
@@ -107,6 +107,16 @@ export const AuthContextProvider = ({children}: ContexArg) => {
                 console.log(error)
             }
     }
+    async function getUserListByParams(user: UserParams){
+        try {
+            const response = await getUserByParamsRequest(user)
+            setUserList(response.data)
+            return true
+        } catch (error) {
+            return false
+            console.log(error)
+        }
+    }
     async function deleteUser(id: number): Promise<boolean>{
         // if(id = user?.id as number){
         //     alert("no se puede eliminar al administrador")
@@ -151,8 +161,6 @@ export const AuthContextProvider = ({children}: ContexArg) => {
             setAuthLoading(false)
             return false
         }
-        setUserList([])
-        // await logoutRequest()
     }
 
 
@@ -178,7 +186,8 @@ export const AuthContextProvider = ({children}: ContexArg) => {
             userList,
             logout,
             deleteUser,
-            listUserByFilter
+            listUserByFilter,
+            getUserListByParams
         }}>
                 {children}
         </appContext.Provider>

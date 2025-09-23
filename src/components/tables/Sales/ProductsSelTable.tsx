@@ -27,6 +27,7 @@ function ProductsSelTable() {
   return (
     <div className="product-detail-con">
         <InputText
+            autoFocus
             onChange={(e) => {
                 context.productListByFilter(e.target.value)
             }}

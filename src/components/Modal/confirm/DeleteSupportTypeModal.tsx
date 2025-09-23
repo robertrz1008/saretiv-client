@@ -16,8 +16,9 @@ function DeleteSupportTypeModal(prop: ModalProp) {
               visible={context.isShowConfirmModal} 
               accept={() => context.deleteSupportType(prop.id)}
               onHide={() => {context.showConfirmModal(false)}} 
-              message={"Decea eliminar esta categoria? "} 
+              message={"¿Desea eliminar esta categoria? "} 
               header="Eliminar" icon="pi pi-exclamation-triangle"
+              acceptLabel='Si'
         />  
   )
 }

@@ -28,6 +28,7 @@ function CustomerTable() {
                     <th>Cedula</th>
                     <th>telefono</th>
                     <th>Direccion</th>
+                    <th>Estado</th>
                     <th className='td-icon'></th>
                 </tr>
             </thead>
@@ -50,6 +51,7 @@ function CustomerTable() {
                                     <td>{data.document}</td>
                                     <td>{data.telephone}</td>
                                      <td>{data.address}</td>
+                                     <td>{data.status? "ACTIVO" : "INACTIVO"}</td>
                                     <td onClick={(e) => e.stopPropagation()}>
                                         <div 
                                             onClick={(e) => {

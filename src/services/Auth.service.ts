@@ -1,5 +1,5 @@
 import axios from "./axios";
-import { type CreateUser, type Role , type UserLogin } from "../Interface/InAuth"
+import { type CreateUser, type Role , type UserLogin, type UserParams } from "../Interface/InAuth"
 import {HTTP } from "../utils/config"
 
 const httpAuth = HTTP+"/auth"
@@ -15,4 +15,5 @@ export const getUserByFilterRequest = (filter: string) => axios.get(httpAuth+`/f
 
 export const createRoleRequest = (role: Role) => axios.post(httpAuth+"/createRole", role)
 export const usersListRequest = () => axios.get(httpAuth+"/users/list")
+export const getUserByParamsRequest = (userParam: UserParams) => axios.post(httpAuth+"/params", userParam)
 

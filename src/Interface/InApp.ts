@@ -18,10 +18,17 @@ export interface Customer{
     address: string
 }
 
+export interface CustomerParams{
+    property: string,
+    order: string
+    isActive: boolean
+}
+
 export interface Category{
     id?: number;
     name: string
 }
+
 export interface Supplier{
     id?: number
     name: string,
@@ -49,8 +56,17 @@ export interface ProductGet extends Product{
     supplier: Supplier
     category: Category
 }
-
-
+export interface ProductParams{
+    property: string,
+    category: string,
+    supplier: string,
+    order: string,
+    isStock: string
+    saleMin: number
+    saleMax: number,
+    buyMin: number,
+    buyMax: number
+}
 
 
 export interface AppContextIn{
@@ -58,7 +74,11 @@ export interface AppContextIn{
     globalTitle: string
     isFormModalOpen: boolean
     showFormModal:  (val: boolean) => void
+    showDetailModal: (val: boolean) => void
+    isShowDetailModal: boolean
     userUpdateMode: (val: boolean) => void
+    isFilterSidebarOpen: boolean
+    setFilterSidebar: (val: boolean) => void
     setUserUpdate: (user: User) => void
     isUserUpdMode: boolean
     userModify: User
@@ -67,19 +87,20 @@ export interface AppContextIn{
     customers: Customer[],
     suppliers: Supplier[]
     customerList: () => void,
-    iscustUpdMode: boolean 
+    iscustUpdMode: boolean
     customerModify: Customer
     setCustUpdateMode: (val: boolean) => void 
     setCustUpdate: (cust: Customer) => void
     deleteCustomer: (id: number) => void
     customerListByFilter: (str: string) => void
     addUserDoc: (doc: string) => void
+    getCustomerByParams: (params: CustomerParams) => void
     userDoc: string
     addCustomerDoc: (doc: string) => void
     customerDoc: string
     supplierList: () => void 
     isSupUpdMode: boolean
-    supplierModify: Supplier 
+    supplierModify: Supplier
     setSupUpddateMode: (val: boolean) => void
     setSupplierUpdate: (sup: Supplier) => void
     deleteSupplier: (id: number) => void 
@@ -95,6 +116,7 @@ export interface AppContextIn{
     changeProductAmount: (id: number, amountCurrent: number) => void
     deleteProductDetail: (id: number) => void
     handleAddProduct: (pro: ProductDetail) => void
+    getProductsByParams: (pro: ProductParams) => void
     productDetails: ProductDetail[]
     total: number
     sumTotal: () => void
@@ -134,4 +156,5 @@ export interface AppContextIn{
     addActivitesToList: (activity: ActivityGet) => void
     resetActivityFromCache: (id: number) => void
     resetActivityFromDB: (actvityId: number) => void
+    deleteSupport: (id: number) => void
 }

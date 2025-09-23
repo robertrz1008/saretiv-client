@@ -80,3 +80,9 @@
 .arrow-open {
   transform: rotate(90deg);
 }
+
+.filter-form-inputs{
+    height: 90%;
+    padding-right: 10px;
+    overflow-y: scroll;
+}

@@ -227,9 +227,6 @@ function SupportForm() {
         isFormToUpdate()
     }, [])
 
-    useEffect(() => {
-        console.log(startDate)
-    }, [startDate])
 
 
     
@@ -241,7 +238,7 @@ function SupportForm() {
   return (
     <>
         <h3 style={{position: "absolute", top:"25px", zIndex:"2"}}>Datos del Soporte</h3>
-            <div className="support-form-inputs">
+        <div className="support-form-inputs">
             {/* customer */}
             <div style={{ width: "100%" }}>
                 <label htmlFor="username" style={{ marginTop: "10px" }}>Cliente</label>

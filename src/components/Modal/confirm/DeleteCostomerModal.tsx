@@ -16,8 +16,9 @@ function DeleteCostomerModal(prop:ModalProp) {
               visible={context.isShowConfirmModal} 
               accept={() => context.deleteCustomer(prop.id)}
               onHide={() => {context.showConfirmModal(false)}} 
-              message={"Do you wish to delete this customer? "+prop.id} 
+              message={"¿Desea eliminar este cliente?"} 
               header="Eliminar" icon="pi pi-exclamation-triangle" 
+              acceptLabel='Si'
         />
   )
 }

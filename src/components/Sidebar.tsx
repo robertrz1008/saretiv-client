@@ -93,7 +93,7 @@ function Sidebar() {
                        
                         <NavLink to={"/tiposSoporte"} className="link-name">
                             <i><VscTools/></i>
-                            <h5>Soporte</h5>
+                            <h5>Tipo Soporte</h5>
                         </NavLink>
                       </ul>
                 </li>

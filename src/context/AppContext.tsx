@@ -1,17 +1,18 @@
 import { useContext, createContext, type ReactNode, useState } from "react";
 import type { User } from "../Interface/InAuth";
-import type { Customer, ProductGet, Supplier } from "../Interface/InApp";
-import { customerListRequest, deleteCustomerRequest, getCustomerByFilterRequest } from "../services/Customer.service";
+import type { Customer, CustomerParams, ProductGet, ProductParams, Supplier } from "../Interface/InApp";
+import { customerListRequest, deleteCustomerRequest, getCustomerByFilterRequest, getCustomerByParamsRequest } from "../services/Customer.service";
 import { deletesupplierRequest, getSupplierByFilterRequest, getSupplierRequest } from "../services/Supplier.service";
-import { deleteProductRequest, getProductByFilterRequest, getProductByIdRequest, getProductRequest, updateProductRequest, updateProductStockRequest } from "../services/Product.service";
+import { deleteProductRequest, getProductByFilterRequest, getProductByIdRequest, getProductByParamsRequest, getProductRequest, updateProductRequest, updateProductStockRequest } from "../services/Product.service";
 import type { ProductDetail, ProductDetailGet, ProductDetailPost } from "../Interface/SalesInterfaces";
 import { createProDetailRequest, createSaleRequest, deleteProductDetailRequest, getProductDetailByIdRequest, getProductDetailBySupportRequest, updateSaleRequest } from "../services/Sale.service";
-import { deleteSupportTypeRequest, getSupportTypeRequest } from "../services/SupportType.service";
-import type { SupportCustomGet, SupportTypeGet, SuppProductDetail } from "../Interface/SupportIn";
-import { getSupportsCustomRequest, updateSupportTotalRequest } from "../services/Support.Service";
+import { deleteSupportTypeRequest, getSupportTypeFilterRequest, getSupportTypeRequest } from "../services/SupportType.service";
+import type { DeviceGet, SupportCustomGet, SupportTypeGet, SuppProductDetail } from "../Interface/SupportIn";
+import { deleteSupportRequest, getSupportsCustomRequest, updateSupportTotalRequest } from "../services/Support.Service";
 import type { AxiosResponse } from "axios";
 import type { ActivityDTO, ActivityGet } from "../Interface/Activities";
 import { deleteActivityRequest, getActivitiesBySupportIdRequest, postActivitiesRequest } from "../services/Activities.service";
+import { deleteDeviceRequest, getDeviceBySupportIdReq } from "../services/Device.service";
 const appContext = createContext({})
 
 export const useAppContext = () => {
@@ -33,7 +34,9 @@ export const AppContexProvider = ({ children }: ContexArg) => {
     const [isFormModalOpen, setIsFormModalOpen] = useState(false);
     const [isUserUpdMode, setUserUpdMode] = useState(false)
     const [userModify, setUserToModify] = useState<User>()
+    const [isFilterSidebarOpen, setFilterSidebarOpen] = useState(false)
     const [isShowConfirmModal, setShowConfirmModal] = useState(false)
+    const [isShowDetailModal, setShowDetailModal] = useState(false)
     const [userDoc, setUserDoc] = useState("")
     const [showRSidebar, setShowRSidebar] = useState(false)
 
@@ -74,6 +77,9 @@ export const AppContexProvider = ({ children }: ContexArg) => {
     function setModalFormTitle(title: string) {
         setFormTitle(title)
     }
+    function setFilterSidebar(val: boolean) {
+        setFilterSidebarOpen(val)
+    }
     function setGlobalTitleFn(title: string) {
         setGlobalTitle(title);
     }
@@ -82,6 +88,9 @@ export const AppContexProvider = ({ children }: ContexArg) => {
         if (!val) {
             setUserUpdMode(false)
         }
+    }
+     function showDetailModal(val: boolean) {
+        setShowDetailModal(val);
     }
     function showConfirmModal(val: boolean) {
         setShowConfirmModal(val);
@@ -135,6 +144,16 @@ export const AppContexProvider = ({ children }: ContexArg) => {
     }
     function addCustomerDoc(str: string) {
         setCustomerDoc(str)
+    }
+    async function getCustomerByParams(params: CustomerParams){
+        try {
+            const res = await getCustomerByParamsRequest(params)
+            setCustomers(res.data)
+            return true
+        } catch (error) {
+            console.log(error)
+            return false
+        }
     }
     // supplier
     async function supplierList() {
@@ -212,9 +231,19 @@ export const AppContexProvider = ({ children }: ContexArg) => {
     function setProductUpdateMode(val: boolean) {
         setProductUpdMode(val)
     }
+    async function getProductsByParams(params: ProductParams){
+        try {
+            const res = await getProductByParamsRequest(params)
+            setProducts(res.data)
+            return true
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+    }
 
     //support type
-    async function listSupportType() {
+    async function listSupportType() { 
         try {
             const response = await getSupportTypeRequest()
             setSupportTypes(response.data)
@@ -243,7 +272,7 @@ export const AppContexProvider = ({ children }: ContexArg) => {
         }
 
         try {
-            const res = await getSupplierByFilterRequest(str)
+            const res = await getSupportTypeFilterRequest(str)
             setSupportTypes(res.data)
 
         } catch (error) {
@@ -526,7 +555,6 @@ export const AppContexProvider = ({ children }: ContexArg) => {
         setActivities([...activities, act])
     }
     function resetActivityFromCache(id: number){
-        console.log("id de actividad "+id)
         const newList = activities.filter(act => act.supportType.id != id)
         console.log(newList)
         setActivities(newList)
@@ -583,19 +611,37 @@ export const AppContexProvider = ({ children }: ContexArg) => {
             console.log(error)
         }
     }
+    async function deleteSupport(suppId: number){
+        try {
+            const dev: AxiosResponse<DeviceGet> = await getDeviceBySupportIdReq(suppId)
 
+            const activities: AxiosResponse<ActivityGet[]> = await getActivitiesBySupportIdRequest(suppId)
+            const productsFound: AxiosResponse<ProductDetailGet[]> = await getProductDetailBySupportRequest(suppId)
 
+            if(activities.data.length > 0 || productsFound.data.length > 0){
+                alert("se han realizado transacciones")
+                return
+            }
+            await deleteDeviceRequest(dev.data.id as number)
+            await deleteSupportRequest(suppId)
+
+            listSupport()
+            showConfirmModal(false)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     return (
         <appContext.Provider value={{
-            isFormModalOpen, showFormModal, showConfirmModal, isShowConfirmModal, setGlobalTitleFn, globalTitle,
+            isFormModalOpen, showFormModal, showConfirmModal, isShowConfirmModal, setGlobalTitleFn, globalTitle,showDetailModal, isShowDetailModal, isFilterSidebarOpen, setFilterSidebar,
             userUpdateMode, setUserUpdate, isUserUpdMode, userModify, addUserDoc, userDoc, showRSidebar, setShowRSidebar,
-            customers, customerList, iscustUpdMode, customerModify, setCustUpdate, setCustUpdateMode, deleteCustomer, customerListByFilter, addCustomerDoc, customerDoc,
+            customers, customerList, iscustUpdMode, customerModify, setCustUpdate, setCustUpdateMode, deleteCustomer, customerListByFilter, addCustomerDoc, customerDoc, getCustomerByParams,
             suppliers, supplierList, isSupUpdMode, supplierModify, setSupUpddateMode, setSupplierUpdate, deleteSupplier, supplierListByFilter,
-            products, productList, isProductUpdMode, productModify, setProductModify, setProductUpdateMode, setProductUpdate, deleteProduct, productListByFilter,
+            products, productList, isProductUpdMode, productModify, setProductModify, setProductUpdateMode, setProductUpdate, deleteProduct, productListByFilter, getProductsByParams,
             productDetails, changeProductAmount, handleAddProduct, deleteProductDetail, total, sumTotal, createSale,
             formTitle, setModalFormTitle, saleButtonDisable,
-            listSupportType, deleteSupportType, setSupportTypeUpdate, setSupportTypeUpdateMode, supportTypes, supportTypeUpdMode, supportTypeModify, listSupportTypeByFilter,
+            listSupportType, deleteSupportType, setSupportTypeUpdate, setSupportTypeUpdateMode, supportTypes, supportTypeUpdMode, supportTypeModify, listSupportTypeByFilter, deleteSupport,
             listSupport, supports, supportUpdMode, supportModify, setSupportsUpdMode, setSupportModify,
             suppDetailConcel, handleAddSuppProduct, supProDetail, resetSuppProduct, resetSuppProductFromDB, sumSupTotal, supTotal,registerSupportDetails, getSupportDetials, setSupportCurrent, supportCurrent, activities, addActivitesToList, resetActivityFromCache, resetActivityFromDB
         }}>

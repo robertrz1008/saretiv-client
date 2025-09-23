@@ -17,7 +17,7 @@ function SupportTypeTable() {
                     <th className="td-id">#</th>
                     <th>Descripción</th>
                     <th>Categoria Dispositivo</th>
-                    <th>Monto</th>
+                    <th className='td-number'>Monto</th>
                     <th className='td-icon'></th>
                 </tr>
             </thead>
@@ -32,12 +32,13 @@ function SupportTypeTable() {
                                         context.setSupportTypeUpdateMode(true)
                                         context.showFormModal(true)
                                     }}
-                                className='td-icon'
-                                    key={id}>
+                                    className='td-icon'
+                                    key={id}
+                                >
                                     <td className="td-id">{id + 1}</td>
                                     <td>{data.description}</td>
                                     <td>{data.category.name}</td>
-                                    <td>{data.amount}</td>
+                                    <td className="td-number">{data.amount}</td>
                                     <td onClick={(e) => e.stopPropagation()}>
                                         <MdDeleteOutline
                                             onClick={() => {

@@ -21,7 +21,7 @@ function SupportTypePage() {
           <div className='register-head'>
                 <InputText
                   onChange={(e) => {
-                    // context.productListByFilter(e.target.value)
+                    context.listSupportTypeByFilter(e.target.value)
                   }}
                   variant="filled"
                   type="text" 

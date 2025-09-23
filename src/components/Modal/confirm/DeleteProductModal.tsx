@@ -15,8 +15,9 @@ function DeleteProductModal(prop: ModalProp) {
         visible={context.isShowConfirmModal}
         accept={() => context.deleteProduct(prop.id)}
         onHide={() => {context.showConfirmModal(false)}} 
-        message="Desea eliminar el proveedor seleccionado?" 
+        message="¿Desea eliminar este producto?" 
         header="Eliminar" icon="pi pi-exclamation-triangle" 
+        acceptLabel='Si'
     />
   )
 }
