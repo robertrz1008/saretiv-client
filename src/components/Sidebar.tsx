@@ -139,10 +139,10 @@ function Sidebar() {
                     </div>
     
                     <ul className= {`sub-menu ${!submenuReport? " sub-menu-close" : "sub-menu-open"}`}>
-                        <li className="link-name">
+                        <NavLink to={"/Ventas"} className="link-name">
                             <i><FaRegUser/></i>
-                            <h5>Ventas</h5>  
-                        </li>
+                            <h5>Ventas</h5>
+                        </NavLink>  
                         <li className="link-name">
                             <i><LuUsers/></i>
                             <h5>Soporte</h5>

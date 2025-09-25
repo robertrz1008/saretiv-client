@@ -15,6 +15,13 @@ export interface SupportTypeDTO extends SupportType{
         id: number
     }
 }
+export interface SupportTypeParams{
+    property: string,
+    category: string,
+    order: string,
+    amountMin: number,
+    amountMax: number
+}
 
 export interface Support{
     id?: number

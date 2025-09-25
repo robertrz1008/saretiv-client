@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import type { DropdownItem, ProductParams } from "../../Interface/InApp"
 import { Dropdown, type DropdownChangeEvent } from "primereact/dropdown";
 import { Button } from "primereact/button";
-import { InputSwitch } from "primereact/inputswitch";
 import { getCategoryProRequest } from "../../services/category.service";
 import { getSupplierRequest } from "../../services/Supplier.service";
 import { InputNumber } from "primereact/inputnumber";
@@ -184,7 +183,7 @@ function ProductFilterForm(prop: Prop) {
                 number)}
             />
           </div>
-        </div>
+          </div>
         </div>
         
         <div style={{marginTop: "10px" }}>

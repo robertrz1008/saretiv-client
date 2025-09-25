@@ -15,6 +15,7 @@ import CategoryDevicePage from './view/pages/main/register/CategoryDevicePage';
 import SupportTypePage from './view/pages/main/register/SupportTypePage';
 import SupportPage from './view/pages/main/Transaction/SupportPage';
 import SupportDetailPage from './view/pages/main/Transaction/SupportDetailPage';
+import SalesHistoryPage from './view/pages/main/historyTransaction/SalesHistoryPage';
 
 function App() {
 
@@ -35,6 +36,7 @@ function App() {
             <Route path='Vender' element={<SalePage/>}/>
             <Route path='SoporteTecnico' element={<SupportPage/>}/>
             <Route path='SoporteTecnico/Detalles/:id' element={<SupportDetailPage/>}/>
+            <Route path='Ventas' element={<SalesHistoryPage/>}/>
           </Route>
         </Route>
       </Routes>

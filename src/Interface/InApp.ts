@@ -1,7 +1,7 @@
 import type { ActivityGet } from "./Activities";
 import type { User } from "./InAuth"
 import type { ProductDetail } from "./SalesInterfaces";
-import type { SupportCustomGet, SupportTypeGet, SuppProductDetail } from "./SupportIn";
+import type { SupportCustomGet, SupportTypeGet, SupportTypeParams, SuppProductDetail } from "./SupportIn";
 
 export interface DropdownItem{
     label: string, 
@@ -157,4 +157,5 @@ export interface AppContextIn{
     resetActivityFromCache: (id: number) => void
     resetActivityFromDB: (actvityId: number) => void
     deleteSupport: (id: number) => void
+    listSupportTypeByParams: (params: SupportTypeParams) => void
 }
