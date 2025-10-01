@@ -19,11 +19,11 @@ function ProductDetailTable() {
 
             </div>
             <div className="total-con">
-            <div className="total-con">
-              {
-                !context.total? (<h3>{"TOTAL: 0"}</h3>) : (<h3>{"TOTAL: "+context.total}</h3>)
-              }
-            </div>
+              <div className="total-con">
+                {
+                  !context.total? (<h3>{"TOTAL: 0"}</h3>) : (<h3>{"TOTAL: "+context.total}</h3>)
+                }
+              </div>
              
             </div>
                 

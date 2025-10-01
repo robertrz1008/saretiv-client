@@ -31,3 +31,24 @@ export interface Sale{
         total: number
         createAt: Date 
 }
+export interface SaleGet{
+        description: string
+        category: string
+        amount: number
+        subtotal: number
+        price: string
+        date: Date
+}
+export interface SaleDates{
+        date1: string
+        date2: string
+}
+export interface SaleParams{
+        property: string
+        category: string
+        order: string
+        subtotalMin: number
+        subtotalMax: number
+        dateFrom: string
+        dateTo: string
+}

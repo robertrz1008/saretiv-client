@@ -18,12 +18,12 @@ function ProductFilterForm(prop: Prop) {
     { label: "Precio de compra", code: "pro.entry_price" },
     { label: "Precio de venta", code: "pro.entry_sale" }
   ]);
+  
   const [propertySelect, setPropertySelect] = useState<DropdownItem | null>(null)
 
   const [stockItems, _setStockItems] = useState<DropdownItem[]>([
     { label: "En Stock", code: "y" },
     { label: "Sin Stock", code: "n" },
-
   ]);
   const [stockSelect, setStockSelect] = useState<DropdownItem | null>(null)
 

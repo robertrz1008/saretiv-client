@@ -12,13 +12,15 @@ function ProductsSelTable() {
 
     function setProducts(){
         const newPr = context.products.filter(pro => pro.stock > 0)
-        console.log(newPr)
         setProWithoutStock(newPr)
     }
 
     useEffect(() => {
         setProducts()
     }, [])
+    useEffect(() => {
+        console.log(proWithoutStock)
+    }, [proWithoutStock])
     useEffect(() => {
         setProducts()
     }, [context.products])

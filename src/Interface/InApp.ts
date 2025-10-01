@@ -1,6 +1,6 @@
 import type { ActivityGet } from "./Activities";
 import type { User } from "./InAuth"
-import type { ProductDetail } from "./SalesInterfaces";
+import type { ProductDetail, SaleGet, SaleParams } from "./SalesInterfaces";
 import type { SupportCustomGet, SupportTypeGet, SupportTypeParams, SuppProductDetail } from "./SupportIn";
 
 export interface DropdownItem{
@@ -125,7 +125,6 @@ export interface AppContextIn{
     setModalFormTitle: (title: string) => void
     saleButtonDisable: boolean
     listSupportType: () => void
-    
     setSupportTypeUpdateMode: (val: boolean) =>  void
     deleteSupportType: (id: number) => void
     setSupportTypeUpdate: (sup: SupportTypeGet) => void
@@ -155,6 +154,9 @@ export interface AppContextIn{
     activities: ActivityGet[]
     addActivitesToList: (activity: ActivityGet) => void
     resetActivityFromCache: (id: number) => void
+    listSalesByDates:(date1: string, date2: string) => void
+    salesList: SaleGet[]
+    listSalesByParams: (params: SaleParams) => void
     resetActivityFromDB: (actvityId: number) => void
     deleteSupport: (id: number) => void
     listSupportTypeByParams: (params: SupportTypeParams) => void

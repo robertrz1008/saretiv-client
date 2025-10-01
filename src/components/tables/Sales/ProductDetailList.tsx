@@ -3,11 +3,16 @@ import { MdDeleteOutline } from "react-icons/md";
 import { useAppContext } from "../../../context/AppContext";
 import type { AppContextIn } from "../../../Interface/InApp";
 import ProductAmountTF from "../../reusable/ProductAmountTF";
+import { useEffect } from "react";
 
 
 export default function ProductDetailList() {
 
    const context = useAppContext() as AppContextIn
+
+   useEffect(() => {
+      console.log(context.productDetails)
+   },[])
 
     if(context.productDetails.length == 0){
         return (

@@ -4,8 +4,8 @@ import type { Customer, CustomerParams, ProductGet, ProductParams, Supplier } fr
 import { customerListRequest, deleteCustomerRequest, getCustomerByFilterRequest, getCustomerByParamsRequest } from "../services/Customer.service";
 import { deletesupplierRequest, getSupplierByFilterRequest, getSupplierRequest } from "../services/Supplier.service";
 import { deleteProductRequest, getProductByFilterRequest, getProductByIdRequest, getProductByParamsRequest, getProductRequest, updateProductRequest, updateProductStockRequest } from "../services/Product.service";
-import type { ProductDetail, ProductDetailGet, ProductDetailPost } from "../Interface/SalesInterfaces";
-import { createProDetailRequest, createSaleRequest, deleteProductDetailRequest, getProductDetailByIdRequest, getProductDetailBySupportRequest, updateSaleRequest } from "../services/Sale.service";
+import type { ProductDetail, ProductDetailGet, ProductDetailPost, SaleGet, SaleParams } from "../Interface/SalesInterfaces";
+import { createProDetailRequest, createSaleRequest, deleteProductDetailRequest, getProductDetailByIdRequest, getProductDetailBySupportRequest, getSaleByDatesRequest, getSalesByParamsRequest, updateSaleRequest } from "../services/Sale.service";
 import { deleteSupportTypeRequest, getSupportTypeByParamRequest, getSupportTypeFilterRequest, getSupportTypeRequest } from "../services/SupportType.service";
 import type { DeviceGet, SupportCustomGet, SupportTypeGet, SupportTypeParams, SuppProductDetail } from "../Interface/SupportIn";
 import { deleteSupportRequest, getSupportsCustomRequest, updateSupportTotalRequest } from "../services/Support.Service";
@@ -57,6 +57,7 @@ export const AppContexProvider = ({ children }: ContexArg) => {
     const [productDetails, setProductDetails] = useState<ProductDetail[]>([]);
     const [total, setTotal] = useState(0)
     const [saleButtonDisable, setSaleButtonDisable] = useState(false)
+    const [salesList, setSaleList] = useState<SaleGet[]>([])
     //support type
     const [supportTypes, setSupportTypes] = useState<SupportTypeGet[]>([])
     const [supportTypeUpdMode, setSupportTypeUpdMode] = useState(false)
@@ -382,6 +383,27 @@ export const AppContexProvider = ({ children }: ContexArg) => {
             setSaleButtonDisable(false)
         }
     }
+    async function listSalesByDates(date1: string, date2: string){
+        try {
+            const res = await getSaleByDatesRequest({
+                date1: date1, 
+                date2: date2
+            })
+            setSaleList(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async function listSalesByParams(params: SaleParams){
+        try {
+            const res = await getSalesByParamsRequest(params)
+            setSaleList(res.data)
+            return true
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+    }
 
     //support
     async function listSupport() {
@@ -645,12 +667,13 @@ export const AppContexProvider = ({ children }: ContexArg) => {
 
     return (
         <appContext.Provider value={{
-            isFormModalOpen, showFormModal, showConfirmModal, isShowConfirmModal, setGlobalTitleFn, globalTitle,showDetailModal, isShowDetailModal, isFilterSidebarOpen, setFilterSidebar,
+            isFormModalOpen, showFormModal, showConfirmModal, isShowConfirmModal, setGlobalTitleFn, globalTitle,showDetailModal, isShowDetailModal, isFilterSidebarOpen, setFilterSidebar, 
             userUpdateMode, setUserUpdate, isUserUpdMode, userModify, addUserDoc, userDoc, showRSidebar, setShowRSidebar,
             customers, customerList, iscustUpdMode, customerModify, setCustUpdate, setCustUpdateMode, deleteCustomer, customerListByFilter, addCustomerDoc, customerDoc, getCustomerByParams,
             suppliers, supplierList, isSupUpdMode, supplierModify, setSupUpddateMode, setSupplierUpdate, deleteSupplier, supplierListByFilter,
             products, productList, isProductUpdMode, productModify, setProductModify, setProductUpdateMode, setProductUpdate, deleteProduct, productListByFilter, getProductsByParams,
             productDetails, changeProductAmount, handleAddProduct, deleteProductDetail, total, sumTotal, createSale,
+            listSalesByDates, salesList, listSalesByParams,
             formTitle, setModalFormTitle, saleButtonDisable,
             listSupportType, deleteSupportType, setSupportTypeUpdate, setSupportTypeUpdateMode, supportTypes, supportTypeUpdMode, supportTypeModify, listSupportTypeByFilter, deleteSupport, listSupportTypeByParams,
             listSupport, supports, supportUpdMode, supportModify, setSupportsUpdMode, setSupportModify,

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import { useEffect } from 'react'
 import "../../../styles/Sales.css"
 import ProductsSelTable from '../../../../components/tables/Sales/ProductsSelTable'
 import ProductDetailTable from '../../../../components/tables/Sales/ProductDetailTable'
