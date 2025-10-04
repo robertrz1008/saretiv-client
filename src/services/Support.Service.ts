@@ -1,6 +1,6 @@
 import axios from "./axios";
 import { HTTP } from "../utils/config";
-import type { SupportPost } from "../Interface/SupportIn";
+import type { SupportParams, SupportPost } from "../Interface/SupportIn";
 
 const API = HTTP+"/api/support"
 
@@ -9,6 +9,8 @@ export const getSupportsRequest = () => axios.get(API)
 export const getSupportsCustomRequest = () => axios.get(API+"/custom")
 
 export const getSupportsCustomByIdRequest = (id: number) => axios.get(API+"/custom/"+id)
+
+export const getSupportByParamsRequest = (params: SupportParams) => axios.post(API+"/params", params)
 
 export const postSupportRequest = (sup: SupportPost) => axios.post(API, sup)
 

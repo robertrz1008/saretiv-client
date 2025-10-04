@@ -143,10 +143,10 @@ function Sidebar() {
                             <i><FaRegUser/></i>
                             <h5>Ventas</h5>
                         </NavLink>  
-                        <li className="link-name">
-                            <i><LuUsers/></i>
-                            <h5>Soporte</h5>
-                        </li>
+                        <NavLink to={"/Soportes"} className="link-name">
+                            <i><FaRegUser/></i>
+                            <h5>Soportes</h5>
+                        </NavLink> 
                     </ul>
                 </li>
                 )

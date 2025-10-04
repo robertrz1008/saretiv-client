@@ -16,6 +16,7 @@ import SupportTypePage from './view/pages/main/register/SupportTypePage';
 import SupportPage from './view/pages/main/Transaction/SupportPage';
 import SupportDetailPage from './view/pages/main/Transaction/SupportDetailPage';
 import SalesHistoryPage from './view/pages/main/historyTransaction/SalesHistoryPage';
+import SupportHistoryPage from './view/pages/main/historyTransaction/SupportHistoryPage';
 
 function App() {
 
@@ -37,6 +38,7 @@ function App() {
             <Route path='SoporteTecnico' element={<SupportPage/>}/>
             <Route path='SoporteTecnico/Detalles/:id' element={<SupportDetailPage/>}/>
             <Route path='Ventas' element={<SalesHistoryPage/>}/>
+            <Route path='Soportes' element={<SupportHistoryPage/>}/>
           </Route>
         </Route>
       </Routes>

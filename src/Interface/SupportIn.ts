@@ -56,6 +56,17 @@ export interface SupportPost{
     userId: number
 }
 
+export interface SupportParams{
+    customerId: number,
+    technicalId: number,
+    categoryId: number,
+    property: string,
+    order: string,
+    totalMin: number,
+    totalMax: number,
+    dateFrom: string,
+    dateTo: string
+}
 
 export interface Device{
     id?: number

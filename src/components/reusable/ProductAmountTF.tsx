@@ -22,24 +22,39 @@ function ProductAmountTF(prop: Props) {
 
   function validateValue(v: string) {
     const val: number = Number(v)
+    console.log("validating")
     if (val == 0) {
       setAmount(1) // si el valor es 0, se actualiza a 1
       return
     }
     if (val >= productStock) { // si la cantidad ingresada es mayor al stock del producto referenciado
+      console.log("valor sobrepasado")
       v = "" + productStock // el valor de la entrada sera igual al stock
     }
-    setAmount(val) // actualiza el estado de la cantidad
+    setAmount(Number(v)) // actualiza el estado de la cantidad
   }
 
-  useEffect(() => {
+
+
+  useEffect(() =>{
     setAmount(prop.amountValue)
     getProStock()
-  }, [context.productDetails])
+  },[])
+
+  // useEffect(() => {
+    
+  // }, [context.productDetails])
 
   useEffect(() => {
     context.changeProductAmount(prop.proId, amount)
   }, [amount])
+
+
+
+
+
+
+
 
   return (
     <input

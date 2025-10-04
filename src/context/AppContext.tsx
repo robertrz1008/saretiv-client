@@ -7,8 +7,8 @@ import { deleteProductRequest, getProductByFilterRequest, getProductByIdRequest,
 import type { ProductDetail, ProductDetailGet, ProductDetailPost, SaleGet, SaleParams } from "../Interface/SalesInterfaces";
 import { createProDetailRequest, createSaleRequest, deleteProductDetailRequest, getProductDetailByIdRequest, getProductDetailBySupportRequest, getSaleByDatesRequest, getSalesByParamsRequest, updateSaleRequest } from "../services/Sale.service";
 import { deleteSupportTypeRequest, getSupportTypeByParamRequest, getSupportTypeFilterRequest, getSupportTypeRequest } from "../services/SupportType.service";
-import type { DeviceGet, SupportCustomGet, SupportTypeGet, SupportTypeParams, SuppProductDetail } from "../Interface/SupportIn";
-import { deleteSupportRequest, getSupportsCustomRequest, updateSupportTotalRequest } from "../services/Support.Service";
+import type { DeviceGet, SupportCustomGet, SupportParams, SupportTypeGet, SupportTypeParams, SuppProductDetail } from "../Interface/SupportIn";
+import { deleteSupportRequest, getSupportByParamsRequest, getSupportsCustomRequest, updateSupportTotalRequest } from "../services/Support.Service";
 import type { AxiosResponse } from "axios";
 import type { ActivityDTO, ActivityGet } from "../Interface/Activities";
 import { deleteActivityRequest, getActivitiesBySupportIdRequest, postActivitiesRequest } from "../services/Activities.service";
@@ -414,6 +414,14 @@ export const AppContexProvider = ({ children }: ContexArg) => {
             console.log(error)
         }
     }
+    async function listSupportByParams(params: SupportParams){
+        try {
+            const res = await getSupportByParamsRequest(params)
+            setSupports(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     //product detail for support
     function sumSupTotal() {
@@ -673,7 +681,7 @@ export const AppContexProvider = ({ children }: ContexArg) => {
             suppliers, supplierList, isSupUpdMode, supplierModify, setSupUpddateMode, setSupplierUpdate, deleteSupplier, supplierListByFilter,
             products, productList, isProductUpdMode, productModify, setProductModify, setProductUpdateMode, setProductUpdate, deleteProduct, productListByFilter, getProductsByParams,
             productDetails, changeProductAmount, handleAddProduct, deleteProductDetail, total, sumTotal, createSale,
-            listSalesByDates, salesList, listSalesByParams,
+            listSalesByDates, salesList, listSalesByParams, listSupportByParams,
             formTitle, setModalFormTitle, saleButtonDisable,
             listSupportType, deleteSupportType, setSupportTypeUpdate, setSupportTypeUpdateMode, supportTypes, supportTypeUpdMode, supportTypeModify, listSupportTypeByFilter, deleteSupport, listSupportTypeByParams,
             listSupport, supports, supportUpdMode, supportModify, setSupportsUpdMode, setSupportModify,

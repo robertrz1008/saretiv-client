@@ -19,9 +19,6 @@ function ProductsSelTable() {
         setProducts()
     }, [])
     useEffect(() => {
-        console.log(proWithoutStock)
-    }, [proWithoutStock])
-    useEffect(() => {
         setProducts()
     }, [context.products])
 
