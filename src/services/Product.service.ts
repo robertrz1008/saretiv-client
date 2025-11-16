@@ -1,0 +1,23 @@
+import axios from "./axios";
+import type {ProductGet, ProductParams, ProductPost} from "../Interface/InApp"
+import { HTTP } from "../utils/config";
+
+const API = HTTP+"/api/product"
+
+export const getProductRequest = () => axios.get(API)
+
+export const postProductRequest = (cat: ProductPost) => axios.post(API, cat)
+
+export const getProductByFilterRequest = (filter: string) => axios.get(API+`/filter/${filter}`)
+
+export const deleteProductRequest = (id: number) => axios.delete(API+`/${id}`)
+
+export const updateProductRequest = (id: number, cat: ProductPost) => axios.put(API+`/${id}`, cat) 
+
+export const updateProductStockRequest = (id: number, stock: number) => axios.put(API+`/stock/${id}/${stock}`) 
+
+export const getProductByIdRequest = (id: number) => axios.get(API+`/id/${id}`)
+
+export const getProductByParamsRequest = (params: ProductParams) => axios.post(API+"/params", params)
+
+export const getProductReportRequest = (list: ProductGet[]) => axios.post(API+"/report", list, {responseType:"blob"})

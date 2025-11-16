@@ -1,0 +1,32 @@
+.navbar-con{
+    width: 100%;
+    height: 50px;
+    /* background-color: rgb(35, 189, 250);*/
+    background-color: #ffff;
+    box-shadow: 0 0 1px grey;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-left: 20px;
+    color: white;
+}
+.title{
+    font-weight: 500;
+    color: rgb(77, 75, 75);
+}
+.navbar-menu-section{
+    display: flex;
+}
+.profile-menu{
+    width: 100px;
+    display: flex;
+    padding: 5px;
+    flex-direction: column;
+    display: flex;   
+}
+.navbar-icon-profile, .navbar-icon-setting{
+    transition: all 200ms ease;
+}
+.navbar-icon-profile:hover, .navbar-icon-setting:hover{
+    color:rgb(57, 144, 202)
+}

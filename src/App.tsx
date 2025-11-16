@@ -1,0 +1,50 @@
+import ProtectedRoute from './view/pages/RouteProtected'
+import { BrowserRouter, Route, Routes } from "react-router-dom";
+import RegisterPage from "./view/pages/RegisterPage";
+import './App.css'
+import MainPage from './view/pages/MainPage';
+import UsersPage from './view/pages/main/register/UsersPage';
+import "./view/styles/main.css"
+import ClientPage from './view/pages/main/register/CustomerPage';
+import Home from './view/pages/main/Home';
+import CategoryProduct from './view/pages/main/register/CategoryProductPage';
+import SupplierPage from './view/pages/main/register/SupplierPage';
+import ProductPage from './view/pages/main/register/ProductPage';
+import SalePage from './view/pages/main/Transaction/SalePage';
+import CategoryDevicePage from './view/pages/main/register/CategoryDevicePage';
+import SupportTypePage from './view/pages/main/register/SupportTypePage';
+import SupportPage from './view/pages/main/Transaction/SupportPage';
+import SupportDetailPage from './view/pages/main/Transaction/SupportDetailPage';
+import SalesHistoryPage from './view/pages/main/historyTransaction/SalesHistoryPage';
+import SupportHistoryPage from './view/pages/main/historyTransaction/SupportHistoryPage';
+
+function App() {
+
+
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/login" element={<RegisterPage />} />
+        <Route element={<ProtectedRoute />}>
+          <Route path="/*" element={<MainPage/>}>
+            <Route path='Admin' element={<Home/>}/>
+            <Route path='Usuarios' element={<UsersPage/>}/>
+            <Route path='Clientes' element={<ClientPage/>}/>
+            <Route path='CategoriasProducto' element={<CategoryProduct/>}/>
+            <Route path='CategoriasDispositivo' element={<CategoryDevicePage/>}/>
+            <Route path='Proveedores' element={<SupplierPage/>}/>
+            <Route path='tiposSoporte' element={<SupportTypePage/>}/>
+            <Route path='Productos' element={<ProductPage/>}/>
+            <Route path='Vender' element={<SalePage/>}/>
+            <Route path='SoporteTecnico' element={<SupportPage/>}/>
+            <Route path='SoporteTecnico/Detalles/:id' element={<SupportDetailPage/>}/>
+            <Route path='Ventas' element={<SalesHistoryPage/>}/>
+            <Route path='Soportes' element={<SupportHistoryPage/>}/>
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  )
+}
+
+export default App

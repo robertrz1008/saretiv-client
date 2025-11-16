@@ -1,0 +1,175 @@
+import { useState } from 'react'
+import "../view/styles/Sidebar.css"
+import { RiHome2Line } from "react-icons/ri";
+import { FaPenToSquare } from "react-icons/fa6";
+import { MdOutlineArrowForwardIos } from "react-icons/md";
+import { FaRegUser } from "react-icons/fa";
+import { AiOutlineProduct } from "react-icons/ai";
+import { LuUsers } from "react-icons/lu";
+import { MdOutlineCategory } from "react-icons/md";
+import { VscTools } from "react-icons/vsc";
+import { BsCurrencyDollar } from "react-icons/bs";
+import { TbReportSearch } from "react-icons/tb";
+import UserRoleValidator from '../utils/UserValidator';
+import { MdAddShoppingCart } from "react-icons/md";
+import { useAuth } from '../context/AuthContext'; 
+import type { AuthContextIn } from '../Interface/InAuth';
+import { NavLink } from 'react-router-dom';
+
+function Sidebar() {
+  const [submenuRegister, setSubmenuRegister] = useState(false)
+  const [submenuTransaction, setSubmenuTransaction] = useState(false)
+  const [submenuReport, setSubmenuReport] = useState(false)
+  const {user} =useAuth() as AuthContextIn
+  const roleValid: UserRoleValidator = new UserRoleValidator(user.roles);
+  
+
+  function handleSubmenuRegister() {
+    setSubmenuRegister(!submenuRegister)
+  }
+  function handleSubmenuTransaction() {
+    setSubmenuTransaction(!submenuTransaction)  
+  }
+  function handleSubmenuReport() {
+    setSubmenuReport(!submenuReport)
+  }
+
+  function isSaleView(){
+    if(roleValid.isAdmin() || roleValid.isSeller()) return true
+
+    return false
+  }
+
+  function isSupportView(){
+    if(roleValid.isAdmin() || roleValid.isTechnical()) return true
+
+    return false
+  }
+
+
+  return (
+    <section className='sidebar-section'>
+        <div className='flex f-ai-center f-jc-center' style={{color:"#0f93dfff"}}>
+            <i className="fa-solid fa-code"></i>
+            <h2>Saretiv</h2>
+        </div>
+            <ul className='nav-list'>
+              {
+                roleValid.isAdmin() && (
+                      <li className="tr">
+                        <div
+                          className="link-title"
+                        >
+                          <NavLink to={"/Admin"} className="link-name">
+                              <RiHome2Line />
+                                  <h5>Administración</h5>
+                            </NavLink>
+                        </div>
+                      </li>
+                )
+              }
+                
+                <li className="tr">
+                    <div
+                      onClick={handleSubmenuRegister} 
+                      className="link-title">
+                        <div>
+                            <FaPenToSquare />
+                            <h5>Registros</h5>
+                        </div> 
+                        <i className={`arrow ${submenuRegister? "arrow-close" : "arrow-open"}`}><MdOutlineArrowForwardIos /></i>
+                    </div>
+    
+                    <ul className= {`sub-menu ${!submenuRegister? "sub-menu-close" : "sub-menu-open"}`}>
+                        <NavLink to={"/Usuarios"} className="link-name">
+                            <i><FaRegUser/></i>
+                            <h5>Usuarios</h5>  
+                        </NavLink>
+                        <NavLink to={"/Clientes"} className="link-name">
+                            <i><FaRegUser/></i>
+                            <h5>Clientes</h5>  
+                        </NavLink>
+                        <NavLink to={"/Proveedores"} className="link-name">
+                            <i><LuUsers/></i>
+                            <h5>Proveedores</h5>
+                        </NavLink>
+                        <NavLink to={"/Productos"} className="link-name">
+                            <i><AiOutlineProduct/></i>
+                            <h5>Productos</h5>
+                        </NavLink>
+                        <NavLink to={"/CategoriasProducto"} className="link-name">
+                            <i><MdOutlineCategory/></i>
+                            <h5>Categoria Productos</h5>
+                        </NavLink>
+                        <NavLink to={"/CategoriasDispositivo"} className="link-name">
+                            <i><MdOutlineCategory/></i>
+                            <h5>Categoria Dispositivos</h5>
+                        </NavLink>
+                       
+                        <NavLink to={"/tiposSoporte"} className="link-name">
+                            <i><VscTools/></i>
+                            <h5>Tipo Soporte</h5>
+                        </NavLink>
+                      </ul>
+                </li>
+
+                <li className="tr">
+                    <div
+                      onClick={handleSubmenuTransaction} 
+                      className="link-title">
+                        <div>
+                            <BsCurrencyDollar/>
+                            <h5>Transacciones</h5>
+                        </div>
+                        <i className={`arrow ${submenuTransaction? "arrow-close" : "arrow-open"}`}><MdOutlineArrowForwardIos /></i>
+                    </div>
+    
+                    <ul className= {`sub-menu ${!submenuTransaction? " sub-menu-close" : "sub-menu-open"}`}>
+                        { isSaleView() && (
+                              <NavLink to={"/Vender"} className="link-name">
+                                <i><MdAddShoppingCart/></i>
+                                <h5>Vender</h5>
+                              </NavLink> 
+                       )
+                        }
+                       { isSupportView() && (
+                            <NavLink to={"/SoporteTecnico"} className="link-name">
+                                <i><VscTools/></i>
+                                <h5>Soporte</h5>
+                            </NavLink>  
+                       )
+                        }
+                    </ul>
+                </li>
+                { roleValid.isAdmin() && (
+                         <li className="tr">
+                            <div
+                              onClick={handleSubmenuReport} 
+                              className="link-title">
+                                <div>
+                                    <i><TbReportSearch/></i>
+                                    <h5>Historial</h5>
+                                </div>
+                                <i className={`arrow ${submenuReport? "arrow-close" : "arrow-open"}`}><MdOutlineArrowForwardIos /></i>
+                            </div>
+            
+                            <ul className= {`sub-menu ${!submenuReport? " sub-menu-close" : "sub-menu-open"}`}>
+                                <NavLink to={"/Ventas"} className="link-name">
+                                    <i><FaRegUser/></i>
+                                    <h5>Ventas</h5>
+                                </NavLink>  
+                                <NavLink to={"/Soportes"} className="link-name">
+                                    <i><VscTools/></i>
+                                    <h5>Soportes</h5>
+                                </NavLink> 
+                            </ul>
+                        </li>
+                )
+                }
+                
+            </ul>
+    </section>
+  )
+}
+
+export default Sidebar
