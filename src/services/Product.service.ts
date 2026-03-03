@@ -10,9 +10,13 @@ export const postProductRequest = (cat: ProductPost) => axios.post(API, cat)
 
 export const getProductByFilterRequest = (filter: string) => axios.get(API+`/filter/${filter}`)
 
+export const getProductByBarcodeRequest = (filter: string) => axios.get(API+`/barcode/${filter}`)
+
 export const deleteProductRequest = (id: number) => axios.delete(API+`/${id}`)
 
 export const updateProductRequest = (id: number, cat: ProductPost) => axios.put(API+`/${id}`, cat) 
+
+export const updateProductFromPurchaseRequest = (id: number, cat: ProductPost) => axios.put(API+`/purchase/${id}`, cat) 
 
 export const updateProductStockRequest = (id: number, stock: number) => axios.put(API+`/stock/${id}/${stock}`) 
 

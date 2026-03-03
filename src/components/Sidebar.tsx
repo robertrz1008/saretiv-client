@@ -125,6 +125,13 @@ function Sidebar() {
                     </div>
     
                     <ul className= {`sub-menu ${!submenuTransaction? " sub-menu-close" : "sub-menu-open"}`}>
+                      { isSaleView() && (
+                              <NavLink to={"/Compra"} className="link-name">
+                                <i><MdAddShoppingCart/></i>
+                                <h5>Compra</h5>
+                              </NavLink> 
+                       )
+                        }
                         { isSaleView() && (
                               <NavLink to={"/Vender"} className="link-name">
                                 <i><MdAddShoppingCart/></i>

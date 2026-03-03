@@ -124,13 +124,13 @@ function SupportTypeForm() {
 
 
   return (
-    <div className='register-form' style={{ width: "430px" }}>
+    <div className='register-form' style={{ width: "990px" }}>
         {/* description */}
         <div style={{ marginTop: "10px" }}>
-            <label htmlFor="username" style={{ marginTop: "10px" }}>Descripción</label>
+            <h4 style={{ marginTop: "10px" }}>Descripción</h4>
             <InputTextarea 
                 value={description} 
-                variant="filled"
+                // variant="filled"
                 onChange={(e) => setDescription(e.target.value)}
                 style={{ marginTop: "5px", width: "100%", height: "100px" }}    
                 invalid={descriptionEmpty} 
@@ -139,11 +139,11 @@ function SupportTypeForm() {
         </div>
         {/* Category */}
         <div style={{marginTop: "10px" }}>
-            <label htmlFor="username" >Categoria de dispositivo</label>
+            <h4 >Categoria de dispositivo</h4>
             <Dropdown 
                 value={supportTypeSelect}
                 filter
-                variant="filled"
+                // variant="filled"
                 options={supportTypeItems}
                 onChange={(e: DropdownChangeEvent) =>setupportTypeSelect(e.value) }
                 style={{width:"100%", height: "40px", marginTop: "5px"}}
@@ -156,10 +156,10 @@ function SupportTypeForm() {
         </div>
         {/* stock */}
         <div style={{ marginTop: "10px" }}>
-            <label htmlFor="username" style={{ marginTop: "10px" }}>Monto</label>
+            <h4 style={{ marginTop: "10px" }}>Monto</h4>
             <InputNumber
                 inputId="integeronly" 
-                variant="filled"
+                // variant="filled"
                 value={amount} 
                 style={{ marginTop: "5px", width: "100%", height: "40px" }}
                 onValueChange={(e) => setAmount(e.value as number)}
@@ -169,19 +169,19 @@ function SupportTypeForm() {
         
 
         <div style={{ display: "flex", width: "100%", justifyContent: "flex-end", marginTop: "20px" }}>
-            <Button
+            <Button 
                 label="Cancelar" outlined 
                 size='small' 
-                onClick={cancel}
-                style={{ marginRight: "10px" }} 
-            />
-            <Button 
+                onClick={() => cancel()}
+                style={{ marginRight: "10px" , width:"200px"}} />
+              <Button 
                 type='submit'
                 label="Guardar" 
                 raised 
                 onClick={handleSubmit}
                 size='small'
-            />
+                style={{ width:"200px"}}
+              />
         </div>
     </div>
   )

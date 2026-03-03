@@ -1,9 +1,9 @@
 import { useContext, createContext, type ReactNode, useState, useRef } from "react";
 import type { User } from "../Interface/InAuth";
-import type { Customer, CustomerParams, ProductGet, ProductParams, Revenues, Supplier } from "../Interface/InApp";
+import type { Customer, CustomerParams, Product, ProductForPurchase, ProductGet, ProductParams, Revenues, Supplier } from "../Interface/InApp";
 import { customerListRequest, deleteCustomerRequest, getCustomerByFilterRequest, getCustomerByParamsRequest } from "../services/Customer.service";
 import { deletesupplierRequest, getSupplierByFilterRequest, getSupplierRequest } from "../services/Supplier.service";
-import { deleteProductRequest, getProductByFilterRequest, getProductByIdRequest, getProductByParamsRequest, getProductRequest, updateProductRequest, updateProductStockRequest } from "../services/Product.service";
+import { deleteProductRequest, getProductByFilterRequest, getProductByIdRequest, getProductByParamsRequest, getProductRequest, updateProductFromPurchaseRequest, updateProductRequest, updateProductStockRequest } from "../services/Product.service";
 import type { ProductDetail, ProductDetailGet, ProductDetailPost, SaleGet, SaleParams } from "../Interface/SalesInterfaces";
 import { createProDetailRequest, createSaleRequest, deleteProductDetailRequest, getProductDetailByIdRequest, getProductDetailBySupportRequest, getSaleByDatesRequest, getSalesByParamsRequest, updateSaleRequest } from "../services/Sale.service";
 import { deleteSupportTypeRequest, getSupportTypeByParamRequest, getSupportTypeFilterRequest, getSupportTypeRequest } from "../services/SupportType.service";
@@ -15,6 +15,8 @@ import { deleteActivityRequest, getActivitiesBySupportIdRequest, postActivitiesR
 import { deleteDeviceRequest, getDeviceBySupportIdReq } from "../services/Device.service";
 import { getRevenuesRequest } from "../services/enterprise.service";
 import { Toast } from "primereact/toast";
+import { PurchaseGet, PurchasePost, PurchaseProductGet, PurchaseProductPost } from "../Interface/purchase";
+import { createPurchaseProductRequequest, createPurchaseRequequest, deletePurchaseProductRequest, finishPurchaseRequequest, getPurchaseProductByPurchaseRequequest, getPurchasesRequequest, updatePurchaseProductRequequest, updatePurchaseRequequest } from "../services/purchase.service";
 const appContext = createContext({})
 
 export const useAppContext = () => {
@@ -78,10 +80,21 @@ export const AppContexProvider = ({ children }: ContexArg) => {
     const [activities, setActivities] = useState<ActivityGet[]>([])
     const [formTitle, setFormTitle] = useState("")
 
+    //purchase detials
+    const [purchaseProSelected, setPurchaseProSelected] = useState<ProductGet | null>()
+    const [purchaseProList, setPurchaseProList] = useState<ProductForPurchase[]>([])
+    const [purchaseProMode, setPurchaseProMode] = useState(false)
+    const [purchaseProModify, setPurchaseProModify] = useState<ProductForPurchase>()
+    const [deletePurProModal, setDeletePurProModal] = useState(false)
+    //purchase
+    const [purchaseTotal, setPurchaseTotal] = useState(0)   
+    const [purchaseList, setPurchaseList] = useState<PurchaseGet[]>([])
+    const [purchaseModify, setPurchaseModify] = useState<PurchaseGet | null>(null)
+
     const toast = useRef<Toast>(null);
     
     const showToasSuccess = (msg: string) => {
-              toast.current?.show({severity:'info', summary: "Completado", detail:msg, life: 2000 });
+              toast.current?.show({severity:'success', summary: "Completado", detail:msg, life: 2000 });
         }    
         const showToasError = (msg: string) => {
             toast.current?.show({severity:'error', summary: 'Success', detail:msg, life: 2000});
@@ -108,6 +121,9 @@ export const AppContexProvider = ({ children }: ContexArg) => {
     }
     function showConfirmModal(val: boolean) {
         setShowConfirmModal(val);
+    }
+    function showDeletePurProModal(val: boolean) {
+        setDeletePurProModal(val)
     }
     function userUpdateMode(val: boolean) {
         setUserUpdMode(val)
@@ -709,6 +725,7 @@ export const AppContexProvider = ({ children }: ContexArg) => {
             console.log(error)
         }
     }
+    
     async function deleteSupport(suppId: number) {
         try {
             const dev: AxiosResponse<DeviceGet> = await getDeviceBySupportIdReq(suppId)
@@ -730,6 +747,177 @@ export const AppContexProvider = ({ children }: ContexArg) => {
         }
     }
 
+    //purchase
+    function selectProductToPurchase(pro: ProductGet | null){
+        if(pro){
+            setPurchaseProSelected(pro)
+        }else{
+            setPurchaseProSelected(null)
+        }
+    }
+
+    function handlePurchaseProductList(pro: ProductForPurchase | null){
+        if(pro){
+            setPurchaseProList([...purchaseProList, pro])
+        }else{
+            setPurchaseProList([])
+        }
+    }
+
+    function sumPurchaseTotal() {
+        const newTotal = purchaseProList.reduce((con, el) => con + el.subtotal, 0)
+        setPurchaseTotal(newTotal)
+    }
+    function purchaseTotalZero(){
+        setPurchaseTotal(0)
+    }
+    function deletePurchaseProduct(id: number){
+        const newList = purchaseProList.filter(pro => pro.id != id)
+        setPurchaseProList(newList)
+    }
+
+    async function createPurchaese(purchase: PurchasePost){
+        if(purchaseProList.length == 0) return false
+        
+        try {
+            let purchaseCreated: AxiosResponse<PurchaseGet> | null = null;
+            let purchaseId;
+
+            if(!purchaseModify){
+                purchaseCreated= await createPurchaseRequequest(purchase)
+            }
+            
+            if(purchaseCreated){
+                purchaseId = purchaseCreated.data.id
+            }else{
+                purchaseId = purchaseModify?.id
+            }       
+
+            const purchaseProductForSave: PurchaseProductPost[] = purchaseProList.filter(pro => !pro.formDB).map(pro => {
+                return {
+                    amount: pro.amount,
+                    subtotal: pro.subtotal,
+                    costo: pro.salePrice,
+                    priceMin: pro.entryPriceMin,
+                    priceMay: pro.entryPriceMay,
+                    product: {id: pro.id as number},
+                    purchase: {id:purchaseId as number}
+                }
+            })
+            await createPurchaseProductRequequest(purchaseProductForSave)
+
+            await updatePurchaseRequequest(purchaseId as number, {
+                id:2,
+                createAt: new Date(),
+                factura:"f",
+                editable:"EDICION",
+                supplier: {id: purchase.supplier.id},
+                total: purchaseTotal
+            })
+
+            return true
+        } catch (error) {
+            console.log(error)
+            return false
+        }
+    }
+
+    async function finishPurchase(purchase: PurchasePost){
+        try{
+            await createPurchaese(purchase)
+            
+            const purProList: AxiosResponse<PurchaseProductGet[]> = await getPurchaseProductByPurchaseRequequest(purchaseModify?.id as number)
+
+            for(const purPro of purProList.data){
+                await updateProductFromPurchaseRequest(purPro.product.id as number,{
+                    barcode:"",
+                    description:"",
+                    category:{id:1},
+                    entryPriceMay: purPro.priceMay,
+                    entryPriceMin: purPro.priceMin,
+                    salePrice: purPro.costo,
+                    stock: purPro.product.stock + purPro.amount
+                })
+            }
+            await finishPurchaseRequequest(purchaseModify?.id as number, purchase)
+            return true
+        }catch(error){
+            console.log(error)
+            return false
+        }
+    }
+
+    async function listPurchase(){
+        try {
+            const res = await getPurchasesRequequest()
+            setPurchaseList(res.data)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async function handlePurchaseModity(purchase: PurchaseGet | null){
+            setPurchaseModify(purchase)    
+    }
+
+    async function changePurchaseProductForTable(){
+        const res: AxiosResponse<PurchaseProductGet[]> = await getPurchaseProductByPurchaseRequequest(purchaseModify?.id as number)
+        const newProForPurchase: ProductForPurchase[] = res.data.map(pro => {
+            return {
+                id: pro.id as number,
+                amount: pro.amount,
+                entryPriceMay: pro.priceMay,
+                entryPriceMin: pro.priceMin,
+                barcode: pro.product.barcode,
+                category: pro.product.category,
+                description: pro.product.description,
+                salePrice: pro.product.salePrice,
+                stock: pro.product.stock,
+                subtotal: pro.subtotal,
+                formDB: true
+            }
+        })
+        setPurchaseProList(newProForPurchase)
+    }
+    function handlePurchaseProductMode(val: boolean){
+        setPurchaseProMode(val)
+    }
+    function setPurchaseProductModify(pro: ProductForPurchase){
+        setPurchaseProModify(pro)
+    }
+    
+    async function modifyPurchaseProductFromCache(id: number, amount: number, cost: number, priMay: number, priMin: number){
+        const newList = purchaseProList.map(p => {
+            if(p.id == id){
+                return {    
+                    ...p,
+                    amount: amount,
+                    subtotal: amount * cost,
+                    entryPriceMin: priMin,
+                    entryPriceMay: priMay
+                }
+            }else{return p} 
+        })
+        setPurchaseProList(newList)
+        
+    }
+    async function modifyPurchaseFromDB(id: number, pro: PurchaseProductPost){
+        try {
+            await updatePurchaseProductRequequest(id, pro)
+            return true
+        }catch (error) {
+            console.log(error)
+            return false
+        }
+    }
+    async function deletePurchaseProductfromDB(id: number){
+        try {
+            await deletePurchaseProductRequest(id)
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+
     return (
         <appContext.Provider value={{
             isFormModalOpen, showFormModal, showConfirmModal, isShowConfirmModal, setGlobalTitleFn, globalTitle, showDetailModal, isShowDetailModal, isFilterSidebarOpen, setFilterSidebar, handleConfigSidebar, showConfigSidebar, handleEnterpriseModal, showEnterpriseModal, listRevenues, revenues,
@@ -744,6 +932,7 @@ export const AppContexProvider = ({ children }: ContexArg) => {
             listSupport, supports, supportUpdMode, supportModify, setSupportsUpdMode, setSupportModify, listSupportByFilter,
             suppDetailConcel, handleAddSuppProduct, supProDetail, resetSuppProduct, resetSuppProductFromDB, sumSupTotal, supTotal, registerSupportDetails, getSupportDetials, setSupportCurrent, supportCurrent, activities, addActivitesToList, resetActivityFromCache, resetActivityFromDB,
             toast, showToasSuccess,showToasError,
+            purchaseProSelected, selectProductToPurchase, purchaseProList,handlePurchaseProductList, sumPurchaseTotal, purchaseTotal, purchaseTotalZero, deletePurchaseProduct, createPurchaese, listPurchase, purchaseList, purchaseModify, handlePurchaseModity, changePurchaseProductForTable,purchaseProMode,  purchaseProModify, handlePurchaseProductMode, setPurchaseProductModify, modifyPurchaseProductFromCache, modifyPurchaseFromDB, finishPurchase, deletePurProModal, showDeletePurProModal, deletePurchaseProductfromDB
         }}>
             {children}
         </appContext.Provider>

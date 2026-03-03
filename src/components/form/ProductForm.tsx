@@ -7,8 +7,7 @@ import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
 import { Dropdown, type DropdownChangeEvent } from 'primereact/dropdown';
 import { getCategoryProRequest } from '../../services/category.service';
-import { getSupplierRequest } from '../../services/Supplier.service';
-import { postProductRequest, updateProductRequest } from '../../services/Product.service';
+import { getProductByBarcodeRequest, postProductRequest, updateProductRequest } from '../../services/Product.service';
 
 function ProductForm() {
 
@@ -16,15 +15,17 @@ function ProductForm() {
 
     const [description, setDescription] = useState("");
     const [descriptionEmpty, setDescriptionEmpty] = useState(false);
-    
-    const [entryPrice, setEntryPrice] = useState(0);
+
+    const [entryPriceMin, setEntryPrice] = useState(0);
     const [entryPriceEmpty, setEntryPriceEmpty] = useState(false);
+
+    const [entryPriceMay, setEntryPriceMay] = useState(0);
 
     const [salePrice, setSalePrice] = useState(0);
     const [salePriceEmpty, setSalePriceEmpty] = useState(false);
 
     const [barcode, setBarcode] = useState("");
-    // const [barcodeEmpty, setBarcodeEmpty] = useState(false);
+    const [barcodeEmpty, setBarcodeEmpty] = useState(false);
 
     const [stock, setStock] = useState(0);
     // const [stockEmpty, setStockEmpty] = useState(false);
@@ -33,23 +34,35 @@ function ProductForm() {
     const [categorySelect, setcategorySelect] = useState<DropdownItem | null>()
     const [categoryEmpty, setCategoryEmpty] = useState(false);
 
-    const [supplierItems, setSupplierItems] = useState<DropdownItem[]>([]);
-    const [supplierSelect, setsupplierSelect] = useState<DropdownItem | null>(null)
-    const [supplierEmpty, setSupplierEmpty] = useState(false);
+    // const [supplierItems, setSupplierItems] = useState<DropdownItem[]>([]);
+    // const [supplierSelect, setsupplierSelect] = useState<DropdownItem | null>(null)
+    // const [supplierEmpty, setSupplierEmpty] = useState(false);
+
+    async function verifyBarcode(bar: string) {
+        try {
+            const res = await getProductByBarcodeRequest(bar)
+            if (res.data.length > 0) {
+                setBarcodeEmpty(true)
+            } else {
+                setBarcodeEmpty(false)
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
 
 
-
-    function cleanInput(){
+    function cleanInput() {
         setDescription("");
         setEntryPrice(0);
         setSalePrice(0);
         setBarcode("");
         setStock(0);
         setcategorySelect(null);
-        setsupplierSelect(null);
+        // setsupplierSelect(null);
         setDescriptionEmpty(false);
-        setEntryPriceEmpty(false); 
+        setEntryPriceEmpty(false);
         setSalePriceEmpty(false);
         setCategoryEmpty(false);
     }
@@ -57,44 +70,44 @@ function ProductForm() {
     function validateInputs(): boolean {
         let invalid: boolean = false;
         if (description === "") {
-        setDescriptionEmpty(true);
-        invalid = true;
+            setDescriptionEmpty(true);
+            invalid = true;
         } else {
-        setDescriptionEmpty(false);
+            setDescriptionEmpty(false);
         }
-        if (entryPrice == 0) {
-        setEntryPriceEmpty(true);
-        invalid = true;
-        } else {
-        setEntryPriceEmpty(false);
-        }
+        // if (entryPriceMin == 0) {
+        //     setEntryPriceEmpty(true);
+        //     invalid = true;
+        // } else {
+        //     setEntryPriceEmpty(false);
+        // }
         if (salePrice == 0) {
-        setSalePriceEmpty(true);
-        invalid = true;
+            setSalePriceEmpty(true);
+            invalid = true;
         } else {
-        setSalePriceEmpty(false);
+            setSalePriceEmpty(false);
         }
         if (categorySelect == null) {
-        setCategoryEmpty(true);
-        invalid = true;
+            setCategoryEmpty(true);
+            invalid = true;
         } else {
-        setCategoryEmpty(false);
+            setCategoryEmpty(false);
         }
-        if (supplierSelect == null) {
-        setSupplierEmpty(true);
-        invalid = true;
-        } else {
-        setSupplierEmpty(false);
-        }
+        // if (supplierSelect == null) {
+        // setSupplierEmpty(true);
+        // invalid = true;
+        // } else {
+        // setSupplierEmpty(false);
+        // }
 
         return invalid;
-    }    
+    }
 
     async function getItems() {
         const categories = await getCategoryProRequest()
-        const suppliers = await getSupplierRequest()
-        setCategoryItems(categories.data.map((cat: any) => ({ label: cat.name, code: cat.id.toString() }))); 
-        setSupplierItems(suppliers.data.map((sup: any) => ({ label: sup.name, code: sup.id.toString() })));
+        // const suppliers = await getSupplierRequest()
+        setCategoryItems(categories.data.map((cat: any) => ({ label: cat.name, code: cat.id.toString() })));
+        // setSupplierItems(suppliers.data.map((sup: any) => ({ label: sup.name, code: sup.id.toString() })));
     }
 
     function cancel() {
@@ -106,25 +119,23 @@ function ProductForm() {
     async function hanldeSubmit() {
         const isInvalid = validateInputs();
         if (isInvalid) {
-            return; 
+            return;
         }
 
         const pro: ProductPost = {
             description,
-            entryPrice,
+            entryPriceMin: 0,
+            entryPriceMay: 0,
             salePrice,
             barcode,
             stock,
             category: {
                 id: Number(categorySelect?.code)
             },
-            supplier:{
-                id: Number(supplierSelect?.code)
-            }
         };
 
         try {
-            if( context.isProductUpdMode) {
+            if (context.isProductUpdMode) {
                 await updateProductRequest(context.productModify.id as number, pro);
             }
             else {
@@ -140,24 +151,25 @@ function ProductForm() {
 
 
 
- useEffect(() => {
-    context.setModalFormTitle("Datos del Producto") 
-    cleanInput();
-    if (context.isProductUpdMode) {
-        const product = context.productModify;
-        setDescription(product.description);
-        setEntryPrice(product.entryPrice);
-        setSalePrice(product.salePrice);
-        setBarcode(product.barcode);
-        setStock(product.stock);
-        setcategorySelect(
-            { label: product.category.name, code: (product.category.id as number)+"" }
-        );
-        setsupplierSelect({ 
-            label: product.supplier.name, code: (product.supplier.id as number)+"" 
-        });
-    }
-  },[])
+    useEffect(() => {
+        context.setModalFormTitle("Datos del Producto")
+        cleanInput();
+        if (context.isProductUpdMode) {
+            const product = context.productModify;
+            setDescription(product.description);
+            setEntryPrice(product.entryPriceMin);
+            setEntryPriceMay(product.entryPriceMay);
+            setSalePrice(product.salePrice);
+            setBarcode(product.barcode);
+            setStock(product.stock);
+            setcategorySelect(
+                { label: product.category.name, code: (product.category.id as number) + "" }
+            );
+            // setsupplierSelect({ 
+            //     label: product.supplier.name, code: (product.supplier.id as number)+"" 
+            // });
+        }
+    }, [])
     useEffect(() => {
         getItems();
     }, [])
@@ -165,135 +177,138 @@ function ProductForm() {
 
 
 
-  return (
-    <div className='register-form'>
-        <section className='person-section' style={{ width: "470px" }}>
-            {/* description */}
-            <div style={{ marginTop: "10px" }}>
-                <label htmlFor="username" style={{ marginTop: "10px" }}>Descripción</label>
-                    <InputTextarea 
-                        value={description} 
-                        variant="filled"
-                        onChange={(e) => setDescription(e.target.value)}
-                        style={{ marginTop: "5px", width: "100%", height: "100px" }}    
-                        invalid={descriptionEmpty} 
+    return (
+        <div className='register-form'>
+            <section className='person-section' style={{ width: "990px" }}>
+                {/* barcode */}
+                <div style={{ marginTop: "10px" }}>
+                    <h4 >Codigo</h4>
+                    <InputText
+                        value={barcode}
+                        onChange={(e) => {
+                            setBarcode(e.target.value)
+                            verifyBarcode(e.target.value)
+                        }}
+                        // variant="filled"
+                        // invalid={barcodeEmpty}
+
+                        type="text"
+                        style={{ marginTop: "5px", width: "100%", height: "40px" }}
                     />
-                {descriptionEmpty &&  <small id="username-help" className='empt-ymsg'>La description es requerida</small>}
-            </div>
+                    {/* {barcodeEmpty && <small id="username-help" className='empt-ymsg'> codigo de barra ya registrado</small>} */}
+                </div>
+                {/* description */}
+                <div style={{ marginTop: "10px" }}>
+                    <h4 style={{ marginTop: "10px" }}>Descripción</h4>
+                    <InputText
+                        value={description}
+                        // variant="filled"
+                        onChange={(e) => setDescription(e.target.value.toUpperCase())}
+                        style={{ marginTop: "5px", width: "100%"}}
+                        invalid={descriptionEmpty}
+                    />
+                    {descriptionEmpty && <small id="username-help" className='empt-ymsg'>La description es requerida</small>}
+                </div>
 
-            {/* prices */}
-             <div className='doble-inputs' style={{ display: "flex", justifyContent: "space-between", width:"100%", marginTop: "10px" }}>
-                              
-                                <div style={{ width: "48%" }}>
-                                    <label htmlFor="username" >Precio de Compra</label>
-                                    <InputNumber
-                                        variant="filled"
-                                        inputId="integeronly" 
-                                        value={entryPrice} 
-                                        style={{ marginTop: "5px", width: "100%", height: "40px" }}
-                                        onValueChange={(e) => setEntryPrice(e.value as 
-                                        number)} 
-                                        invalid={entryPriceEmpty}
-                                    />
-                                    {entryPriceEmpty &&  <small id="username-help" className='empt-ymsg'> El precio de compra es requerido</small>}
-                                </div>
-                    
-                                <div style={{ width: "48%" }}>
-                                  <label htmlFor="username" style={{ marginTop: "10px" }}>Precio de Venta</label>
-                                  <InputNumber
-                                        inputId="integeronly" 
-                                        value={salePrice} 
-                                        variant="filled"
-                                        style={{ marginTop: "5px", width: "100%", height: "40px" }}
-                                        onValueChange={(e) => setSalePrice(e.value as 
-                                        number)} 
-                                        invalid={salePriceEmpty}
-                                    />
-                                    {salePriceEmpty &&  <small id="username-help" className='empt-ymsg'> El precio de venta es requerido</small>}
-                                </div>
-            </div>
+                <div style={{ marginTop: "10px" }}>
+                    <h4 >Precio de compra</h4>
+                    <InputNumber
+                        value={salePrice}
+                        onValueChange={(e) => setSalePrice(e.target.value as number)}
+                        // variant="filled"
+                        invalid={barcodeEmpty}
+                        type="text"
+                        style={{ marginTop: "5px", width: "100%", height: "40px" }}
+                    />
+                    {salePriceEmpty && <small id="username-help" className='empt-ymsg'> El precio de compra es requerido</small>}
+                </div>
 
-            {/* barcode */}
-            <div style={{ marginTop: "10px" }}>
-                <label htmlFor="username" >Codigo</label>
-                <InputText
-                    value={barcode} 
-                    onChange={(e) => setBarcode(e.target.value)}
-                    variant="filled"
-                    type="text" 
-                    style={{ marginTop: "5px", width: "100%", height: "40px" }}
+                {/* prices */}
+                {/* <div className='doble-inputs' style={{ display: "flex", justifyContent: "space-between", width: "100%", marginTop: "10px" }}>
+
+                    <div style={{ width: "48%" }}>
+                        <h4>Precio Minorista</h4>
+                        <InputNumber
+                            // variant="filled"
+                            inputId="integeronly"
+                            value={entryPriceMin}
+                            style={{ marginTop: "5px", width: "100%", height: "40px" }}
+                            onValueChange={(e) => setEntryPrice(e.value as
+                                number)}
+                            invalid={entryPriceEmpty}
+                        />
+                        {entryPriceEmpty && <small id="username-help" className='empt-ymsg'> El precio de compra es requerido</small>}
+                    </div>
+
+                    <div style={{ width: "48%" }}>
+                        <h4 style={{ marginTop: "10px" }}>Precio Mayorista</h4>
+                        <InputNumber
+                            inputId="integeronly"
+                            value={entryPriceMay}
+                            // variant="filled"
+                            style={{ marginTop: "5px", width: "100%", height: "40px" }}
+                            onValueChange={(e) => setSalePrice(e.value as
+                                number)}
+                            // invalid={salePriceEmpty}
+                        />
+
+                    </div>
+                </div> */}
+
+
+                {/* stock */}
+                <div style={{ marginTop: "10px" }}>
+                    <h4 style={{ marginTop: "10px" }}>Stock</h4>
+                    <InputNumber
+                        inputId="integeronly"
+                        // variant="filled"
+                        value={stock}
+                        style={{ marginTop: "5px", width: "100%", height: "40px" }}
+                        onValueChange={(e) => setStock(e.value as number)}
+                    />
+                </div>
+
+                {/* category supplier */}
+                <div className='doble-inputs' style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
+
+                    <div style={{ width: "48%" }}>
+                        <h4 >Categoria</h4>
+                        <Dropdown
+                            value={categorySelect}
+                            filter
+                            // variant="filled"
+                            options={categoryItems}
+                            onChange={(e: DropdownChangeEvent) => setcategorySelect(e.value)}
+                            style={{ width: "100%", height: "40px", marginTop: "5px" }}
+                            // options={roles} 
+                            placeholder='Seleccionar'
+                            className="w-full md:w-14rem"
+                            invalid={categoryEmpty}
+                        />
+                        {categoryEmpty && <small id="username-help" className='empt-ymsg'> La categoria es requerida</small>}
+                    </div>
+                </div>
+            </section>
+
+
+            {/* buttons */}
+            <div style={{ display: "flex", width: "100%", justifyContent: "flex-end", marginTop: "20px" }}>
+                <Button
+                    label="Cancelar" outlined
+                    size='small'
+                    onClick={() => cancel()}
+                    style={{ marginRight: "10px", width: "200px" }} />
+                <Button
+                    type='submit'
+                    label="Guardar"
+                    raised
+                    onClick={hanldeSubmit}
+                    size='small'
+                    style={{ width: "200px" }}
                 />
             </div>
-
-            {/* stock */}
-            <div style={{ marginTop: "10px" }}>
-                <label htmlFor="username" style={{ marginTop: "10px" }}>Stock</label>
-                <InputNumber
-                    inputId="integeronly" 
-                    variant="filled"
-                    value={stock} 
-                    style={{ marginTop: "5px", width: "100%", height: "40px" }}
-                    onValueChange={(e) => setStock(e.value as number)}
-                />
-            </div>
-
-            {/* category supplier */}
-             <div className='doble-inputs' style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
-                              
-                <div style={{ width: "48%" }}>
-                    <label htmlFor="username" >Categoria</label>
-                    <Dropdown 
-                        value={categorySelect}
-                        filter
-                        variant="filled"
-                        options={categoryItems}
-                        onChange={(e: DropdownChangeEvent) =>setcategorySelect(e.value) }
-                        style={{width:"100%", height: "40px", marginTop: "5px"}}
-                        // options={roles} 
-                        placeholder='Seleccionar'
-                        className="w-full md:w-14rem" 
-                        invalid={categoryEmpty}
-                    />
-                    {categoryEmpty &&  <small id="username-help" className='empt-ymsg'> La categoria es requerida</small>}
-                </div>
-                    
-                <div style={{ width: "48%" }}>
-                    <label htmlFor="username" style={{ marginTop: "10px" }}>Proveedor</label>
-                    <Dropdown 
-                        variant="filled"
-                        filter
-                        options={supplierItems}
-                        onChange={(e: DropdownChangeEvent) =>setsupplierSelect(e.value) }
-                        style={{width:"100%", height: "40px", marginTop: "5px"}}
-                        value={supplierSelect} 
-                        placeholder='Seleccionar'
-                        className="w-full md:w-14rem"
-                        invalid={supplierEmpty}
-                    />
-                    {supplierEmpty &&  <small id="username-help" className='empt-ymsg'> El proveedor es requerido</small>}
-                </div>
-            </div>
-        </section>
-
-
-        {/* buttons */}
-        <div style={{ display: "flex", width: "100%", justifyContent: "flex-end", marginTop: "20px" }}>
-            <Button
-                label="Cancelar" outlined 
-                size='small' 
-                onClick={() => cancel()}
-                style={{ marginRight: "10px" }} 
-            />
-            <Button 
-                type='submit'
-                label="Guardar" 
-                raised 
-                onClick={() => hanldeSubmit()}
-                size='small'
-            />
         </div>
-    </div>
-  )
+    )
 }
 
 export default ProductForm

@@ -17,6 +17,8 @@ import SupportPage from './view/pages/main/Transaction/SupportPage';
 import SupportDetailPage from './view/pages/main/Transaction/SupportDetailPage';
 import SalesHistoryPage from './view/pages/main/historyTransaction/SalesHistoryPage';
 import SupportHistoryPage from './view/pages/main/historyTransaction/SupportHistoryPage';
+import BuyPage from './view/pages/main/Transaction/BuyPage';
+import PurchaseProcessPage from './view/pages/main/Transaction/PurchaseProcessPage';
 
 function App() {
 
@@ -35,6 +37,8 @@ function App() {
             <Route path='Proveedores' element={<SupplierPage/>}/>
             <Route path='tiposSoporte' element={<SupportTypePage/>}/>
             <Route path='Productos' element={<ProductPage/>}/>
+            <Route path='Compra' element={<BuyPage/>}/>
+            <Route path='DatosCompra' element={<PurchaseProcessPage/>}/>
             <Route path='Vender' element={<SalePage/>}/>
             <Route path='SoporteTecnico' element={<SupportPage/>}/>
             <Route path='SoporteTecnico/Detalles/:id' element={<SupportDetailPage/>}/>

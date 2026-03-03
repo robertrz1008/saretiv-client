@@ -17,10 +17,9 @@ function ProductTable() {
                     <th style={{width:"200px"}}>Codigo</th>
                     <th>Descripción</th>
                     <th >Categoria</th>
-                    <th >Proveedor</th>
                     <th className='td-number'>Stock</th>
                     <th className='td-number'>PrecioCompra</th>
-                    <th className='td-number'>PrecioVenta</th>
+                    <th className='td-number'>Precio</th>
                     <th className='td-icon'></th>
                 </tr>
             </thead>
@@ -41,11 +40,10 @@ function ProductTable() {
                                     <td style={{width:"200px"}}>{data.barcode}</td>
                                     <td>{data.description}</td>
                                     <td>{data.category.name}</td>
-                                    <td>{data.supplier.name}</td>
                                     
                                     <td className='td-number'>{data.stock}</td>
-                                    <td className='td-number'>{data.entryPrice}</td>
                                     <td className='td-number'>{data.salePrice}</td>
+                                    <td className='td-number'>{data.entryPriceMin}</td>
                                     <td onClick={(e) => e.stopPropagation()}>
                                         <MdDeleteOutline
                                             onClick={() => {

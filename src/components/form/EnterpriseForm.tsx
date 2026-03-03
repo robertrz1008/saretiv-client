@@ -41,6 +41,7 @@ function EnterpriseForm() {
                 <div style={{ marginTop: "10px" }}>
                     <label htmlFor="username" style={{ marginTop: "10px" }}>Nombre</label>
                     <InputText
+                        id='name'
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         variant="filled"
@@ -52,6 +53,7 @@ function EnterpriseForm() {
                 <div style={{ marginTop: "10px" }}>
                     <label htmlFor="username" style={{ marginTop: "10px" }}>telefono</label>
                     <InputText
+                        id='telephone'
                         value={telephone}
                         onChange={(e) => setTelephone(e.target.value)}
                         variant="filled"
@@ -63,6 +65,7 @@ function EnterpriseForm() {
                 <div style={{ marginTop: "10px" }}>
                     <label htmlFor="username" style={{ marginTop: "10px" }}>Dirección</label>
                     <InputText
+                        id='address'
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
                         variant="filled"
@@ -71,7 +74,7 @@ function EnterpriseForm() {
                         // invalid={nameEmpty}
                     />
                 </div>
-                <Button type="submit" onClick={handleSubmit} style={{marginTop: "10px", width:"100%"}} label="Guardar" icon="pi pi-check"/>
+                <Button id='btn-submit' type="submit" onClick={handleSubmit} style={{marginTop: "10px", width:"100%"}} label="Guardar" icon="pi pi-check"/>
             </div>
         </div>
     )

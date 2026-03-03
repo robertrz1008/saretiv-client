@@ -76,7 +76,7 @@ function ClientPage() {
               variant="filled"
               type="text"
               placeholder="Buscar Ciente"
-              style={{ height: "40px" }}
+              style={{ height: "40px", width:"450px" }}
             />
             <div
               style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}

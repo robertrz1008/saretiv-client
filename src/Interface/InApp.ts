@@ -4,6 +4,7 @@ import type { User } from "./InAuth"
 import type { ProductDetail, SaleGet, SaleParams } from "./SalesInterfaces";
 import type { DeviceAmount, SupportCustomGet, SupportParams, SupportTypeGet, SupportTypeParams, SuppProductDetail } from "./SupportIn";
 import { Toast } from "primereact/toast";
+import { PurchaseGet, PurchasePost, PurchaseProductPost } from "./purchase";
 
 export interface DropdownItem{
     label: string, 
@@ -41,21 +42,19 @@ export interface Supplier{
 export interface Product{
     id?: number
     description: string,
-    entryPrice: number,
+    entryPriceMin: number,
+    entryPriceMay: number,
     salePrice: number,
     stock: number,
     barcode: string,
 }
 export interface ProductPost extends Product{
-    supplier: {
-        id: number
-    },
     category: {
         id: number
     }
 }
 export interface ProductGet extends Product{
-    supplier: Supplier
+    supplier?: Supplier
     category: Category
 }
 export interface ProductParams{
@@ -69,7 +68,12 @@ export interface ProductParams{
     buyMin: number,
     buyMax: number
 }
-
+export interface ProductForPurchase extends ProductGet{
+    id?: number
+    amount: number,
+    subtotal: number
+    formDB: boolean
+}
 export interface Enterprice{
     id?: number,
     name: string,
@@ -186,4 +190,28 @@ export interface AppContextIn{
     toast: RefObject<Toast>
     showToasSuccess: (msg: string) => void
     showToasError: (msg: string) => void
+    purchaseProSelected: ProductGet
+    selectProductToPurchase: (pro: ProductGet | null) => void
+    purchaseProList: ProductForPurchase[],
+    handlePurchaseProductList: (pro: ProductForPurchase | null) => void
+    sumPurchaseTotal: () => void
+    purchaseTotal: number
+    purchaseTotalZero: () => void
+    deletePurchaseProduct: (id: number) => void
+    createPurchaese: (purchase: PurchasePost) => boolean
+    listPurchase: () => void
+    purchaseList: PurchaseGet[], 
+    purchaseModify: PurchaseGet | null 
+    handlePurchaseModity: (purchase: PurchaseGet | null) => void
+    changePurchaseProductForTable: () => void
+    purchaseProMode: boolean,  
+    purchaseProModify: ProductForPurchase, 
+    handlePurchaseProductMode: (val: boolean) => void, 
+    setPurchaseProductModify: (pro: ProductForPurchase) => void
+    modifyPurchaseProductFromCache:(id: number, amount: number, cost: number, priMay: number, priMin: number) => void
+    modifyPurchaseFromDB: (id: number, pro: PurchaseProductPost) => boolean
+    finishPurchase:(purchase: PurchasePost) => void
+    deletePurProModal: boolean
+    showDeletePurProModal: (val: boolean) => void
+    deletePurchaseProductfromDB: (id: number) => void
 }

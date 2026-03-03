@@ -104,14 +104,14 @@ function SupplierForm() {
 
   return (
     <div className="register-form">
-              <section className='person-section' style={{ width: "460px" }}>
+              <section className='person-section' style={{ width: "990px" }}>
                 {/* name */}
                   <div style={{ marginTop: "10px" }}>
-                      <label htmlFor="username" style={{ marginTop: "10px" }}>Nombre</label>
+                      <h4 style={{ marginTop: "10px" }}>Nombre</h4>
                       <InputText
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        variant="filled"
+                        // variant="filled"
                         style={{ marginTop: "5px", width: "100%", height: "40px" }}
                         type="text"
                         invalid={nameEmpty}
@@ -122,11 +122,11 @@ function SupplierForm() {
                    <div className='doble-inputs' style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
                   
                     <div style={{ width: "48%" }}>
-                      <label htmlFor="username" >Telefono</label>
+                      <h4 style={{ marginTop: "10px" }}>Telefono</h4>
                       <InputText
                         value={telephone}
                         onChange={(e) => setTelephone(e.target.value)}
-                        variant="filled"
+                        // variant="filled"
                         style={{ marginTop: "5px", width: "100%", height: "40px" }}
                         type="text"
                         invalid={telephoneEmpty}
@@ -135,11 +135,11 @@ function SupplierForm() {
                     </div>
         
                     <div style={{ width: "48%" }}>
-                      <label htmlFor="username" style={{ marginTop: "10px" }}>Ruc</label>
+                     <h4 style={{ marginTop: "10px" }}>RUC</h4>
                       <InputText
                         value={ruc}
                         onChange={(e) => setRuc(e.target.value)}
-                        variant="filled"
+                        // variant="filled"
                         style={{ marginTop: "5px", width: "100%", height: "40px" }}
                         type="text"
                         invalid={rucEmpty}
@@ -149,11 +149,11 @@ function SupplierForm() {
                   </div>
                   {/* Address */}
                     <div style={{ marginTop: "10px" }}>
-                        <label htmlFor="username" style={{ marginTop: "10px" }}>Direccion</label>
+                        <h4 style={{ marginTop: "10px" }}>Dirección</h4>
                         <InputText
                           value={address}
                           onChange={(e) => setAddress(e.target.value)}
-                          variant="filled"
+                          // variant="filled"
                           style={{ marginTop: "5px", width: "100%", height: "40px" }}
                           type="text"
                           invalid={addressEmpy}
@@ -164,20 +164,22 @@ function SupplierForm() {
                   </section>
           {/* buttons */}
           <div style={{ display: "flex", width: "100%", justifyContent: "flex-end", marginTop: "20px" }}>
-                  <Button
+                  <Button 
                     label="Cancelar" outlined 
                     size='small' 
                     onClick={() => cancel()}
-                    style={{ marginRight: "10px" }} />
+                    style={{ marginRight: "10px" , width:"200px"}} 
+                  />
                   <Button 
                     type='submit'
                     label="Guardar" 
                     raised 
-                    onClick={() => hanldeSubmit()}
+                    onClick={hanldeSubmit}
                     size='small'
+                    style={{ width:"200px"}}
                   />
-                </div>
         </div>
+    </div>
   )
 }
 

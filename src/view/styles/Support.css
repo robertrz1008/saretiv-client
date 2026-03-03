@@ -97,7 +97,7 @@
     margin-top: 20px;
     display: grid;
     grid-template-columns: 1fr;
-    grid-template-rows: 40px 1fr 60px;
+    grid-template-rows: 40px 40px 1fr;
 }
 .supp-tables-con{
     display: flex;
@@ -116,7 +116,7 @@
 
 /* Modal search */
 .search-con{
-    width: 370px; 
+    width: 800px; 
     height: 400px;
     display: flex;
     flex-direction: column;
@@ -159,7 +159,7 @@
 
 /* support details modal */
 .supp-detial-modal{
-    width: 460px;
+    width: 960px;
     height: 600px;
 }
 .details-texts-item{
@@ -171,5 +171,5 @@
 }
 .detail-table-con{
     margin-top: 15px;
-    width: 460px;
+    width: 100%;
 }

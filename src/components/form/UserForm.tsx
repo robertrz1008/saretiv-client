@@ -277,7 +277,7 @@ const authContext = useAuth() as AuthContextIn
             </div>
             <div className="flex-auto" style={{ width: "48%" }}>
               <label htmlFor="buttondisplay" className="font-bold block mb-2">
-                Button Display
+                Fecha Ingreso
               </label>
               <Calendar 
                 id="buttondisplay" 

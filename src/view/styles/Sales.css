@@ -136,8 +136,13 @@
 
 .total-con{
     width: 100%;
-    padding-left: 10px;
-    color: rgb(34, 99, 34);
+    color:rgb(22, 129, 54);
+    font-size: 20px;
+    display:flex;
+    justify-content: space-between;
+    border-radius: 3px;
+    padding: 3px;
+    background-color: rgb(211, 248, 211);
 }
 .sale-success-con{
     width: 400px;

@@ -16,11 +16,6 @@ function ProductPage() {
   const context = useAppContext() as AppContextIn
   const [isFilterList, setFilterList] = useState(false)
 
-
-
-
-
-
    async function submitParam(params: ProductParams) {
       try {
         await context.getProductsByParams(params)

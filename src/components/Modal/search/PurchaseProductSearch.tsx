@@ -9,24 +9,13 @@ interface Prop {
   setThisModal: (val: boolean) => void
 }
 
-function ProductSearch(prop: Prop) {
+function PurchaseProductSearch(prop: Prop) {
   const context = useAppContext() as AppContextIn
-  const [newProducts, setNewProducts] = useState<ProductGet[]>()
 
 
   function addProductDetial(pro: ProductGet){
-    context.handleAddSuppProduct({
-      id: pro.id as number,
-      description: pro.description,
-      productAmount: 1,
-      price: pro.salePrice,
-      subtotal: 0
-    })
+    context.selectProductToPurchase(pro)
     prop.setThisModal(false)
-  }
-  function settingProducts(){
-    const proList: ProductGet[]= context.products.filter(pr => pr.stock > 0)
-    setNewProducts(proList)
   }
 
 
@@ -34,9 +23,6 @@ function ProductSearch(prop: Prop) {
     context.productList()
   }, [])
   
-  useEffect(() => {
-    settingProducts()
-  }, [context.products])
 
   return (
     <Dialog header={"Seleccionar Producto"} visible={prop.showthisModal} style={{ marginTop: "50px"}} onHide={() => { prop.setThisModal(false) }}>
@@ -63,9 +49,9 @@ function ProductSearch(prop: Prop) {
             </thead>
             <tbody>
               {
-                !newProducts? 
+                !context.products? 
                         ( <tr></tr> ) : 
-                        newProducts.map((pro, id) => (
+                        context.products.map((pro, id) => (
                           <tr
                             key={id}
                             className="sale-table-tr"
@@ -88,4 +74,4 @@ function ProductSearch(prop: Prop) {
   )
 }
 
-export default ProductSearch
+export default PurchaseProductSearch

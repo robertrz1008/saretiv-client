@@ -113,16 +113,17 @@ function CustomerForm() {
 
   return (
     <div className="register-form">
-      <form className='form-input-con' style={{ display: "flex" }}>
-          <section className='person-section' style={{ width: "460px" }}>
+      <form className='form-input-con' style={{ display: "flex"}}>
+          <section className='person-section' style={{ width: "990px" }}>
                 <div className='doble-inputs' style={{ display: "flex", justifyContent: "space-between" }}>
       
                   <div style={{ width: "48%" }}>
-                    <label htmlFor="username" >Nombre</label>
+                    <h4 style={{ marginTop: "10px" }}>Nombre</h4>
                     <InputText
+                      id="name"
                       value={name}
                       onChange={(e) => setName(e.target.value)}
-                      variant="filled"
+                      // variant="filled"
                       style={{ marginTop: "5px", width: "100%", height: "40px" }}
                       type="text"
                       invalid={nameEmpty}
@@ -131,11 +132,12 @@ function CustomerForm() {
                   </div>
       
                   <div style={{ width: "48%" }}>
-                    <label htmlFor="username" style={{ marginTop: "10px" }}>Apellido</label>
+                    <h4 style={{ marginTop: "10px" }}>Apellido</h4>
                     <InputText
+                      id="lastname"
                       value={lastname}
                       onChange={(e) => setLastname(e.target.value)}
-                      variant="filled"
+                      // variant="filled"
                       style={{ marginTop: "5px", width: "100%", height: "40px" }}
                       type="text"
                       invalid={lastnameEmpty}
@@ -145,11 +147,12 @@ function CustomerForm() {
                 </div>
       
                 <div style={{ marginTop: "10px" }}>
-                  <label htmlFor="username" style={{ marginTop: "10px" }}>Cedula</label>
+                  <h4 style={{ marginTop: "10px" }}>Documento</h4>
                   <InputText
+                  id="document"
                     value={document}
                     onChange={(e) => setDocument(e.target.value)}
-                    variant="filled"
+                    // variant="filled"
                     style={{ marginTop: "5px", width: "100%", height: "40px" }}
                     type="text"
                     invalid={documentEmpty}
@@ -158,11 +161,12 @@ function CustomerForm() {
                 </div>
 
                 <div style={{ marginTop: "10px" }}>
-                        <label htmlFor="username" style={{ marginTop: "10px" }}>Direccion</label>
+                        <h4 style={{ marginTop: "10px" }}>Dirección</h4>
                         <InputText
+                        id="address"
                         value={address}
                         onChange={(e) => setAddress(e.target.value)}
-                        variant="filled"
+                        // variant="filled"
                         style={{ marginTop: "5px", width: "100%", height: "40px" }}
                         type="text"
                         invalid={addressEmpy}
@@ -172,11 +176,12 @@ function CustomerForm() {
       
                 <div className='doble-inputs' style={{ display: "flex", justifyContent: "space-between", marginTop: "10px" }}>
                     <div style={{ width: "48%" }}>
-                      <label htmlFor="username" style={{ marginTop: "10px" }}>Telefono</label>
+                      <h4 style={{ marginTop: "10px" }}>Telefono</h4>
                       <InputText
+                        id="telephone"
                         value={telephone}
                         onChange={(e) => setTelephone(e.target.value)}
-                        variant="filled"
+                        // variant="filled"
                         style={{ marginTop: "5px", width: "100%", height: "40px" }}
                         type="text"
                         invalid={telephoneEmpty}
@@ -189,18 +194,21 @@ function CustomerForm() {
       {/* buttons */}
       <div style={{ display: "flex", width: "100%", justifyContent: "flex-end", marginTop: "20px" }}>
               <Button 
+                id="btn-reset"
                 label="Cancelar" outlined 
                 size='small' 
                 onClick={() => cancel()}
-                style={{ marginRight: "10px" }} />
+                style={{ marginRight: "10px" , width:"200px"}} />
               <Button 
+                id="btn-submit"
                 type='submit'
                 label="Guardar" 
                 raised 
                 onClick={hanldeSubmit}
                 size='small'
+                style={{ width:"200px"}}
               />
-            </div>
+        </div>
     </div>
   )
 }
